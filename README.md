@@ -109,9 +109,9 @@ Before compressing, extract and verify these items are preserved:
 
 | Type | Original Tokens | Compressed | Ratio | Understanding |
 |------|-----------------|------------|-------|---------------|
-| Skills | 6,480 | 1,480 | 4.4:1 | 100% ✓ |
-| Agents | 5,776 | 1,122 | 5.1:1 | 100% ✓ |
-| **Total** | **12,256** | **2,602** | **4.7:1** | **100% ✓** |
+| Skills (3) | 6,480 | 1,480 | 4.4:1 | 100% ✓ |
+| Agents (4) | 20,776 | 5,522 | 3.8:1 | 100% ✓ |
+| **Total** | **27,256** | **7,002** | **3.9:1** | **100% ✓** |
 
 ### Iteration Rate Improvement
 
@@ -137,8 +137,8 @@ semantic-compressor/
             │   │   ├── verbose/    # Original verbose skills (3 files)
             │   │   └── compressed/ # Compressed skills (3 files)
             │   ├── agents/
-            │   │   ├── verbose/    # Original verbose agents (3 files)
-            │   │   └── compressed/ # Compressed agents (3 files)
+            │   │   ├── verbose/    # Original verbose agents (4 files)
+            │   │   └── compressed/ # Compressed agents (4 files)
             │   └── verification/   # LLM understanding extracts
             └── references/
                 ├── examples.md     # Before/after examples
@@ -154,6 +154,7 @@ semantic-compressor/
 - `code-reviewer.md` (172 lines)
 - `db-specialist.md` (268 lines)
 - `security-auditor.md` (299 lines)
+- `devops-orchestrator.md` (1,737 lines)
 
 ### Compressed (After)
 Same names, 70-80% smaller, 100% understanding preserved.

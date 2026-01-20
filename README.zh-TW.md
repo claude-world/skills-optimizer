@@ -109,9 +109,9 @@ git submodule add https://github.com/claude-world/skills-optimizer.git .claude/s
 
 | 類型 | 原始 Tokens | 壓縮後 | 比例 | 理解度 |
 |------|-------------|--------|------|--------|
-| Skills | 6,480 | 1,480 | 4.4:1 | 100% ✓ |
-| Agents | 5,776 | 1,122 | 5.1:1 | 100% ✓ |
-| **總計** | **12,256** | **2,602** | **4.7:1** | **100% ✓** |
+| Skills (3) | 6,480 | 1,480 | 4.4:1 | 100% ✓ |
+| Agents (4) | 20,776 | 5,522 | 3.8:1 | 100% ✓ |
+| **總計** | **27,256** | **7,002** | **3.9:1** | **100% ✓** |
 
 ### 迭代率改善
 
@@ -138,8 +138,8 @@ semantic-compressor/
             │   │   ├── verbose/    # 原始冗長版 skills (3 檔案)
             │   │   └── compressed/ # 壓縮版 skills (3 檔案)
             │   ├── agents/
-            │   │   ├── verbose/    # 原始冗長版 agents (3 檔案)
-            │   │   └── compressed/ # 壓縮版 agents (3 檔案)
+            │   │   ├── verbose/    # 原始冗長版 agents (4 檔案)
+            │   │   └── compressed/ # 壓縮版 agents (4 檔案)
             │   └── verification/   # LLM 理解提取結果
             └── references/
                 ├── examples.md     # 壓縮前後範例
