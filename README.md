@@ -2,6 +2,8 @@
 
 > Compress Claude Code agents/skills with LLM-based quality assurance. Iterative 5-phase process ensures understanding is preserved.
 
+English | [繁體中文](README.zh-TW.md)
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## Why This Approach?
@@ -33,7 +35,7 @@ Copy the skill to your Claude Code configuration:
 
 ```bash
 # Clone the repository
-git clone https://github.com/anthropics/semantic-compressor.git
+git clone https://github.com/claude-world/skills-optimizer.git
 
 # Copy to your .claude directory
 cp -r semantic-compressor/.claude/skills/semantic-compressor ~/.claude/skills/
@@ -42,7 +44,7 @@ cp -r semantic-compressor/.claude/skills/semantic-compressor ~/.claude/skills/
 Or add as a git submodule to your project:
 
 ```bash
-git submodule add https://github.com/anthropics/semantic-compressor.git .claude/skills/semantic-compressor
+git submodule add https://github.com/claude-world/skills-optimizer.git .claude/skills/semantic-compressor
 ```
 
 ## Usage

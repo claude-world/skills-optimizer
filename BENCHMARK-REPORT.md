@@ -5,11 +5,11 @@ Generated: 2026-01-20
 ## Methodology: 5-Phase Quality Assurance Loop
 
 Each file goes through:
-1. **Phase 1**: Original Verification (用 claude -p 確認原始理解)
-2. **Phase 2**: Compress (按規則壓縮)
-3. **Phase 3**: Compressed Verification (用 claude -p 確認壓縮後理解)
-4. **Phase 4**: Compare & Decide (比較是否有資訊損失)
-5. **Phase 5**: Report (產生報告，或回 Phase 2 改善)
+1. **Phase 1**: Original Verification (confirm understanding with `claude -p`)
+2. **Phase 2**: Compress (apply compression rules)
+3. **Phase 3**: Compressed Verification (confirm understanding with `claude -p`)
+4. **Phase 4**: Compare & Decide (check for information loss)
+5. **Phase 5**: Report (generate report, or return to Phase 2 for improvement)
 
 ---
 
@@ -125,10 +125,10 @@ This ensures **semantic equivalence**, not just token reduction.
    - Using sub-agents in parallel reduces verification time by ~4x
    - Each sample verification runs independently
 
-5. **「必須保留清單」大幅降低迭代率**
-   - 舊規則：67% 需要迭代 (4/6)
-   - 新規則：0% 需要迭代 (0/3 重測)
-   - 關鍵：壓縮前先提取所有 triggers/commands/tools/formats，禁用 "etc."
+5. **MUST PRESERVE checklist dramatically reduces iteration rate**
+   - Old rules: 67% needed iteration (4/6)
+   - New rules: 0% needed iteration (0/3 retested)
+   - Key: Extract all triggers/commands/tools/formats before compressing, ban "etc."
 
 ---
 

@@ -2,7 +2,7 @@
 name: semantic-compressor
 description: |
   Compress agents/skills with quality assurance loop. Iterative 5-phase process ensures understanding preserved.
-  TRIGGERS: semantic-compressor, compress skill, optimize agent, reduce tokens, benchmark, 壓縮, 優化
+  TRIGGERS: semantic-compressor, compress skill, optimize agent, reduce tokens, benchmark
 user-invocable: true
 ---
 
@@ -14,7 +14,7 @@ Compress agents/skills while preserving understanding. Uses 5-phase iterative qu
 
 For EACH file to compress, execute ALL phases in order:
 
-### Phase 1: Original Verification (原始確認)
+### Phase 1: Original Verification
 
 **Goal**: Confirm Claude understands the original file correctly.
 
@@ -33,20 +33,20 @@ Output as structured YAML."
 
 Save output as `<name>.original-understanding.yaml`
 
-### Phase 2: Compress (壓縮)
+### Phase 2: Compress
 
 **Goal**: Apply compression rules to create compressed version.
 
-**⚠️ 必須保留清單 (MUST PRESERVE - 67% 的檔案因遺漏這些而需要迭代)**
+**⚠️ MUST PRESERVE Checklist (67% of files needed iteration due to missing these)**
 
 ```
 BEFORE compressing, extract and LIST these from original:
-□ ALL triggers (每個關鍵字都要保留)
-□ ALL commands (每個指令都要列出)
-□ ALL tools (每個工具都要列出)
-□ ALL supported formats/types (檔案格式、輸出格式、協議)
-□ ALL feature categories (功能分類不能省略)
-□ ALL database/language names (具體名稱不能用 "etc." 取代)
+□ ALL triggers (every keyword must be preserved)
+□ ALL commands (every command must be listed)
+□ ALL tools (every tool must be listed)
+□ ALL supported formats/types (file formats, output formats, protocols)
+□ ALL feature categories (capabilities must not be omitted)
+□ ALL database/language names (specific names cannot be replaced with "etc.")
 ```
 
 **Compression Rules:**
@@ -75,7 +75,7 @@ FOR agents:
   - Target: 2:1 ratio
 ```
 
-**Phase 2 Checklist (壓縮前檢查)**
+**Phase 2 Checklist (pre-compression verification)**
 ```
 Before writing compressed version, verify:
 ✓ Every trigger from original appears in compressed
@@ -87,7 +87,7 @@ Before writing compressed version, verify:
 
 Write compressed version to `<name>.compressed.md`
 
-### Phase 3: Compressed Verification (壓縮後確認)
+### Phase 3: Compressed Verification
 
 **Goal**: Confirm Claude understands the compressed version correctly.
 
@@ -106,7 +106,7 @@ Output as structured YAML."
 
 Save output as `<name>.compressed-understanding.yaml`
 
-### Phase 4: Compare & Decide (是否需改善)
+### Phase 4: Compare & Decide
 
 **Goal**: Compare original vs compressed understanding.
 
@@ -133,7 +133,7 @@ If NEEDS_IMPROVEMENT, specify what to add back."
 - If PASS → Phase 5 (Report)
 - If NEEDS_IMPROVEMENT → Return to Phase 2 with feedback
 
-### Phase 5: Report (產生報告)
+### Phase 5: Report
 
 **Goal**: Generate final comparison report.
 
