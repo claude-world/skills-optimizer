@@ -66,6 +66,39 @@ cp -r skills-optimizer/.claude/skills/semantic-compressor ~/.claude/skills/
 /semantic-compressor verify path/to/skill.md
 ```
 
+## 備份機制
+
+在任何壓縮操作前，自動建立備份以確保可安全回復：
+
+```bash
+# 備份位置
+.claude/backups/YYYYMMDD_HHMMSS/
+├── skills/          # 壓縮前的原始 skills
+└── agents/          # 壓縮前的原始 agents
+```
+
+**運作方式：**
+
+1. **自動掃描模式** (`/semantic-compressor`):
+   - 建立整個 `.claude/skills/` 和 `.claude/agents/` 的時間戳記備份
+   - 原地壓縮檔案
+   - 原始檔案保留在備份資料夾
+
+2. **單一檔案模式** (`/semantic-compressor path/to/file.md`):
+   - 在原始檔案旁建立 `file.md.backup`
+   - 或加入時間戳記備份資料夾（批次處理時）
+
+3. **回復**:
+   ```bash
+   # 從備份還原
+   cp -r .claude/backups/20260120_143000/skills/ .claude/skills/
+   cp -r .claude/backups/20260120_143000/agents/ .claude/agents/
+   ```
+
+4. **跳過已壓縮檔案**:
+   - 含 `# Compressed by semantic-compressor` 標頭的檔案會被跳過
+   - 防止重複壓縮
+
 ## 5 階段流程
 
 | 階段 | 動作 |

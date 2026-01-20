@@ -66,6 +66,39 @@ cp -r skills-optimizer/.claude/skills/semantic-compressor ~/.claude/skills/
 /semantic-compressor verify path/to/skill.md
 ```
 
+## Backup Mechanism
+
+Before any compression, automatic backups are created to ensure safe rollback:
+
+```bash
+# Backup location
+.claude/backups/YYYYMMDD_HHMMSS/
+├── skills/          # Original skills before compression
+└── agents/          # Original agents before compression
+```
+
+**How it works:**
+
+1. **Auto-scan mode** (`/semantic-compressor`):
+   - Creates timestamped backup of entire `.claude/skills/` and `.claude/agents/`
+   - Compresses files in-place
+   - Original files preserved in backup folder
+
+2. **Single file mode** (`/semantic-compressor path/to/file.md`):
+   - Creates `file.md.backup` alongside original
+   - Or adds to timestamped backup folder if running multiple files
+
+3. **Rollback**:
+   ```bash
+   # Restore from backup
+   cp -r .claude/backups/20260120_143000/skills/ .claude/skills/
+   cp -r .claude/backups/20260120_143000/agents/ .claude/agents/
+   ```
+
+4. **Skip already compressed**:
+   - Files with `# Compressed by semantic-compressor` header are skipped
+   - Prevents double-compression
+
 ## 5-Phase Workflow
 
 | Phase | Action |
