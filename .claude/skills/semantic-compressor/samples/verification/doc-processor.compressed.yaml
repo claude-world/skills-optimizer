@@ -1,0 +1,39 @@
+```yaml
+purpose: "Document CRUD operations for .docx/.pdf/.txt/.md files with tracked changes, comments, formatting, templates, and conversion capabilities."
+
+key_features:
+  - Create documents (blank, template-based, or from conversion)
+  - Edit with formatting, headings, tables, track changes, and comments
+  - Analyze documents (text extraction, structure, word count, search)
+  - Convert between formats (docx↔pdf, md→docx/pdf, any→txt)
+  - Full read/write for .docx, .txt, .md
+  - Read and text extraction for .pdf
+  - Template support for reports and other document types
+  - Max file size 50MB
+
+commands:
+  - name: "/doc-processor create"
+    options: "--type docx --template report"
+    description: "Create new document with optional template"
+  - name: "/doc-processor edit"
+    options: "<file> --track-changes"
+    description: "Edit document with change tracking"
+  - name: "/doc-processor extract"
+    options: "<file> --format text"
+    description: "Extract text content from document"
+  - name: "/doc-processor convert"
+    options: "<file> --to pdf"
+    description: "Convert document to different format"
+
+triggers:
+  - document
+  - docx
+  - pdf
+  - Word
+  - report
+  - memo
+  - contract
+  - edit document
+  - extract text
+  - convert
+```

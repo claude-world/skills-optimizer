@@ -1,0 +1,58 @@
+```yaml
+purpose: "Comprehensive document processing capabilities for working with various document formats including Word, PDF, plain text, RTF, and Markdown."
+
+key_features:
+  - Full Microsoft Word (.docx) support with formatting preservation
+  - PDF text extraction and basic manipulation
+  - Tracked changes and revision history management
+  - Comment insertion and annotation
+  - Table creation and manipulation
+  - Image embedding support
+  - Template-based document generation
+  - Format conversion between supported types
+  - Document structure analysis and statistics
+
+commands:
+  - name: "/doc-processor create"
+    description: "Create new documents from scratch or templates"
+    options:
+      - "--type <format>: Specify document format (docx, pdf, txt, etc.)"
+      - "--template <name>: Use a predefined template (e.g., report)"
+  
+  - name: "/doc-processor edit"
+    description: "Edit existing documents"
+    options:
+      - "<file_path>: Path to the document to edit"
+      - "--track-changes: Enable revision tracking"
+      - "--comment <text>: Add comment annotation"
+  
+  - name: "/doc-processor extract"
+    description: "Extract text content from documents"
+    options:
+      - "<file_path>: Path to the document"
+      - "--format <type>: Output format (text)"
+      - "--preserve-layout: Maintain original layout structure"
+  
+  - name: "/doc-processor convert"
+    description: "Convert documents between formats"
+    options:
+      - "<input_file>: Source document path"
+      - "--to <format>: Target format (pdf, docx, txt, etc.)"
+
+triggers:
+  - "document processing"
+  - "word document"
+  - "docx"
+  - "pdf extraction"
+  - "create report"
+  - "edit document"
+  - "convert document"
+  - "track changes"
+  - "document template"
+  - "extract text"
+  - "format conversion"
+  - "document analysis"
+  - "word count"
+  - "pdf to word"
+  - "markdown to pdf"
+```
