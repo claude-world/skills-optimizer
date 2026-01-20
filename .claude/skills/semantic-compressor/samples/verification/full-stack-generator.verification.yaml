@@ -1,0 +1,134 @@
+file: full-stack-generator
+date: 2026-01-20
+status: PASS
+
+original:
+  lines: 2757
+  tokens_est: ~24000
+
+compressed:
+  lines: 167
+  tokens_est: ~1400
+
+ratio: 16.5:1
+reduction: 94%
+iterations: 1
+
+verification:
+  triggers:
+    expected: 11
+    found: 11
+    items:
+      - full-stack
+      - scaffold
+      - generate app
+      - create project
+      - bootstrap
+      - new app
+      - starter
+      - boilerplate
+      - project generator
+      - web app
+      - application scaffold
+    status: PASS
+
+  frontend_frameworks:
+    expected: 6
+    found: 6
+    items:
+      - React
+      - Vue
+      - Next.js
+      - Nuxt
+      - Angular
+      - SvelteKit
+    status: PASS
+
+  backend_frameworks:
+    expected: 8
+    found: 8
+    items:
+      - Express
+      - Fastify
+      - NestJS
+      - FastAPI
+      - Django
+      - Gin
+      - Fiber
+      - Actix
+    status: PASS
+
+  commands:
+    expected: 11
+    found: 11
+    items:
+      - /full-stack-generator
+      - init
+      - frontend
+      - backend
+      - add-component
+      - add-page
+      - add-module
+      - add-endpoint
+      - database
+      - test
+      - devops
+    status: PASS
+
+  generation_phases:
+    expected: 6
+    found: 6
+    items:
+      - Init
+      - Frontend
+      - Backend
+      - Integration
+      - DevOps
+      - Docs
+    status: PASS
+
+  deployment_targets:
+    expected: 6
+    found: 6
+    items:
+      - AWS
+      - GCP
+      - Azure
+      - Vercel
+      - Railway
+      - Fly
+    status: PASS
+
+  databases:
+    found: 7+
+    items:
+      - PostgreSQL
+      - MySQL
+      - MongoDB
+      - SQLite
+      - SQL Server
+      - Oracle
+      - Cassandra
+    status: PASS
+
+  orms:
+    found: 9+
+    items:
+      - Prisma
+      - TypeORM
+      - Mongoose
+      - SQLAlchemy
+      - Tortoise
+      - GORM
+      - Ent
+      - Diesel
+      - SeaORM
+    status: PASS
+
+summary: |
+  All critical semantic elements preserved.
+  94% size reduction achieved through:
+  - Tables instead of verbose prose
+  - Concise YAML examples
+  - Consolidated command reference
+  - Eliminated redundant explanations

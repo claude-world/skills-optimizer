@@ -34,9 +34,9 @@ Original (1,471 tokens) → Compressed (420 tokens) = 3.5:1 ratio
 
 | Type | Files | Original | Compressed | Ratio |
 |------|-------|----------|------------|-------|
-| Skills | 3 | 6,480 tokens | 1,480 tokens | 4.4:1 |
+| Skills | 4 | 30,480 tokens | 2,880 tokens | 10.6:1 |
 | Agents | 4 | 20,776 tokens | 5,522 tokens | 3.8:1 |
-| **Total** | **7** | **27,256 tokens** | **7,002 tokens** | **3.9:1** |
+| **Total** | **8** | **51,256 tokens** | **8,402 tokens** | **6.1:1** |
 
 All files achieved **100% semantic understanding preservation**.
 
@@ -98,6 +98,7 @@ Before compressing, verify these are preserved:
 | db-specialist | Agent | 268 lines | 53 lines | 5.1:1 |
 | security-auditor | Agent | 299 lines | 52 lines | 5.8:1 |
 | devops-orchestrator | Agent | 1,737 lines | 515 lines | 3.4:1 |
+| **full-stack-generator** | **Skill** | **2,757 lines** | **167 lines** | **16.5:1** |
 
 ## Project Structure
 
@@ -111,7 +112,7 @@ semantic-compressor/
 └── .claude/skills/semantic-compressor/
     ├── SKILL.md              # Main skill definition
     ├── samples/
-    │   ├── skills/           # 3 verbose + 3 compressed
+    │   ├── skills/           # 4 verbose + 4 compressed
     │   ├── agents/           # 4 verbose + 4 compressed
     │   └── verification/     # LLM understanding extracts
     └── references/

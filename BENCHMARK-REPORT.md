@@ -17,9 +17,9 @@ Each file goes through:
 
 | Metric | Value |
 |--------|-------|
-| Total Samples | 7 |
-| Compression Ratio | 4.99:1 avg |
-| Token Reduction | 80% avg |
+| Total Samples | 8 |
+| Compression Ratio | 6.1:1 avg |
+| Token Reduction | 84% avg |
 | **Understanding Preserved** | **100%** |
 
 ## Detailed Results
@@ -31,6 +31,7 @@ Each file goes through:
 | doc-processor | 153 → 42 | 1,471 → 420 | 3.5:1 | 2 | ✓ PASS |
 | api-tester | 316 → 68 | 2,302 → 520 | 4.4:1 | 2 | ✓ PASS |
 | code-analyzer | 349 → 65 | 2,707 → 540 | 5.0:1 | 2 | ✓ PASS |
+| **full-stack-generator** | **2,757 → 167** | **~24,000 → ~1,400** | **16.5:1** | **1** | **✓ PASS** |
 
 ### Agents
 

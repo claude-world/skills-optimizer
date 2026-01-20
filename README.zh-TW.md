@@ -34,9 +34,9 @@ Claude Code 的 agents 和 skills 可能變得 token 量很大，增加成本和
 
 | 類型 | 檔案數 | 原始 | 壓縮後 | 比例 |
 |------|--------|------|--------|------|
-| Skills | 3 | 6,480 tokens | 1,480 tokens | 4.4:1 |
+| Skills | 4 | 30,480 tokens | 2,880 tokens | 10.6:1 |
 | Agents | 4 | 20,776 tokens | 5,522 tokens | 3.8:1 |
-| **總計** | **7** | **27,256 tokens** | **7,002 tokens** | **3.9:1** |
+| **總計** | **8** | **51,256 tokens** | **8,402 tokens** | **6.1:1** |
 
 所有檔案皆達成 **100% 語義理解保留**。
 
@@ -98,6 +98,7 @@ cp -r skills-optimizer/.claude/skills/semantic-compressor ~/.claude/skills/
 | db-specialist | Agent | 268 行 | 53 行 | 5.1:1 |
 | security-auditor | Agent | 299 行 | 52 行 | 5.8:1 |
 | devops-orchestrator | Agent | 1,737 行 | 515 行 | 3.4:1 |
+| **full-stack-generator** | **Skill** | **2,757 行** | **167 行** | **16.5:1** |
 
 ## 專案結構
 
@@ -111,7 +112,7 @@ semantic-compressor/
 └── .claude/skills/semantic-compressor/
     ├── SKILL.md              # 主要 skill 定義
     ├── samples/
-    │   ├── skills/           # 3 verbose + 3 compressed
+    │   ├── skills/           # 4 verbose + 4 compressed
     │   ├── agents/           # 4 verbose + 4 compressed
     │   └── verification/     # LLM 理解提取結果
     └── references/
