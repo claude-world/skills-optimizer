@@ -4,6 +4,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![GitHub Stars](https://img.shields.io/github/stars/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/stargazers)
+[![Latest Release](https://img.shields.io/github/v/release/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/releases/latest)
+[![claude-world.com](https://img.shields.io/badge/claude--world.com-link-0A66C2)](https://claude-world.com)
 
 [English](README.md) | 繁體中文
 
@@ -179,7 +182,7 @@ semantic-compressor/
 |------|------|
 | [CF Browser](https://github.com/claude-world/cf-browser) | 開源代理服務，提供 Claude Code 9 個 MCP 工具以存取 JavaScript 渲染的網頁 |
 | [trend-pulse](https://github.com/claude-world/trend-pulse) | 免費趨勢話題聚合器 + AI 內容指南 -- 15 個來源、零認證、專利評分 |
-| [Claude Skill Antivirus](https://github.com/gn00295120/claude-skill-antivirus) | Claude Code Skills 安全掃描器 -- 安裝第三方 skills 前偵測惡意模式 |
+| [Claude Skill Antivirus](https://github.com/claude-world/claude-skill-antivirus) | Claude Code Skills 安全掃描器 -- 安裝第三方 skills 前偵測惡意模式 |
 
 ## 授權
 

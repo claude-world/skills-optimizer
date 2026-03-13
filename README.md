@@ -4,6 +4,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![GitHub Stars](https://img.shields.io/github/stars/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/stargazers)
+[![Latest Release](https://img.shields.io/github/v/release/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/releases/latest)
+[![claude-world.com](https://img.shields.io/badge/claude--world.com-link-0A66C2)](https://claude-world.com)
 
 English | [繁體中文](README.zh-TW.md)
 
@@ -179,7 +182,7 @@ Other Claude Code tools from the community:
 |---------|-------------|
 | [CF Browser](https://github.com/claude-world/cf-browser) | Open-source proxy giving Claude Code 9 MCP tools for JavaScript-rendered web pages |
 | [trend-pulse](https://github.com/claude-world/trend-pulse) | Free trending topics aggregator + AI content guides -- 15 sources, zero auth, patent-based scoring |
-| [Claude Skill Antivirus](https://github.com/gn00295120/claude-skill-antivirus) | Security scanner for Claude Code skills -- detects malicious patterns before installing third-party skills |
+| [Claude Skill Antivirus](https://github.com/claude-world/claude-skill-antivirus) | Security scanner for Claude Code skills -- detects malicious patterns before installing third-party skills |
 
 ## License
 
