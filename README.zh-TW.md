@@ -3,7 +3,7 @@
 > 一個 Claude Code skill，透過 LLM 驗證的品質保證機制，在壓縮 agents 和 skills 的同時保留語義理解。
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.0-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
 
 [English](README.md) | 繁體中文
 
@@ -162,12 +162,12 @@ semantic-compressor/
 
 ## 需求
 
-- Claude Code CLI 2.0+ 並支援 `claude -p`
+- Claude Code CLI 2.1+ 並支援 `claude -p`
 - Claude API 存取權限（任何方案）
 
 ## 相容性
 
-- **Claude Code** 2.0+（已於 2.1.x 測試）
+- **Claude Code** 2.1+（已於 2.1.x 測試）
 - 適用於任何 `.md` 格式的 skill 或 agent 定義
 - 使用 `claude -p`（管道模式）進行驗證 -- 所有 Claude Code 版本均支援
 

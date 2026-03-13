@@ -3,7 +3,7 @@
 > A Claude Code skill that compresses agents and skills while preserving semantic understanding through LLM-verified quality assurance.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.0-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
+[![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1-blueviolet)](https://docs.anthropic.com/en/docs/claude-code)
 
 English | [繁體中文](README.zh-TW.md)
 
@@ -33,7 +33,7 @@ Original (1,471 tokens) → Compressed (420 tokens) = 3.5:1 ratio
 
 ## Compatibility
 
-- **Claude Code** 2.0+ (tested with 2.1.x)
+- **Claude Code** 2.1+ (tested with 2.1.x)
 - Works with any `.md`-based skill or agent definition
 - Uses `claude -p` (pipe mode) for verification -- available in all Claude Code versions
 
@@ -168,7 +168,7 @@ semantic-compressor/
 
 ## Requirements
 
-- Claude Code CLI 2.0+ with `claude -p` support
+- Claude Code CLI 2.1+ with `claude -p` support
 - Claude API access (any tier)
 
 ## Related Projects
