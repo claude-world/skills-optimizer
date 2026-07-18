@@ -343,7 +343,7 @@ Typical performance:
 
 ## See Also
 
-- [Rule Reference](rules/index.md)
-- [Security Scanning Guide](guides/security.md)
-- [Custom Rules Tutorial](guides/custom-rules.md)
-- [CI/CD Integration](guides/ci-cd.md)
+- Rule reference: `rules/index.md`
+- Security scanning guide: `guides/security.md`
+- Custom rules tutorial: `guides/custom-rules.md`
+- CI/CD integration: `guides/ci-cd.md`

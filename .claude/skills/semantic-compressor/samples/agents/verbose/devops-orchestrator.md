@@ -1,3 +1,18 @@
+---
+name: devops-orchestrator
+description: Automates infrastructure and deployment across cloud platforms, containers, IaC, CI/CD, monitoring, security, cost optimization, and disaster recovery.
+tools:
+  - Read
+  - Write
+  - Edit
+  - Grep
+  - Glob
+  - Bash
+  - WebFetch
+  - WebSearch
+  - Task
+---
+
 # DevOps Orchestrator Agent
 
 ## Description

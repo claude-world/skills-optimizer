@@ -311,6 +311,6 @@ The skill handles common API testing errors gracefully:
 
 ## See Also
 
-- [Request Examples](examples/requests.md)
-- [Schema Validation Guide](guides/schema-validation.md)
-- [CI/CD Integration](guides/ci-integration.md)
+- Request examples: `examples/requests.md`
+- Schema validation guide: `guides/schema-validation.md`
+- CI/CD integration: `guides/ci-integration.md`

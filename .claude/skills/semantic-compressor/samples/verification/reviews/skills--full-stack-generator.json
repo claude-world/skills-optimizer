@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "id": "skills/full-stack-generator",
+  "verdict": "PASS",
+  "original_sha256": "40e3700f59e09bf3380a2c56bd1341cd326850b9299db633bf4ddeac6e2e5084",
+  "candidate_sha256": "3f9643bc6fb410de1d8df62e936d8d754ecfd1856c1bf619d8c51a0bb2e38a21",
+  "inventory_sha256": "50153a0c305b2fb99cc39cfc54d4e7033ec69d78df8c0fa2822ad50741ce1e7c",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent read-only comparison of the complete 2,757-line source, current candidate, and all 44 inventory concepts found the stack matrices, option semantics, destructive migration boundary, configuration, phases, generated artifacts, security and authorization invariants, JWT lifecycle, CI dependencies and branch gate, example constants, troubleshooting scope, and references preserved without unsupported capabilities."
+  ],
+  "reviewer": "benchmark-test-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "clean-architecture-principles",
+      "source": "Separation of Concerns",
+      "candidate": "Clean architecture retains separation of concerns, dependency inversion, single responsibility, open/closed, and interface segregation principles"
+    },
+    {
+      "concept_id": "interactive-wizard-flow",
+      "source": "This command launches an interactive wizard that guides you through:",
+      "candidate": "The base command launches a wizard for project metadata, frontend, backend, database, authentication, features, and deployment."
+    },
+    {
+      "concept_id": "init-default-stack",
+      "source": "Creates a new project with sensible defaults:",
+      "candidate": "`init` defaults to Next.js+TypeScript, NestJS, PostgreSQL+Prisma, JWT, Jest, and Playwright"
+    },
+    {
+      "concept_id": "frontend-stack-matrix",
+      "source": "The generator supports the following frontend frameworks and libraries:",
+      "candidate": "React 18.2: hooks; Redux Toolkit/Zustand/React Context; React Router v6 lazy routes; Tailwind/Styled Components/CSS Modules; React Hook Form+Zod; TanStack Query; Jest/React Testing Library/Cypress."
+    },
+    {
+      "concept_id": "backend-stack-matrix",
+      "source": "The generator supports the following backend frameworks:",
+      "candidate": "Express 4.18/TypeScript: clean/MVC/hexagonal; Zod/Joi; JWT/OAuth2/session; TypeORM/Prisma/Mongoose; PostgreSQL/MySQL/MongoDB; Redis; Winston/Pino; Swagger/OpenAPI; express-rate-limit; Helmet/CORS/CSP; Jest/Supertest."
+    },
+    {
+      "concept_id": "database-choice-boundary",
+      "source": "type: postgresql | mysql | mongodb",
+      "candidate": "Supported database choices are exactly PostgreSQL, MySQL, and MongoDB, subject to each framework table above."
+    },
+    {
+      "concept_id": "frontend-option-semantics",
+      "source": "`--typescript` / `--no-typescript`: Enable/disable TypeScript (default: enabled)",
+      "candidate": "Frontend options: --typescript/--no-typescript (enabled by default); --styling tailwind|css-modules|styled-components; --state redux|zustand|pinia|ngrx; --testing jest|vitest."
+    },
+    {
+      "concept_id": "component-page-options",
+      "source": "`--with-tests`: Generate test files",
+      "candidate": "Components also accept --path, --with-tests, --with-stories. Pages accept --layout, --protected, --with-api."
+    },
+    {
+      "concept_id": "backend-option-semantics",
+      "source": "`--database <type>`: Database type (postgresql, mysql, mongodb)",
+      "candidate": "Backend options: --database postgresql|mysql|mongodb; --orm prisma|typeorm|sqlalchemy|gorm; --auth jwt|oauth2|session; --docker."
+    },
+    {
+      "concept_id": "module-endpoint-options",
+      "source": "`--with-crud`: Generate CRUD operations",
+      "candidate": "Modules also accept --with-crud, --with-events, --with-queue. Endpoints accept --methods, --auth, --validation."
+    },
+    {
+      "concept_id": "model-option-semantics",
+      "source": "`--fields <spec>`: Field definitions",
+      "candidate": "Models accept --fields, --relations, --timestamps, --soft-delete."
+    },
+    {
+      "concept_id": "fresh-migration-destructive",
+      "source": "`--fresh`: Drop all tables and re-run migrations",
+      "candidate": "The --fresh migration drops all tables before rerunning migrations."
+    },
+    {
+      "concept_id": "test-generation",
+      "source": "/full-stack-generator test add unit UserService",
+      "candidate": "/full-stack-generator test add unit UserService"
+    },
+    {
+      "concept_id": "devops-generation",
+      "source": "docker-compose.prod.yml",
+      "candidate": "Docker generation creates per-service Dockerfile, docker-compose.yml, docker-compose.prod.yml, and .dockerignore. CI targets GitHub Actions, GitLab, Jenkins, or CircleCI."
+    },
+    {
+      "concept_id": "project-configuration",
+      "source": "version: 1.0.0",
+      "candidate": "project: { name: my-awesome-app, description: \"A full-stack web application\", version: 1.0.0, author: \"Your Name\", license: MIT }"
+    },
+    {
+      "concept_id": "frontend-configuration",
+      "source": "locales:",
+      "candidate": "routing: { type: app-router, middleware: true, i18n: { enabled: true, locales: [en, zh-TW, ja], default: en } }"
+    },
+    {
+      "concept_id": "backend-api-configuration",
+      "source": "prefix: /api/v1",
+      "candidate": "api: { type: rest, versioning: true, prefix: /api/v1, documentation: { enabled: true, path: /docs } }"
+    },
+    {
+      "concept_id": "backend-operational-configuration",
+      "source": "ttl: 3600",
+      "candidate": "caching: { enabled: true, store: redis, ttl: 3600, host: localhost, port: 6379 }"
+    },
+    {
+      "concept_id": "model-schema-contract",
+      "source": "model RefreshToken {",
+      "candidate": "Models preserve User/Post/Product/Order/OrderItem/Category fields, relations, indexes, unique/optional/default values, role USER|ADMIN, order states PENDING|PROCESSING|SHIPPED|DELIVERED|CANCELLED, decimal(10,2), and refresh-token storage."
+    },
+    {
+      "concept_id": "devops-promotion-gate",
+      "source": "approval_required: true",
+      "candidate": "production: { branch: main, auto_deploy: false, approval_required: true }"
+    },
+    {
+      "concept_id": "deployment-monitoring",
+      "source": "region: us-east-1",
+      "candidate": "region: us-east-1"
+    },
+    {
+      "concept_id": "environment-secret-boundary",
+      "source": "JWT_SECRET: ${JWT_SECRET}",
+      "candidate": "Treat development values as placeholders; staging/production secrets must come from environment secret management."
+    },
+    {
+      "concept_id": "phase-init",
+      "source": "### Phase 1: Project Initialization",
+      "candidate": "1. Init: create root/frontend/backend/shared/docs/config directories, Git/.gitignore/initial commit, package/workspace files, .env.example, environment configs, secret management."
+    },
+    {
+      "concept_id": "phase-frontend",
+      "source": "### Phase 2: Frontend Generation",
+      "candidate": "2. Frontend: install/configure framework, TypeScript/build tools, UI/theme, stores/devtools, router/guards, API client/hooks/interceptors, test utilities/examples."
+    },
+    {
+      "concept_id": "phase-backend",
+      "source": "### Phase 3: Backend Generation",
+      "candidate": "3. Backend: install/configure framework, ORM/driver/models/migrations, auth middleware/endpoints/token management, controllers/services/repositories/DI, validation schemas/middleware, Swagger/OpenAPI UI/spec, tests."
+    },
+    {
+      "concept_id": "phase-integration",
+      "source": "### Phase 4: Integration",
+      "candidate": "4. Integration: generate API/shared types, validate contracts, connect URLs/proxy/CORS, token refresh and protected routes."
+    },
+    {
+      "concept_id": "phase-devops",
+      "source": "### Phase 5: DevOps Configuration",
+      "candidate": "5. DevOps: multi-stage Docker, CI testing/deployment, optional Terraform IaC, cloud resources, monitoring."
+    },
+    {
+      "concept_id": "phase-documentation",
+      "source": "### Phase 6: Documentation",
+      "candidate": "6. Docs: README.md, CONTRIBUTING.md, API/auth/error reference, deployment guide, architecture/component/data-flow diagrams, code style/PR/testing guidance."
+    },
+    {
+      "concept_id": "generated-tree-contract",
+      "source": "frontend/",
+      "candidate": "Frontend and backend trees separate app/components/hooks/stores/lib/types/tests from modules/common/config/database/tests; shared API types connect them."
+    },
+    {
+      "concept_id": "generated-format-contract",
+      "source": "Create docker-compose files",
+      "candidate": "Generated formats include YAML, JSON, TypeScript/JavaScript, Prisma schema/migrations, Markdown, .env files, Dockerfile/docker-compose, OpenAPI, HTML docs, shell/deploy scripts, and optional Terraform."
+    },
+    {
+      "concept_id": "request-security",
+      "source": "Helmet, CORS, CSP headers",
+      "candidate": "Validate and whitelist requests; use Helmet, CORS, CSP, CSRF, and rate limiting."
+    },
+    {
+      "concept_id": "password-and-authorization",
+      "source": "bcrypt.hash(createUserDto.password, 10)",
+      "candidate": "Hash new/updated passwords with bcrypt cost 10; never return password fields. Users update only themselves unless Role.ADMIN; admin-only create/delete routes use guards."
+    },
+    {
+      "concept_id": "auth-error-status-contract",
+      "source": "Invalid credentials",
+      "candidate": "Login returns the same “Invalid credentials” response for missing users and bad passwords. Duplicate registration is 409; successful registration is 201; login is 200; invalid credentials are 401."
+    },
+    {
+      "concept_id": "jwt-lifecycle",
+      "source": "JWT_ACCESS_SECRET",
+      "candidate": "Issue separate JWT access/refresh secrets with 15m/7d TTLs; store refresh tokens with expiry, reject missing/expired stored tokens as “Invalid refresh token,” rotate/delete the old token on refresh, delete matching tokens on logout, and convert exp seconds with ×1000."
+    },
+    {
+      "concept_id": "invalid-refresh-rejection",
+      "source": "Invalid refresh token",
+      "candidate": "reject missing/expired stored tokens as “Invalid refresh token,”"
+    },
+    {
+      "concept_id": "generated-quality-invariants",
+      "source": "Accessibility compliance",
+      "candidate": "API types, CORS, auth refresh, protected routes, validation, Swagger/OpenAPI, dependency injection, clean separation, strict TypeScript, accessibility, i18n, and tests are generated—not optional prose."
+    },
+    {
+      "concept_id": "ci-runtime-contract",
+      "source": "needs: [lint, test]",
+      "candidate": "Reference CI uses Node 20, pnpm 8, PostgreSQL 15 on 5432, Redis 7 on 6379, health interval 10s, timeout 5s, retries 5; coverage target is 80%. Build retains `needs: [lint, test]`; deploy retains `needs: [build]` and `refs/heads/main`."
+    },
+    {
+      "concept_id": "ui-example-constants",
+      "source": "focus-visible:ring-2",
+      "candidate": "UI example retains focus ring 2, ring offset 2, opacity 50, primary hover 90, and button heights 9/10/11; pagination defaults page 1/limit 10. These are example constants, not universal policy."
+    },
+    {
+      "concept_id": "container-build-contract",
+      "source": "RUN pnpm install --frozen-lockfile",
+      "candidate": "Build/container command details retain pnpm install --frozen-lockfile, Docker COPY --from=deps and COPY --from=builder stages, plus PostgreSQL health flags --health-cmd, --health-interval 10s, --health-timeout 5s, and --health-retries 5."
+    },
+    {
+      "concept_id": "example-project-recipes",
+      "source": "--features subscription,teams,billing",
+      "candidate": "--features subscription,teams,billing"
+    },
+    {
+      "concept_id": "database-troubleshooting",
+      "source": "docker-compose ps",
+      "candidate": "Database errors: verify service and connection string."
+    },
+    {
+      "concept_id": "jwt-troubleshooting",
+      "source": "randomBytes(64)",
+      "candidate": "Auth errors: verify both JWT secrets and regenerate with 64 random bytes."
+    },
+    {
+      "concept_id": "build-troubleshooting-scope",
+      "source": "rm -rf node_modules",
+      "candidate": "Build errors: clear only the listed local caches, reinstall, and rebuild."
+    },
+    {
+      "concept_id": "reference-links",
+      "source": "https://nextjs.org/docs",
+      "candidate": "References: [Next.js](https://nextjs.org/docs), [NestJS](https://docs.nestjs.com), [Prisma](https://www.prisma.io/docs), [Tailwind CSS](https://tailwindcss.com/docs)."
+    }
+  ]
+}

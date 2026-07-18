@@ -1,183 +1,126 @@
-# Compression Strategies
+# Safe Compression Strategies
 
-## 1. Skill Description Compression
+Use these strategies only after completing the preservation inventory. They apply to Claude Code skill and agent Markdown, not source code, arbitrary documents, or conversation history.
 
-### Trigger-Preserve Algorithm
-```
-1. EXTRACT trigger words (file extensions, action verbs, domain terms)
-2. REMOVE filler: "This skill", "helps you", "allows users to", "Use when"
-3. CONVERT sentences → keyword lists with separators
-4. MERGE synonyms: "create/make/generate" → "create"
-5. VALIDATE: ensure all original triggers still present
-```
+## Priority order
 
-### Compression Patterns
-| Pattern | Before | After |
-|---------|--------|-------|
-| Passive → Active | "can be used to edit" | "edit" |
-| Verbose trigger | "Use this when working with" | "For:" |
-| Redundant category | "file types including .pdf, .docx" | ".pdf/.docx" |
-| Feature list | "supports X, Y, and Z" | "X/Y/Z" |
+1. Preserve behavior and safety boundaries.
+2. Preserve operational metadata and literal contracts.
+3. Keep the result easy for an agent to follow.
+4. Reduce repeated or non-actionable wording.
+5. Improve the ratio only while the first four remain true.
 
-## 2. DICE Context Compression
+A smaller file is worse if it changes activation, permissions, supported operations, failure behavior, or user expectations.
 
-### Drop Rules
-- Greetings: "Hi", "Hello", "Thanks"
-- Acknowledgments: "Got it", "Sure", "I understand"
-- Failed attempts: keep only final working approach
-- Repetition: keep first mention only
-- Meta-commentary: "Let me think...", "I'll try..."
+## Frontmatter
 
-### Implicit Conversion
-```
-EXPLICIT: "The user said they want to build a REST API"
-IMPLICIT: goal=REST_API
+The control script permits rewriting only `description` and `when_to_use`. Keep all other fields value-equivalent, including unknown fields.
 
-EXPLICIT: "User prefers Python over JavaScript"
-IMPLICIT: lang=Python
+For descriptions:
 
-EXPLICIT: "They mentioned it needs to be fast"
-IMPLICIT: constraint=perf
-```
+- Put the main capability first.
+- State when to use the skill with concrete user intents.
+- Preserve exact activation phrases recorded under `literals.triggers`.
+- Remove promotional adjectives and duplicated feature prose.
+- Do not merge distinct trigger words merely because they are synonyms; models may match them differently.
+- Do not add a capability just to make the description sound complete.
 
-### Consolidation Templates
-```
-Multi-turn decision:
-  U: "Should we use React?"
-  A: "React or Vue both work"
-  U: "Let's go with React"
-  → decision: framework=React
+Example:
 
-Error-recovery:
-  A: [tried X, failed]
-  A: [tried Y, failed]
-  A: [tried Z, worked]
-  → approach=Z (X,Y failed)
-```
-
-### Extraction Schema
 ```yaml
-facts:
-  - type: requirement|decision|constraint|blocker
-    key: short_identifier
-    value: compressed_value
-    confidence: high|medium|low
+# Before
+description: This comprehensive skill helps developers carefully review pull requests and can be used whenever someone asks for a PR review, code review, change audit, or merge readiness assessment.
+
+# After
+description: Review pull requests for correctness, security, maintainability, and merge readiness. Use for PR review, code review, change audit, or merge readiness requests.
 ```
 
-## 3. Hierarchical Output Compression
+## Instruction body
 
-### L0 Ultra (<15 tokens)
-Single actionable insight or decision.
-```
-Input: [500 word analysis of database options]
-L0: "Use PostgreSQL: best fit for ACID + JSON needs"
-```
+### Safe reductions
 
-### L1 Brief (<50 tokens)
-Key findings as terse list.
-```
-L1: "DB choice: PostgreSQL
-    - ACID compliance ✓
-    - JSON support ✓
-    - Team expertise ✓
-    - Cost: ~$200/mo"
-```
+- Replace repeated explanations with one precise instruction.
+- Convert prose sequences into numbered steps.
+- Merge duplicate examples only when the remaining example covers every distinct branch.
+- Replace narrative introductions with the actual precondition or action.
+- Move large optional details to a referenced file when the entrypoint clearly says when to read it.
+- Use a compact table for repeated mappings with identical columns.
+- Keep one canonical output schema instead of describing it several times.
 
-### L2 Standard (<200 tokens)
-Structured summary with context.
-```
-L2: "## Recommendation: PostgreSQL
+### Unsafe reductions
 
-Selected over MongoDB (lacks ACID) and MySQL (weaker JSON).
+- Dropping “minor” flags, commands, tools, formats, triggers, or limitations.
+- Replacing a concrete list with “etc.”, “and more,” or “such as.”
+- Collapsing the newest corrected decision into an older statement.
+- Removing failed attempts when they explain a blocker or prevent repeating a harmful action.
+- Rewriting exact errors, security requirements, paths, or numerical thresholds.
+- Turning optional behavior into a requirement, or a requirement into advice.
+- Summarizing code in a way that changes executable syntax.
+- Adding modern tools, platforms, or best practices that were not in the source.
 
-Key factors:
-1. Transaction requirements → need ACID
-2. Semi-structured data → need JSON columns
-3. Team has Postgres experience
+## Skill-specific guidance
 
-Trade-off: Higher ops complexity vs. flexibility.
+Retain:
 
-Next: provision RDS instance, est. $200/mo"
-```
+- every top-level workflow state and branch;
+- all invocation modes and argument grammar;
+- trigger and non-trigger boundaries;
+- tool names and permission implications;
+- output schemas, filenames, and paths;
+- retry, stop, failure, and rollback behavior;
+- references and the conditions for loading them.
 
-## 4. Code Compression Modes
+Descriptions are activation metadata, not a marketing summary. A concise description that drops a near-match trigger can make the skill effectively unusable even if the body is perfect.
 
-### Signature-Only
-```python
-# BEFORE
-def calculate_total(items: List[Item], tax_rate: float = 0.1) -> float:
-    """Calculate total price including tax."""
-    subtotal = sum(item.price * item.quantity for item in items)
-    return subtotal * (1 + tax_rate)
+## Agent-specific guidance
 
-# AFTER (signature-only)
-def calculate_total(items: List[Item], tax_rate: float = 0.1) -> float: ...
-```
+Real Claude Code agents require valid YAML frontmatter. Preserve the full operational contract before shortening the body:
 
-### Interface Mode
-```python
-# Extract public API only
-class OrderService:
-    def create_order(self, items: List[Item]) -> Order: ...
-    def get_order(self, order_id: str) -> Optional[Order]: ...
-    def cancel_order(self, order_id: str) -> bool: ...
-    # Private methods omitted
-```
+- `name` and `description`;
+- tool and disallowed-tool lists;
+- model, effort, permission mode, and turn limits;
+- hooks, MCP servers, skills, memory, isolation, and background behavior;
+- all unknown or future frontmatter keys.
 
-### Delta Mode
-```diff
-# Only changes + minimal context
-class OrderService:
-    # ... unchanged ...
-+   def refund_order(self, order_id: str, reason: str) -> Refund:
-+       """New: process refund for order."""
-+       ...
-    # ... unchanged ...
-```
+In the body, keep role boundaries, process, expected evidence, output format, escalation conditions, and limitations. Do not replace an existing tool with a newer or “better” one.
 
-## 5. Document Compression Modes
+## Tables
 
-### ToC Mode
-```
-# Original: 5000 word technical spec
-# Compressed:
-1. Overview - System handles real-time event processing
-2. Architecture - Kafka + Flink pipeline
-3. Data Model - Event schema with 12 fields
-4. API - REST endpoints for ingestion/query
-5. Deployment - K8s with auto-scaling
-6. Monitoring - Prometheus + Grafana dashboards
-```
+Tables help when several items share a stable schema. They hurt when a cell becomes a dense paragraph or when qualifiers disappear.
 
-### Entity Mode
-```yaml
-entities:
-  systems: [Kafka, Flink, PostgreSQL, Redis]
-  actions: [ingest, process, store, query]
-  constraints: [<100ms latency, 10k events/sec]
-  stakeholders: [data-team, platform-team]
-relations:
-  - Kafka → Flink: stream
-  - Flink → PostgreSQL: persist
-  - Redis: cache layer
-```
+Use a table for:
 
-## 6. Compression Quality Metrics
+- command → behavior → writes?
+- status → meaning → next action;
+- supported format → capability → limitation;
+- severity → criteria → response.
 
-### Information Retention Score
-```
-IRS = (key_facts_after / key_facts_before) * 100
+Keep prose or bullets for conditional logic, safety rules, and steps whose order matters.
 
-Target:
-- Skill descriptions: IRS > 95%
-- Context handoff: IRS > 85%
-- Report summaries: IRS > 80%
-```
+## Examples
 
-### Actionability Score
-```
-AS = actionable_items_preserved / actionable_items_original
+An example can be removed only if it adds no unique literal, branch, edge case, or output requirement. Before deleting an example, check it against every inventory category and concept.
 
-All compression should maintain AS = 100%
-(Never lose action items in compression)
-```
+When one example remains:
+
+- prefer the one with the most representative input;
+- retain exact commands and output shape;
+- keep negative controls and failure examples when they define a boundary;
+- do not change placeholder syntax or quote style if consumers may copy it.
+
+## Tiny files
+
+Some well-written files cannot safely reach 2:1. Make one careful candidate, run the gates, and return `NOT_COMPRESSIBLE` after at most three drafts if further reduction would remove meaning. Do not pad the original, minify Markdown into unreadable text, or hide content in generated files to manufacture a ratio.
+
+## Reviewer checklist
+
+Before sending a candidate to the independent reviewer:
+
+- The opening frontmatter delimiter remains line 1 when the source has frontmatter.
+- All inventory categories were explicitly reviewed.
+- Every literal appears in both source and candidate.
+- Every concept has exact, locatable source and candidate excerpts.
+- No unsupported additions appear.
+- No requirement strength, ordering, or failure behavior changed.
+- The candidate can stand alone without the source.
+- Supporting references remain reachable.

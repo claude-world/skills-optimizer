@@ -1,0 +1,188 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "1aa7cf4882ca655dc908a723e0c2b2c41816d7b8a372fdc883865a57138e8121",
+  "literals": {
+    "triggers": [
+      "API testing",
+      "API development",
+      "RESTful APIs",
+      "GraphQL"
+    ],
+    "commands": [
+      "/api-tester get https://api.example.com/users",
+      "/api-tester post https://api.example.com/users --body '{\"name\":\"John\"}'",
+      "/api-tester run collection.yaml --env staging",
+      "/api-tester validate response.json --schema user.schema.json",
+      "/api-tester get https://api.example.com/protected --auth bearer:token123",
+      "/api-tester chain create-and-get.yaml",
+      "/api-tester load https://api.example.com/users --requests 100 --concurrency 10",
+      "/api-tester docs collection.yaml --output api-docs.md"
+    ],
+    "tools": [
+      "WebSockets",
+      "gRPC",
+      "OAuth 2.0",
+      "X-API-Key",
+      "JSON Schema"
+    ],
+    "formats": [
+      "REST",
+      "GraphQL",
+      "JSON",
+      "XML",
+      "form-data",
+      "raw",
+      ".yaml",
+      ".json",
+      ".md"
+    ],
+    "paths": [
+      "https://api.example.com/users",
+      "collection.yaml",
+      "response.json",
+      "user.schema.json",
+      "https://api.example.com/protected",
+      "create-and-get.yaml",
+      "api-docs.md",
+      "GET https://api.example.com/users/123",
+      "localhost:3000",
+      "/users",
+      "examples/requests.md",
+      "guides/schema-validation.md",
+      "guides/ci-integration.md"
+    ],
+    "numbers": [
+      "--requests 100 --concurrency 10",
+      "status == 200",
+      "201",
+      "time < 500",
+      "body.items.length >= 10",
+      "245ms",
+      "12ms",
+      "23ms",
+      "89ms",
+      "156ms",
+      "34ms",
+      "1.2KB",
+      "8080",
+      "10MB"
+    ],
+    "error_messages": [],
+    "security_rules": [
+      "hardcode",
+      "sensitive values",
+      "manual browser interaction",
+      "10MB",
+      "GraphQL subscriptions"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "rest-method-coverage",
+      "description": "REST requests support GET, POST, PUT, DELETE, PATCH, HEAD, and OPTIONS."
+    },
+    {
+      "id": "graphql-operation-boundary",
+      "description": "GraphQL supports queries and mutations with variables, but not subscriptions."
+    },
+    {
+      "id": "websocket-boundary",
+      "description": "WebSocket support is limited to basic connection and message testing."
+    },
+    {
+      "id": "grpc-beta",
+      "description": "Protocol-buffer-based gRPC service testing remains beta."
+    },
+    {
+      "id": "authentication-matrix",
+      "description": "Authentication covers header API keys, bearer or JWT tokens, OAuth2 client credentials and authorization code, and Basic username/password."
+    },
+    {
+      "id": "body-and-schema-support",
+      "description": "Requests accept JSON, XML, form-data, and raw bodies; responses support JSON Schema and custom validation."
+    },
+    {
+      "id": "environment-management",
+      "description": "Development, staging, and production environments retain separate base URLs and placeholder credentials."
+    },
+    {
+      "id": "collection-execution",
+      "description": "Related requests can be stored in reusable collections and executed with assertions."
+    },
+    {
+      "id": "request-chaining",
+      "description": "A request may consume output produced by an earlier request."
+    },
+    {
+      "id": "load-and-doc-generation",
+      "description": "Load testing exposes request and concurrency controls, and collections can generate Markdown API documentation."
+    },
+    {
+      "id": "direct-request-examples",
+      "description": "The canonical GET example carries Accept and API-key headers; the POST example carries JSON content type plus name and email."
+    },
+    {
+      "id": "response-validation-contract",
+      "description": "Validation can constrain status, headers, required object fields, and property types."
+    },
+    {
+      "id": "assertion-contract",
+      "description": "Assertions cover status, body content, headers, elapsed time, and array or string length."
+    },
+    {
+      "id": "performance-output-contract",
+      "description": "Timing output distinguishes total, DNS, TCP, TLS, time-to-first-byte, download, and response-size measurements."
+    },
+    {
+      "id": "mock-server-contract",
+      "description": "The mock example exposes GET and POST user routes, fixed success statuses, a fixed sample user, and a generated UUID."
+    },
+    {
+      "id": "error-reporting",
+      "description": "Connection, timeout, authentication, and SSL or TLS failures receive clear diagnostic feedback."
+    },
+    {
+      "id": "certificate-skip-boundary",
+      "description": "Certificate validation may be skipped only in testing."
+    },
+    {
+      "id": "secret-handling",
+      "description": "Sensitive API values belong in environment variables rather than source or test collections."
+    },
+    {
+      "id": "collection-versioning",
+      "description": "Test collections remain under version control."
+    },
+    {
+      "id": "edge-case-coverage",
+      "description": "Tests cover failures and edge cases in addition to happy paths."
+    },
+    {
+      "id": "observable-test-quality",
+      "description": "Tests use clear names, document expected behavior, and apply response-time assertions to detect regressions."
+    },
+    {
+      "id": "oauth-browser-limit",
+      "description": "OAuth2 authorization-code flow requires manual browser interaction."
+    },
+    {
+      "id": "upload-limit",
+      "description": "Each uploaded test file is limited to 10MB."
+    },
+    {
+      "id": "reference-links",
+      "description": "Request examples, schema-validation guidance, and CI/CD integration remain linked to their respective guide paths."
+    }
+  ]
+}

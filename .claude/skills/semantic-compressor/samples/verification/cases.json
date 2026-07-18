@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "skills/api-tester",
+      "original_sha256": "1aa7cf4882ca655dc908a723e0c2b2c41816d7b8a372fdc883865a57138e8121",
+      "compressed_sha256": "5252f5b2739851ed04da8081d9ca41f639147374b30ec911c0c2f1421c88b93b",
+      "inventory": "inventories/skills--api-tester.json",
+      "forbidden_literals": [
+        "unlimited file uploads",
+        "certificate validation may always be disabled",
+        "automatically uses production credentials"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "skills/code-analyzer",
+      "original_sha256": "fec9f883cdcf6ab3590ee70eb6147d76dbe8e250e71205b9bfca09bcb50bc327",
+      "compressed_sha256": "2ef3f072e8b145332fe49a4ac88f6494e2a6a3e056cd874de19ac2f45337f717",
+      "inventory": "inventories/skills--code-analyzer.json",
+      "forbidden_literals": [
+        "dynamic penetration testing",
+        "automatically fixes findings",
+        "guarantees zero false positives"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "skills/doc-processor",
+      "original_sha256": "bafe5d03e738e78107b5925acbfb3d8c06b79e571c9b6620de65f07b716f27ce",
+      "compressed_sha256": "7b3f960dbc57fdb8afcda63d1b7fd981b18a3876ea4e7b13219da292201c200c",
+      "inventory": "inventories/skills--doc-processor.json",
+      "forbidden_literals": [
+        "edits encrypted files without a password",
+        "perfect PDF conversion",
+        "executes Word macros"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "skills/full-stack-generator",
+      "original_sha256": "40e3700f59e09bf3380a2c56bd1341cd326850b9299db633bf4ddeac6e2e5084",
+      "compressed_sha256": "3f9643bc6fb410de1d8df62e936d8d754ecfd1856c1bf619d8c51a0bb2e38a21",
+      "inventory": "inventories/skills--full-stack-generator.json",
+      "forbidden_literals": [
+        "SQLite",
+        "SQL Server",
+        "Oracle",
+        "Cassandra"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "agents/code-reviewer",
+      "original_sha256": "47cbdfbbae2272ad6cd49482e1abf0d2f1fcec5376d1bdf4e5d511f541982ac9",
+      "compressed_sha256": "6200202de5e461a970de39b7ef2ed1b924c50f3663ec297f89aaf94e8fb8283e",
+      "inventory": "inventories/agents--code-reviewer.json",
+      "forbidden_literals": [
+        "automatically fixes findings",
+        "merges the pull request",
+        "guarantees bug-free code"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "agents/db-specialist",
+      "original_sha256": "6b13334e2c7191188571350032dd10e77da1d68df5017ad81141701174e5115e",
+      "compressed_sha256": "d7a1dc772eaef60ccc8df84e1f7dbf24a9c3a93fe9716f45c158b4fe7177f8e6",
+      "inventory": "inventories/agents--db-specialist.json",
+      "forbidden_literals": [
+        "Supabase",
+        "connects directly to production",
+        "automatically applies migrations"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "agents/devops-orchestrator",
+      "original_sha256": "ea4ea5519da4a9ad9e9a9e11e19f5d2e845069f0ff0158c52c8b7228dafefa9d",
+      "compressed_sha256": "0a6e9231793fda0faa0d56021cfcf2e2c7a75a6f380dfd2dca90c2822ea52c46",
+      "inventory": "inventories/agents--devops-orchestrator.json",
+      "forbidden_literals": [
+        "App Runner",
+        "terraform destroy",
+        "helm uninstall",
+        "auto_rollback: true",
+        "rto_minutes: 60",
+        "rpo_minutes: 15"
+      ],
+      "min_word_ratio": 2.0
+    },
+    {
+      "id": "agents/security-auditor",
+      "original_sha256": "2fe854c0a102f164b4542d84ec88d1c0bc29bacab3a6a58803eba05670b860e0",
+      "compressed_sha256": "295c4f9c61b27651050a276d1e692a6a8e47190685d9d9d30fe6d2d6b60a847c",
+      "inventory": "inventories/agents--security-auditor.json",
+      "forbidden_literals": [
+        "guarantees complete security",
+        "automatically exploits vulnerabilities",
+        "no human verification required"
+      ],
+      "min_word_ratio": 2.0
+    }
+  ]
+}

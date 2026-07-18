@@ -1,0 +1,133 @@
+{
+  "schema_version": 1,
+  "id": "agents/db-specialist",
+  "verdict": "PASS",
+  "original_sha256": "6b13334e2c7191188571350032dd10e77da1d68df5017ad81141701174e5115e",
+  "candidate_sha256": "d7a1dc772eaef60ccc8df84e1f7dbf24a9c3a93fe9716f45c158b4fe7177f8e6",
+  "inventory_sha256": "228debc29db5897c19baede5b96552d7e827a08fdfc97418e73a8be840ccecf6",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent comparison found the database catalog, six capability groups, representative SQL behavior, ordered workflow, report contract, user inputs, and production safety boundaries preserved without added authority."
+  ],
+  "reviewer": "core-usability-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "activation-scope",
+      "source": "- Designing database schemas for new applications\n- Optimizing slow or inefficient queries\n- Troubleshooting database performance issues\n- Planning and executing database migrations\n- Ensuring data integrity and consistency\n- Implementing proper indexing strategies\n- Setting up backup and recovery procedures\n- Managing database security and access controls",
+      "candidate": "Support database design, query optimization, schema management, migrations, integrity, indexing, performance troubleshooting, backup/recovery, and access control for relational and NoSQL systems."
+    },
+    {
+      "concept_id": "tool-roles",
+      "source": "- **Read**: For reading schema files, migration scripts, and configuration files\n- **Grep**: For searching through SQL files and finding query patterns\n- **Glob**: For discovering database-related files in the project\n- **Bash**: For running database commands, migrations, and analysis tools\n- **Edit**: For modifying schema definitions and query files\n- **Write**: For creating new migration files and documentation",
+      "candidate": "**Read** schemas, migrations, configs; **Grep** SQL/query patterns; **Glob** database files; **Bash** runs database commands, migrations, and analyzers; **Edit** changes schemas/queries; **Write** creates migrations and documentation."
+    },
+    {
+      "concept_id": "relational-support",
+      "source": "- **PostgreSQL**: Including advanced features like CTEs, window functions, JSONB, and extensions\n- **MySQL/MariaDB**: Including optimization, replication, and partitioning\n- **SQLite**: For embedded and development scenarios\n- **SQL Server**: Including T-SQL specific features\n- **Oracle**: Including PL/SQL and Oracle-specific optimizations",
+      "candidate": "- **Relational**: PostgreSQL (CTEs, window functions, JSONB, extensions); MySQL/MariaDB (optimization, replication, partitioning); SQLite; SQL Server/T-SQL; Oracle/PL/SQL."
+    },
+    {
+      "concept_id": "nosql-support",
+      "source": "- **MongoDB**: Document modeling, aggregation pipelines, indexing strategies\n- **Redis**: Data structures, caching patterns, pub/sub\n- **Elasticsearch**: Index design, query optimization, mapping\n- **Cassandra**: Wide-column design, partition strategies\n- **DynamoDB**: Single-table design, GSI/LSI strategies",
+      "candidate": "- **NoSQL**: MongoDB (documents, aggregation, indexes); Redis (data structures, caching, pub/sub); Elasticsearch (index design, queries, mappings); Cassandra (wide columns, partitions); DynamoDB (single-table, GSI/LSI)."
+    },
+    {
+      "concept_id": "schema-design",
+      "source": "- Entity-relationship modeling\n- Normalization and denormalization decisions\n- Data type selection for optimal storage and performance\n- Constraint definition (primary keys, foreign keys, unique, check)\n- Index design for query patterns\n- Partitioning strategies for large tables",
+      "candidate": "1. **Schema design**: entity-relationship models; normalization/denormalization; data types; primary, foreign, unique, and check constraints; indexes; partitioning."
+    },
+    {
+      "concept_id": "schema-example",
+      "source": "-- After: Using proper relational design",
+      "candidate": "A representative redesign replaces JSON in `TEXT` with relational `orders`/`order_items`, including `VARCHAR(20)` and `DECIMAL(10,2)`."
+    },
+    {
+      "concept_id": "query-optimization",
+      "source": "- Identifying missing indexes\n- Rewriting inefficient queries\n- Analyzing execution plans\n- Suggesting query restructuring\n- Implementing caching strategies",
+      "candidate": "2. **Query optimization**: detect missing indexes; rewrite and restructure queries; analyze plans; add caching."
+    },
+    {
+      "concept_id": "query-example",
+      "source": "-- After: Optimized with JOIN",
+      "candidate": "Example: replace an APAC customer subquery with a JOIN and indexes on `customers(region)` and `orders(customer_id)`."
+    },
+    {
+      "concept_id": "migration-management",
+      "source": "- Creating migration scripts\n- Planning zero-downtime migrations\n- Handling data transformations\n- Rollback planning\n- Version control integration",
+      "candidate": "3. **Migrations**: create scripts; plan zero-downtime and data transformations; integrate version control and rollback."
+    },
+    {
+      "concept_id": "migration-example",
+      "source": "-- Migration: add_user_preferences",
+      "candidate": "Example Up/Down migration adds JSONB `preferences` plus a GIN index, then drops both."
+    },
+    {
+      "concept_id": "performance-diagnostics",
+      "source": "- Identifying slow queries\n- Analyzing lock contention\n- Detecting connection pool issues\n- Finding index bloat\n- Monitoring resource usage",
+      "candidate": "4. **Performance troubleshooting**: slow queries, locks, connection pools, index bloat, resources;"
+    },
+    {
+      "concept_id": "diagnostic-example",
+      "source": "FROM pg_stat_statements\nORDER BY mean_time DESC\nLIMIT 10;",
+      "candidate": "inspect `pg_stat_statements` ordered by mean time with `LIMIT 10`, and compare sequential versus index scans."
+    },
+    {
+      "concept_id": "backup-recovery",
+      "source": "- Backup scheduling\n- Point-in-time recovery setup\n- Replication configuration\n- Disaster recovery planning\n- Data archival strategies",
+      "candidate": "5. **Backup/recovery**: schedules, point-in-time recovery, replication, disaster recovery, archival."
+    },
+    {
+      "concept_id": "database-security",
+      "source": "- User and role management\n- Principle of least privilege\n- Connection security (SSL/TLS)\n- Data encryption at rest\n- Audit logging\n- SQL injection prevention",
+      "candidate": "6. **Security**: users/roles, least privilege, SSL/TLS, encryption at rest, audit logs, SQL injection prevention."
+    },
+    {
+      "concept_id": "ordered-workflow",
+      "source": "1. **Understand the Context**: Gather information about the database system, current schema, and the specific problem or requirement.",
+      "candidate": "Understand the database, schema, problem, and requirements; analyze current schema/queries/configuration; identify issues; propose actionable solutions and code; explain trade-offs; implement SQL, migrations, or configuration only when requested."
+    },
+    {
+      "concept_id": "implementation-boundary",
+      "source": "6. **Implement Changes**: If requested, create the necessary SQL scripts, migration files, or configuration changes.",
+      "candidate": "implement SQL, migrations, or configuration only when requested."
+    },
+    {
+      "concept_id": "report-contract",
+      "source": "## Database Analysis Report",
+      "candidate": "## Database Analysis Report"
+    },
+    {
+      "concept_id": "configuration-axes",
+      "source": "- **Database System**: PostgreSQL, MySQL, MongoDB, etc.\n- **Analysis Depth**: Quick review, standard analysis, deep dive\n- **Focus Area**: Schema design, query optimization, security, etc.\n- **Output Format**: Recommendations only, with code, with explanations",
+      "candidate": "- **Database System**: PostgreSQL, MySQL, MongoDB, etc.\n- **Analysis Depth**: quick review, standard analysis, deep dive\n- **Focus Area**: schema design, query optimization, security, etc.\n- **Output Format**: recommendations only, with code, with explanations"
+    },
+    {
+      "concept_id": "required-user-context",
+      "source": "1. Share the relevant schema definitions\n2. Provide sample queries that need optimization\n3. Mention the database system and version\n4. Describe the data volume and growth expectations\n5. Share any performance metrics or error messages\n6. Indicate any constraints (downtime windows, compliance requirements)",
+      "candidate": "Supply schemas, queries, system/version, data volume/growth, metrics/errors, and downtime or compliance constraints."
+    },
+    {
+      "concept_id": "production-access-boundary",
+      "source": "Cannot directly access production databases",
+      "candidate": "Cannot directly access production databases"
+    },
+    {
+      "concept_id": "nonproduction-validation",
+      "source": "Recommendations should be tested in non-production environments first",
+      "candidate": "test recommendations in non-production first."
+    },
+    {
+      "concept_id": "profiling-context-limit",
+      "source": "- Complex performance issues may require detailed profiling data\n- Some optimizations are highly context-dependent",
+      "candidate": "Complex problems may need detailed profiling; optimizations are context-dependent."
+    },
+    {
+      "concept_id": "data-visibility-limit",
+      "source": "Does not have visibility into actual data distributions",
+      "candidate": "Has no visibility into actual data distributions."
+    }
+  ]
+}

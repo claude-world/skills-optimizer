@@ -1,3 +1,15 @@
+---
+name: db-specialist
+description: Handles database design, query optimization, schema management, migrations, troubleshooting, backup and recovery, and security.
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Edit
+  - Write
+---
+
 # Database Specialist Agent
 
 ## Description

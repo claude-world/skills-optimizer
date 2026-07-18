@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "47cbdfbbae2272ad6cd49482e1abf0d2f1fcec5376d1bdf4e5d511f541982ac9",
+  "literals": {
+    "triggers": [
+      "pull requests",
+      "codebases",
+      "technical debt",
+      "coding standards",
+      "draft or final"
+    ],
+    "commands": [
+      "Task(subagent_type=\"code-reviewer\", prompt=\"Review the changes in PR #123...\")"
+    ],
+    "tools": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash",
+      "Task"
+    ],
+    "formats": [
+      "```markdown",
+      "## Code Review Summary",
+      "### Overview",
+      "### Critical Issues (Must Fix)",
+      "### Warnings (Should Consider)",
+      "### Suggestions (Nice to Have)",
+      "### Positive Aspects",
+      "### Files Reviewed"
+    ],
+    "paths": [],
+    "numbers": [],
+    "error_messages": [],
+    "security_rules": [
+      "Cannot execute code to verify runtime behavior",
+      "critical systems"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "activation-scope",
+      "description": "Review pull requests and existing codebases, teach review standards, identify technical debt, and enforce project style guides."
+    },
+    {
+      "id": "review-granularity",
+      "description": "Examine both individual lines and overall architecture; feedback remains constructive, actionable, and educational."
+    },
+    {
+      "id": "tool-roles",
+      "description": "Read source, search patterns, discover related files, run linters/tests/analysis, and delegate specialist analysis when needed."
+    },
+    {
+      "id": "correctness-checks",
+      "description": "Check indexing/off-by-one, null access, types, conditionals, error propagation, resource lifetime, races, and deadlocks."
+    },
+    {
+      "id": "security-checks",
+      "description": "Check validation, SQL injection, XSS, authentication/authorization, sensitive data, cryptography, and dependencies."
+    },
+    {
+      "id": "performance-checks",
+      "description": "Check complexity, database queries, memory/network use, caching/lazy loading, and resource pooling."
+    },
+    {
+      "id": "maintainability-checks",
+      "description": "Check readability, size, duplication, naming, documentation, tests, modularity, and separation of concerns."
+    },
+    {
+      "id": "best-practice-checks",
+      "description": "Check SOLID, DRY, KISS, error handling, observability, configuration, and version-control practices."
+    },
+    {
+      "id": "ordered-review-process",
+      "description": "Preserve the order context gathering, static analysis, logic/edge cases, standards, tests, then report."
+    },
+    {
+      "id": "report-contract",
+      "description": "Report overview, must-fix critical issues, warnings with recommendations, optional suggestions, positives, and files reviewed."
+    },
+    {
+      "id": "configuration-axes",
+      "description": "Support review depth, focus areas, severity threshold, style guide, and language-specific rules."
+    },
+    {
+      "id": "required-user-context",
+      "description": "Ask for review context, concerns, project standards, feature/bug background, and draft-versus-final status."
+    },
+    {
+      "id": "runtime-boundary",
+      "description": "The reviewer cannot establish runtime behavior by executing the reviewed code."
+    },
+    {
+      "id": "analysis-limitations",
+      "description": "Static review can miss domain-specific issues and bugs and can produce false positives."
+    },
+    {
+      "id": "human-review-boundary",
+      "description": "Critical systems still require human code review."
+    }
+  ]
+}

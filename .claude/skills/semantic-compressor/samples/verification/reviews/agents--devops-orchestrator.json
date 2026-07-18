@@ -1,0 +1,203 @@
+{
+  "schema_version": 1,
+  "id": "agents/devops-orchestrator",
+  "verdict": "PASS",
+  "original_sha256": "ea4ea5519da4a9ad9e9a9e11e19f5d2e845069f0ff0158c52c8b7228dafefa9d",
+  "candidate_sha256": "0a6e9231793fda0faa0d56021cfcf2e2c7a75a6f380dfd2dca90c2822ea52c46",
+  "inventory_sha256": "e2e08e8e155129bb00f74e354a94a7f0e78e10f94cf7f497329faeb337fa4e17",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent full-file review covered all 1,752 source lines and found the three cloud catalogs, container and IaC reference contracts, CI/CD gates, monitoring and security settings, capabilities, workflow, report, configuration, and limitations preserved without invented authority or services."
+  ],
+  "reviewer": "core-usability-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "activation-scope",
+      "source": "The DevOps Orchestrator agent is a comprehensive infrastructure and deployment automation specialist designed to help development teams manage their entire DevOps lifecycle.",
+      "candidate": "Provide end-to-end infrastructure and deployment support: AWS/GCP/Azure, Docker/Kubernetes, Terraform/Pulumi/CloudFormation, CI/CD, monitoring/alerting, security/compliance, secrets/configuration, production troubleshooting and root-cause analysis, cost/performance optimization, high availability, and disaster recovery."
+    },
+    {
+      "concept_id": "tool-roles",
+      "source": "- **Read**: For reading configuration files, manifests, scripts, and documentation\n- **Write**: For creating new configuration files, scripts, and infrastructure code\n- **Edit**: For modifying existing configurations and fixing issues",
+      "candidate": "- **Read** configurations, manifests, scripts, docs; **Write** new configs/scripts/IaC; **Edit** existing configurations."
+    },
+    {
+      "concept_id": "aws-service-scope",
+      "source": "#### Amazon Web Services (AWS)",
+      "candidate": "- **Compute**: EC2, Lambda, ECS, EKS, Fargate, Elastic Beanstalk, Batch, Lightsail."
+    },
+    {
+      "concept_id": "gcp-service-scope",
+      "source": "#### Google Cloud Platform (GCP)",
+      "candidate": "- **DevOps/monitoring**: Cloud Build, Cloud Deploy, Artifact Registry, Cloud Source Repositories, Deployment Manager; Cloud Monitoring, Logging, Trace, Profiler, Error Reporting."
+    },
+    {
+      "concept_id": "azure-service-scope",
+      "source": "#### Microsoft Azure",
+      "candidate": "- **DevOps/monitoring**: Azure DevOps, GitHub Actions, Azure Pipelines, Repos, Artifacts, ARM Templates, Bicep; Azure Monitor, Application Insights, Log Analytics, Network Watcher."
+    },
+    {
+      "concept_id": "docker-image-controls",
+      "source": "- Use multi-stage builds to minimize image size\n- Run containers as non-root users\n- Use .dockerignore to exclude unnecessary files\n- Pin base image versions for reproducibility\n- Implement health checks for container orchestration\n- Use build arguments for environment-specific configurations\n- Layer caching optimization for faster builds\n- Security scanning with Trivy, Snyk, or Docker Scout",
+      "candidate": "Build optimized, reproducible, scanned images using multi-stage builds, pinned bases, `.dockerignore`, caching, non-root users, health checks, and environment build args."
+    },
+    {
+      "concept_id": "compose-contract",
+      "source": "version: '3.8'",
+      "candidate": "The Docker Compose `3.8` pattern makes `web` depend on `db` and `redis`; exposes `3000:3000`; uses database/Redis environment URLs; checks `/health` every `30s` with `10s` timeout, `3` retries, and `40s` start; limits `0.5` CPU/`512M` and reserves `0.25` CPU/`256M`."
+    },
+    {
+      "concept_id": "kubernetes-deployment-contract",
+      "source": "kind: Deployment",
+      "candidate": "The reference deployment uses `3` replicas, RollingUpdate (`maxSurge: 1`, `maxUnavailable: 0`), non-root user/group `1000`, image `v1.2.3`, Prometheus port `9090`, limits `500m`/`512Mi`, and requests `250m`/`256Mi`."
+    },
+    {
+      "concept_id": "autoscaling-network-contract",
+      "source": "kind: HorizontalPodAutoscaler",
+      "candidate": "The HorizontalPodAutoscaler ranges `3`–`10` replicas at CPU `70` and memory `80`; scale-down stabilization is `300` seconds with Percent value `10` per `60` seconds, while scale-up uses Percent value `100` or `4` Pods per `15` seconds."
+    },
+    {
+      "concept_id": "helm-operator-contract",
+      "source": "**Operators and CRDs**",
+      "candidate": "The Helm application chart is version `1.0.0`, app `1.2.3`, with PostgreSQL `12.1.0` and Redis `17.3.0` dependencies."
+    },
+    {
+      "concept_id": "terraform-foundation",
+      "source": "required_version = \">= 1.5.0\"",
+      "candidate": "The AWS reference requires Terraform `>= 1.5.0`, AWS provider `~> 5.0`, Kubernetes `~> 2.23`, Helm `~> 2.11`, and an encrypted S3 backend with DynamoDB locking in `us-west-2`."
+    },
+    {
+      "concept_id": "eks-contract",
+      "source": "cluster_version = \"1.28\"",
+      "candidate": "EKS uses module `~> 19.0`, Kubernetes `1.28`, public and private endpoint access, add-ons, and service-account IAM roles; the general node group is desired `3`, min `2`, max `10`, with `max_unavailable_percentage = 33`, while spot is desired `2`, min `0`, max `10`, with `NO_SCHEDULE`."
+    },
+    {
+      "concept_id": "rds-contract",
+      "source": "backup_retention_period         = var.environment == \"prod\" ? 30 : 7",
+      "candidate": "RDS uses module `~> 6.0`, PostgreSQL `15.4`, `20`–`100` storage, port `5432`, production multi-AZ/deletion protection, `30`-day versus `7`-day retention, maintenance `Mon:00:00-Mon:03:00`, and backup `03:00-06:00`; skip the final snapshot only outside `prod`."
+    },
+    {
+      "concept_id": "redis-contract",
+      "source": "at_rest_encryption_enabled = true\n  transit_encryption_enabled = true",
+      "candidate": "ElastiCache uses module `~> 0.52`, Redis `7.0`, production size `3` versus `1`, automatic failover, encryption, `allkeys-lru`, port `6379`."
+    },
+    {
+      "concept_id": "iac-output-contract",
+      "source": "export const kubeconfig = cluster.kubeconfig;\nexport const clusterName = cluster.eksCluster.name;",
+      "candidate": "Pulumi TypeScript uses required `environment` and `projectName` config, a `10.0.0.0/16` AWS VPC, public/private subnets in the three `us-west-2` zones, and EKS `m5.large` desired capacity `3`, min `2`, max `10`, with `gp3`; export kubeconfig and cluster name."
+    },
+    {
+      "concept_id": "github-trigger-dependency",
+      "source": "build:\n    needs: [test, security-scan]",
+      "candidate": "On pushes to `main`/`develop` and pull requests to `main`, run `test` and `security-scan`; `build` must `needs: [test, security-scan]`."
+    },
+    {
+      "concept_id": "github-test-security-build",
+      "source": "fail_ci_if_error: true",
+      "candidate": "Tests use Node `20`, npm cache, lint, coverage, and Codecov with `fail_ci_if_error: true`. Security runs Snyk at `high` and Trivy filesystem SARIF."
+    },
+    {
+      "concept_id": "github-deploy-contract",
+      "source": "deploy-staging:\n    needs: build",
+      "candidate": "Both deployments must `needs: build`: `develop` deploys staging with Helm `--wait --timeout 5m` then smoke-tests `/health`; `main` deploys production with Helm `--wait --timeout 10m`, `replicaCount=5`, and sends the Slack completion notification."
+    },
+    {
+      "concept_id": "gitlab-manual-production",
+      "source": "when: manual",
+      "candidate": "Deploy production only from `main` and retain `when: manual`; do not automate this production gate."
+    },
+    {
+      "concept_id": "prometheus-grafana-contract",
+      "source": "retention: 30d",
+      "candidate": "- **Prometheus/Grafana**: retain metrics `30d`/`50GB` on `100Gi` `gp3`; Alertmanager resolves in `5m`, groups after `30s`, uses group interval `5m`, repeats in `4h`, routes critical alerts to PagerDuty and others to Slack."
+    },
+    {
+      "concept_id": "datadog-contract",
+      "source": "networkMonitoring:\n    enabled: true",
+      "candidate": "- **Datadog**: collect logs, APM, processes, network, compliance, and runtime security; agent requests `200m`/`256Mi`, limits `500m`/`512Mi`."
+    },
+    {
+      "concept_id": "external-secret-contract",
+      "source": "refreshInterval: 1h",
+      "candidate": "- **Secrets**: External Secrets Operator reads `production/database` username/password from AWS Secrets Manager in `us-west-2`, refreshes every `1h`, and owns the target secret."
+    },
+    {
+      "concept_id": "pod-security-contract",
+      "source": "pod-security.kubernetes.io/enforce: restricted",
+      "candidate": "- **Pod Security Standards**: enforce/audit/warn `restricted`; non-root user/group/fsGroup `1000`, RuntimeDefault seccomp, no privilege escalation, read-only root filesystem, and drop `ALL` capabilities."
+    },
+    {
+      "concept_id": "infrastructure-capability",
+      "source": "- Create VPCs with proper network segmentation\n- Set up compute resources (VMs, containers, serverless)\n- Configure databases with high availability\n- Set up load balancers and CDNs\n- Implement network security (firewalls, WAF)\n- Configure DNS and domain management",
+      "candidate": "1. **Infrastructure provisioning**: segmented VPCs, VMs/containers/serverless compute, highly available databases, load balancers/CDNs, firewalls/WAF, DNS/domains."
+    },
+    {
+      "concept_id": "container-capability",
+      "source": "- Cluster provisioning (EKS, GKE, AKS)\n- Workload deployment and scaling\n- Service mesh implementation (Istio, Linkerd)\n- Ingress and load balancing\n- Storage provisioning\n- RBAC and security policies",
+      "candidate": "2. **Container orchestration**: EKS/GKE/AKS, deployment/scaling, Istio/Linkerd, ingress, storage, RBAC/security."
+    },
+    {
+      "concept_id": "delivery-capability",
+      "source": "- Source code integration (GitHub, GitLab, Bitbucket)\n- Build automation with caching\n- Automated testing integration\n- Security scanning (SAST, DAST, SCA)\n- Artifact management\n- Deployment strategies (rolling, blue-green, canary)",
+      "candidate": "3. **CI/CD**: GitHub/GitLab/Bitbucket, cached builds, tests, SAST/DAST/SCA, artifacts, rolling/blue-green/canary."
+    },
+    {
+      "concept_id": "observability-capability",
+      "source": "- Metrics collection and visualization\n- Log aggregation and analysis\n- Distributed tracing\n- Custom dashboards\n- Alerting and notification\n- SLO/SLI tracking",
+      "candidate": "4. **Observability**: metrics, logs, traces, dashboards, alerts/notifications, SLO/SLI."
+    },
+    {
+      "concept_id": "security-capability",
+      "source": "- Identity and access management\n- Secrets management\n- Network security policies\n- Vulnerability scanning\n- Compliance automation\n- Audit logging",
+      "candidate": "5. **Security**: IAM, secrets, network policy, vulnerability scans, compliance automation, audit logs."
+    },
+    {
+      "concept_id": "cost-capability",
+      "source": "- Resource right-sizing\n- Reserved instance planning\n- Spot instance utilization\n- Unused resource identification\n- Budget alerts\n- Cost allocation tagging",
+      "candidate": "6. **Cost optimization**: right-sizing, reserved/spot planning, unused resources, budgets, allocation tags."
+    },
+    {
+      "concept_id": "ordered-eight-stage-process",
+      "source": "1. **Assess Current State**: Understand existing infrastructure, tools, and processes",
+      "candidate": "1. **Assess Current State**: understand infrastructure, tools, processes.\n2. **Define Requirements**: gather security, compliance, performance requirements.\n3. **Design Architecture**: create infrastructure architecture and diagrams.\n4. **Plan Implementation**: phases and milestones.\n5. **Implement Changes**: execute through Infrastructure as Code.\n6. **Validate and Test**: security, performance, reliability.\n7. **Document**: runbooks and documentation.\n8. **Monitor and Optimize**: monitoring and continuous improvement."
+    },
+    {
+      "concept_id": "report-contract",
+      "source": "## Infrastructure Analysis Report",
+      "candidate": "## Infrastructure Analysis Report"
+    },
+    {
+      "concept_id": "configuration-axes",
+      "source": "- **Cloud Provider**: AWS, GCP, Azure, multi-cloud\n- **Environment**: Development, staging, production\n- **Compliance Framework**: SOC2, PCI-DSS, HIPAA, GDPR\n- **Cost Optimization Level**: Aggressive, balanced, performance-first\n- **Security Level**: Standard, enhanced, paranoid",
+      "candidate": "- **Cloud Provider**: AWS, GCP, Azure, multi-cloud\n- **Environment**: Development, staging, production\n- **Compliance Framework**: SOC2, PCI-DSS, HIPAA, GDPR\n- **Cost Optimization Level**: Aggressive, balanced, performance-first\n- **Security Level**: Standard, enhanced, paranoid"
+    },
+    {
+      "concept_id": "required-user-context",
+      "source": "1. Provide clear requirements for security and compliance\n2. Share existing infrastructure documentation\n3. Specify budget constraints if any\n4. Mention preferred tools and technologies\n5. Indicate timeline and resource constraints\n6. Share any past incidents or lessons learned",
+      "candidate": "Provide security/compliance requirements, existing infrastructure docs, budgets, preferred tools, timeline/resources, and prior incidents/lessons."
+    },
+    {
+      "concept_id": "console-access-boundary",
+      "source": "Cannot directly access cloud provider consoles",
+      "candidate": "Cannot directly access cloud provider consoles."
+    },
+    {
+      "concept_id": "review-expertise-boundary",
+      "source": "- Recommendations should be reviewed before implementation\n- Complex migrations may require additional human expertise",
+      "candidate": "- Recommendations require review before implementation.\n- Complex migrations may need additional human expertise."
+    },
+    {
+      "concept_id": "compliance-boundary",
+      "source": "Compliance verification may need external auditors",
+      "candidate": "Compliance verification may need external auditors."
+    },
+    {
+      "concept_id": "estimate-support-limit",
+      "source": "- Cost estimates are approximate\n- Some cloud-specific features may have limited support",
+      "candidate": "- Cost estimates are approximate.\n- Some cloud-specific features may have limited support."
+    }
+  ]
+}

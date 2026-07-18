@@ -1,0 +1,285 @@
+{
+  "compressor_version": "2.0.0",
+  "measurement": {
+    "note": "These are deterministic text metrics, not Claude tokenizer counts.",
+    "ratio_gate": "whitespace-delimited words"
+  },
+  "pairs": [
+    {
+      "compressed": "skills/compressed/api-tester.md",
+      "compressed_sha256": "5252f5b2739851ed04da8081d9ca41f639147374b30ec911c0c2f1421c88b93b",
+      "id": "skills/api-tester",
+      "kind": "skill",
+      "metrics": {
+        "candidate": {
+          "bytes": 3584,
+          "characters": 3582,
+          "lines": 51,
+          "path": "skills/compressed/api-tester.md",
+          "words": 409
+        },
+        "original": {
+          "bytes": 7679,
+          "characters": 7679,
+          "lines": 316,
+          "path": "skills/verbose/api-tester.md",
+          "words": 982
+        },
+        "ratios": {
+          "bytes": 2.142578125,
+          "characters": 2.1437744276940256,
+          "lines": 6.196078431372549,
+          "words": 2.4009779951100243
+        },
+        "schema_version": 1
+      },
+      "original": "skills/verbose/api-tester.md",
+      "original_sha256": "1aa7cf4882ca655dc908a723e0c2b2c41816d7b8a372fdc883865a57138e8121"
+    },
+    {
+      "compressed": "skills/compressed/code-analyzer.md",
+      "compressed_sha256": "2ef3f072e8b145332fe49a4ac88f6494e2a6a3e056cd874de19ac2f45337f717",
+      "id": "skills/code-analyzer",
+      "kind": "skill",
+      "metrics": {
+        "candidate": {
+          "bytes": 4374,
+          "characters": 4370,
+          "lines": 60,
+          "path": "skills/compressed/code-analyzer.md",
+          "words": 486
+        },
+        "original": {
+          "bytes": 9445,
+          "characters": 9445,
+          "lines": 349,
+          "path": "skills/verbose/code-analyzer.md",
+          "words": 1260
+        },
+        "ratios": {
+          "bytes": 2.1593507087334247,
+          "characters": 2.1613272311212817,
+          "lines": 5.816666666666666,
+          "words": 2.5925925925925926
+        },
+        "schema_version": 1
+      },
+      "original": "skills/verbose/code-analyzer.md",
+      "original_sha256": "fec9f883cdcf6ab3590ee70eb6147d76dbe8e250e71205b9bfca09bcb50bc327"
+    },
+    {
+      "compressed": "skills/compressed/doc-processor.md",
+      "compressed_sha256": "7b3f960dbc57fdb8afcda63d1b7fd981b18a3876ea4e7b13219da292201c200c",
+      "id": "skills/doc-processor",
+      "kind": "skill",
+      "metrics": {
+        "candidate": {
+          "bytes": 2603,
+          "characters": 2595,
+          "lines": 48,
+          "path": "skills/compressed/doc-processor.md",
+          "words": 318
+        },
+        "original": {
+          "bytes": 5496,
+          "characters": 5496,
+          "lines": 153,
+          "path": "skills/verbose/doc-processor.md",
+          "words": 787
+        },
+        "ratios": {
+          "bytes": 2.111409911640415,
+          "characters": 2.1179190751445085,
+          "lines": 3.1875,
+          "words": 2.4748427672955975
+        },
+        "schema_version": 1
+      },
+      "original": "skills/verbose/doc-processor.md",
+      "original_sha256": "bafe5d03e738e78107b5925acbfb3d8c06b79e571c9b6620de65f07b716f27ce"
+    },
+    {
+      "compressed": "skills/compressed/full-stack-generator.md",
+      "compressed_sha256": "3f9643bc6fb410de1d8df62e936d8d754ecfd1856c1bf619d8c51a0bb2e38a21",
+      "id": "skills/full-stack-generator",
+      "kind": "skill",
+      "metrics": {
+        "candidate": {
+          "bytes": 15139,
+          "characters": 15128,
+          "lines": 279,
+          "path": "skills/compressed/full-stack-generator.md",
+          "words": 1651
+        },
+        "original": {
+          "bytes": 66721,
+          "characters": 65567,
+          "lines": 2757,
+          "path": "skills/verbose/full-stack-generator.md",
+          "words": 7244
+        },
+        "ratios": {
+          "bytes": 4.407226368980778,
+          "characters": 4.334148598625066,
+          "lines": 9.881720430107526,
+          "words": 4.387643852210782
+        },
+        "schema_version": 1
+      },
+      "original": "skills/verbose/full-stack-generator.md",
+      "original_sha256": "40e3700f59e09bf3380a2c56bd1341cd326850b9299db633bf4ddeac6e2e5084"
+    },
+    {
+      "compressed": "agents/compressed/code-reviewer.md",
+      "compressed_sha256": "6200202de5e461a970de39b7ef2ed1b924c50f3663ec297f89aaf94e8fb8283e",
+      "id": "agents/code-reviewer",
+      "kind": "agent",
+      "metrics": {
+        "candidate": {
+          "bytes": 3095,
+          "characters": 3095,
+          "lines": 80,
+          "path": "agents/compressed/code-reviewer.md",
+          "words": 391
+        },
+        "original": {
+          "bytes": 6418,
+          "characters": 6418,
+          "lines": 183,
+          "path": "agents/verbose/code-reviewer.md",
+          "words": 924
+        },
+        "ratios": {
+          "bytes": 2.0736672051696283,
+          "characters": 2.0736672051696283,
+          "lines": 2.2875,
+          "words": 2.363171355498721
+        },
+        "schema_version": 1
+      },
+      "original": "agents/verbose/code-reviewer.md",
+      "original_sha256": "47cbdfbbae2272ad6cd49482e1abf0d2f1fcec5376d1bdf4e5d511f541982ac9"
+    },
+    {
+      "compressed": "agents/compressed/db-specialist.md",
+      "compressed_sha256": "d7a1dc772eaef60ccc8df84e1f7dbf24a9c3a93fe9716f45c158b4fe7177f8e6",
+      "id": "agents/db-specialist",
+      "kind": "agent",
+      "metrics": {
+        "candidate": {
+          "bytes": 3786,
+          "characters": 3786,
+          "lines": 75,
+          "path": "agents/compressed/db-specialist.md",
+          "words": 439
+        },
+        "original": {
+          "bytes": 8399,
+          "characters": 8399,
+          "lines": 280,
+          "path": "agents/verbose/db-specialist.md",
+          "words": 1120
+        },
+        "ratios": {
+          "bytes": 2.2184363444268356,
+          "characters": 2.2184363444268356,
+          "lines": 3.7333333333333334,
+          "words": 2.55125284738041
+        },
+        "schema_version": 1
+      },
+      "original": "agents/verbose/db-specialist.md",
+      "original_sha256": "6b13334e2c7191188571350032dd10e77da1d68df5017ad81141701174e5115e"
+    },
+    {
+      "compressed": "agents/compressed/devops-orchestrator.md",
+      "compressed_sha256": "0a6e9231793fda0faa0d56021cfcf2e2c7a75a6f380dfd2dca90c2822ea52c46",
+      "id": "agents/devops-orchestrator",
+      "kind": "agent",
+      "metrics": {
+        "candidate": {
+          "bytes": 12012,
+          "characters": 12008,
+          "lines": 172,
+          "path": "agents/compressed/devops-orchestrator.md",
+          "words": 1468
+        },
+        "original": {
+          "bytes": 42315,
+          "characters": 42315,
+          "lines": 1752,
+          "path": "agents/verbose/devops-orchestrator.md",
+          "words": 4530
+        },
+        "ratios": {
+          "bytes": 3.522727272727273,
+          "characters": 3.52390073284477,
+          "lines": 10.186046511627907,
+          "words": 3.0858310626703
+        },
+        "schema_version": 1
+      },
+      "original": "agents/verbose/devops-orchestrator.md",
+      "original_sha256": "ea4ea5519da4a9ad9e9a9e11e19f5d2e845069f0ff0158c52c8b7228dafefa9d"
+    },
+    {
+      "compressed": "agents/compressed/security-auditor.md",
+      "compressed_sha256": "295c4f9c61b27651050a276d1e692a6a8e47190685d9d9d30fe6d2d6b60a847c",
+      "id": "agents/security-auditor",
+      "kind": "agent",
+      "metrics": {
+        "candidate": {
+          "bytes": 4416,
+          "characters": 4416,
+          "lines": 99,
+          "path": "agents/compressed/security-auditor.md",
+          "words": 535
+        },
+        "original": {
+          "bytes": 8858,
+          "characters": 8858,
+          "lines": 311,
+          "path": "agents/verbose/security-auditor.md",
+          "words": 1211
+        },
+        "ratios": {
+          "bytes": 2.0058876811594204,
+          "characters": 2.0058876811594204,
+          "lines": 3.1414141414141414,
+          "words": 2.263551401869159
+        },
+        "schema_version": 1
+      },
+      "original": "agents/verbose/security-auditor.md",
+      "original_sha256": "2fe854c0a102f164b4542d84ec88d1c0bc29bacab3a6a58803eba05670b860e0"
+    }
+  ],
+  "schema_version": 1,
+  "summary": {
+    "compressed": {
+      "bytes": 49009,
+      "characters": 48980,
+      "lines": 864,
+      "words": 5697
+    },
+    "original": {
+      "bytes": 155331,
+      "characters": 154177,
+      "lines": 6101,
+      "words": 18058
+    },
+    "pairs": 8,
+    "ratios": {
+      "bytes": 3.169438266440858,
+      "characters": 3.1477541853817885,
+      "lines": 7.061342592592593,
+      "words": 3.169738458837985
+    },
+    "reductions": {
+      "bytes": 0.6844866768384933,
+      "characters": 0.6823131854945939,
+      "lines": 0.858383871496476,
+      "words": 0.6845165577583343
+    }
+  }
+}
