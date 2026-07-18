@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "fec9f883cdcf6ab3590ee70eb6147d76dbe8e250e71205b9bfca09bcb50bc327",
+  "literals": {
+    "triggers": [
+      "static code analysis",
+      "code quality",
+      "code review",
+      "onboarding",
+      "security audit",
+      "best practice violation"
+    ],
+    "commands": [
+      "/code-analyzer analyze src/main.py",
+      "/code-analyzer analyze ./src --recursive",
+      "/code-analyzer security ./src",
+      "/code-analyzer complexity ./src --output report.html",
+      "/code-analyzer deps ./package.json",
+      "/code-analyzer analyze ./src --profile quick",
+      "/code-analyzer analyze ./src --profile standard",
+      "/code-analyzer analyze ./src --profile strict",
+      "/code-analyzer analyze ./src --profile security",
+      "/code-analyzer analyze ./src --format json > report.json",
+      "/code-analyzer analyze ./src --format html --output report.html",
+      "/code-analyzer analyze ./src --format sarif > results.sarif",
+      "/code-analyzer analyze --staged --severity error"
+    ],
+    "tools": [
+      "ESLint",
+      "Pylint",
+      "flake8",
+      "mypy",
+      "PMD",
+      "SpotBugs",
+      "golangci-lint",
+      "Clippy",
+      "cppcheck",
+      "GitHub Actions",
+      "actions/checkout@v3",
+      "github/codeql-action/upload-sarif@v2",
+      "VS Code",
+      "IntelliJ",
+      "ALE",
+      "coc.nvim"
+    ],
+    "formats": [
+      "JavaScript",
+      "TypeScript",
+      "Python",
+      "Java",
+      "Go",
+      "Rust",
+      "C/C++",
+      "Ruby",
+      "PHP",
+      "JSON",
+      "HTML",
+      "SARIF",
+      ".js",
+      ".jsx",
+      ".mjs"
+    ],
+    "paths": [
+      ".code-analyzer.yaml",
+      "src/main.py",
+      "./src",
+      "./package.json",
+      "report.html",
+      "report.json",
+      "results.sarif",
+      "tests/**",
+      "migrations/**",
+      ".git/hooks/pre-commit",
+      "rules/index.md",
+      "guides/security.md",
+      "guides/custom-rules.md",
+      "guides/ci-cd.md"
+    ],
+    "numbers": [
+      "OWASP Top 10",
+      "max_cyclomatic: 10",
+      "max_cognitive: 15",
+      "max_line_length: 120",
+      "max_function_lines: 50",
+      "23:5",
+      "45:1",
+      "67:3",
+      "12:1",
+      "89:5",
+      "2 errors, 2 warnings, 1 info",
+      "10K",
+      "100K",
+      "5 seconds",
+      "30 seconds",
+      "2 minutes"
+    ],
+    "error_messages": [
+      "Do not hardcode API keys",
+      "fetch() calls must have error handling"
+    ],
+    "security_rules": [
+      "OWASP Top 10",
+      "check_secrets",
+      "owasp_top_10",
+      "Do not hardcode API keys",
+      "fetch() calls must have error handling",
+      "--severity error",
+      "before merge"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "scope-and-techniques",
+      "description": "The analyzer accepts files, directories, or repositories and combines pattern matching, AST analysis, and data-flow analysis."
+    },
+    {
+      "id": "language-depth-matrix",
+      "description": "All listed languages receive full syntax, security, and complexity analysis; type depth remains full, assisted, or partial according to the source matrix."
+    },
+    {
+      "id": "syntax-style-analysis",
+      "description": "Style analysis covers formatting, naming, unused symbols, dead code, line length, and missing documentation."
+    },
+    {
+      "id": "bug-detection",
+      "description": "Bug analysis covers null dereferences, type mismatches, bounds errors, resource leaks, races, and unreachable paths."
+    },
+    {
+      "id": "security-analysis",
+      "description": "Security analysis covers injection and XSS, authentication weaknesses, secret exposure, XXE, missing authorization, misconfiguration, and vulnerable dependencies."
+    },
+    {
+      "id": "complexity-metrics",
+      "description": "Complexity reporting includes cyclomatic, cognitive, Halstead, physical and logical LOC, and inheritance depth."
+    },
+    {
+      "id": "dependency-analysis",
+      "description": "Dependency analysis covers outdated, vulnerable, unused, circular, and license-incompatible dependencies."
+    },
+    {
+      "id": "profile-semantics",
+      "description": "Quick is essential-only, standard is balanced, strict enables all rules, and security focuses on vulnerabilities."
+    },
+    {
+      "id": "output-contract",
+      "description": "Reports can be emitted to console, JSON, HTML, or GitHub-compatible SARIF."
+    },
+    {
+      "id": "language-configuration",
+      "description": "Per-language enablement, rules, ignores, and JavaScript extension selection remain configurable."
+    },
+    {
+      "id": "security-configuration",
+      "description": "Dependency scanning, secret checks, and OWASP checks remain independently configurable."
+    },
+    {
+      "id": "complexity-thresholds",
+      "description": "Cyclomatic, cognitive, line-length, and function-length limits retain their individual thresholds."
+    },
+    {
+      "id": "severity-contract",
+      "description": "Errors are merge-blocking, warnings require review, and info or hint findings are optional."
+    },
+    {
+      "id": "console-sample-contract",
+      "description": "The canonical console sample retains locations, per-finding severities and rule classes, and the aggregate summary."
+    },
+    {
+      "id": "git-hook-integration",
+      "description": "The pre-commit hook analyzes staged changes and blocks at error severity."
+    },
+    {
+      "id": "github-sarif-flow",
+      "description": "GitHub Actions checks out code, produces SARIF, and uploads the same results file through CodeQL."
+    },
+    {
+      "id": "ide-integrations",
+      "description": "VS Code uses an extension, IntelliJ uses an external tool, and Vim or Neovim uses ALE or coc.nvim."
+    },
+    {
+      "id": "custom-rule-api-key",
+      "description": "The API-key custom rule matches hardcoded assignments and emits an error for Python and JavaScript."
+    },
+    {
+      "id": "custom-rule-fetch-catch",
+      "description": "The fetch custom rule detects calls without catch handling and emits a warning for JavaScript and TypeScript."
+    },
+    {
+      "id": "performance-optimizations",
+      "description": "Large-codebase analysis remains incremental, parallel, cached, and streaming."
+    },
+    {
+      "id": "performance-targets",
+      "description": "Small, medium, and large LOC bands retain their separate target completion times."
+    },
+    {
+      "id": "binary-file-limit",
+      "description": "Binary files are excluded from analysis."
+    },
+    {
+      "id": "generated-code-limit",
+      "description": "Generated code may create false positives."
+    },
+    {
+      "id": "language-framework-limits",
+      "description": "Feature support and accuracy vary by language, and custom frameworks may require custom rules."
+    },
+    {
+      "id": "best-practice-order",
+      "description": "Begin with standard, prioritize errors, integrate early, customize exceptions, and periodically run full analysis."
+    },
+    {
+      "id": "historical-trends",
+      "description": "Historical trend analysis remains part of the analyzer capability."
+    },
+    {
+      "id": "reference-links",
+      "description": "Rule, security, custom-rule, and CI/CD references retain their respective guide roles."
+    }
+  ]
+}

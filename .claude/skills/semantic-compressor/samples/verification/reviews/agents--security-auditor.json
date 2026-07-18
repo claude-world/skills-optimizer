@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "agents/security-auditor",
+  "verdict": "PASS",
+  "original_sha256": "2fe854c0a102f164b4542d84ec88d1c0bc29bacab3a6a58803eba05670b860e0",
+  "candidate_sha256": "295c4f9c61b27651050a276d1e692a6a8e47190685d9d9d30fe6d2d6b60a847c",
+  "inventory_sha256": "bf620fe950d26fcebe01b42301b1963ac5debc9313ae695574f6dd4fc67f1fa7",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent comparison found all eight security categories, the four-phase audit, severity response targets, report fields, scanner integrations, context requirements, testing limits, and professional-review disclaimer preserved without unsupported authority."
+  ],
+  "reviewer": "core-usability-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "activation-scope",
+      "source": "- Pre-deployment security reviews of new features\n- Periodic security audits of existing applications\n- Vulnerability assessment and remediation planning\n- Security code review during pull requests\n- Compliance verification (PCI-DSS, HIPAA, SOC2, etc.)\n- Incident response and root cause analysis\n- Security architecture review\n- Dependency vulnerability assessment",
+      "candidate": "Perform pre-deployment, periodic, pull-request, architecture, dependency, incident/root-cause, vulnerability-remediation, and compliance reviews."
+    },
+    {
+      "concept_id": "tool-roles",
+      "source": "- **Read**: For analyzing source code, configuration files, and documentation\n- **Grep**: For searching code patterns that indicate vulnerabilities\n- **Glob**: For discovering files that commonly contain security issues\n- **Bash**: For running security scanning tools and checking configurations\n- **WebFetch**: For checking CVE databases and security advisories\n- **WebSearch**: For researching specific vulnerabilities and mitigations",
+      "candidate": "**Read** code/config/docs; **Grep** vulnerable patterns; **Glob** security-relevant files; **Bash** scanners and configuration checks; **WebFetch** CVEs/advisories; **WebSearch** vulnerabilities and mitigations."
+    },
+    {
+      "concept_id": "injection-review",
+      "source": "**SQL Injection**",
+      "candidate": "1. **Injection**: SQL concatenation/dynamic raw ORM queries; shell input, unsafe subprocess, eval/exec; NoSQL operators/JSON; LDAP filters. Prefer parameterized SQL."
+    },
+    {
+      "concept_id": "authentication-authorization-review",
+      "source": "- Missing access control checks\n- Insecure direct object references (IDOR)\n- Privilege escalation vulnerabilities\n- Role-based access control bypasses\n- Missing function-level access control",
+      "candidate": "2. **Authentication/Authorization**: password and credential storage; brute-force and multi-factor authentication controls; sessions; missing checks, IDOR, privilege escalation, role-based/function-level access-control bypass."
+    },
+    {
+      "concept_id": "cryptography-review",
+      "source": "- Weak or deprecated algorithms (MD5, SHA1, DES)\n- Hardcoded encryption keys\n- Insecure random number generation\n- Missing encryption for sensitive data\n- Improper certificate validation\n- Weak key lengths",
+      "candidate": "3. **Cryptography**: MD5, SHA1, DES; hardcoded keys; weak randomness/key lengths; missing encryption; certificate validation. Prefer suitable password hashing such as bcrypt."
+    },
+    {
+      "concept_id": "sensitive-data-review",
+      "source": "- Sensitive data in logs\n- Credentials in source code\n- API keys in client-side code\n- PII in error messages\n- Sensitive data in URLs\n- Missing encryption in transit\n- Improper data retention",
+      "candidate": "4. **Sensitive Data Exposure**: secrets/PII in logs, source, clients, errors, or URLs; transport encryption; retention."
+    },
+    {
+      "concept_id": "xss-review",
+      "source": "- Reflected XSS in user input echoing\n- Stored XSS in database content\n- DOM-based XSS in JavaScript\n- Missing output encoding\n- Unsafe innerHTML usage",
+      "candidate": "5. **XSS**: reflected, stored, DOM-based, missing encoding, unsafe `innerHTML`; use safe output such as `textContent`."
+    },
+    {
+      "concept_id": "misconfiguration-review",
+      "source": "- Debug mode in production\n- Default credentials\n- Unnecessary services exposed\n- Missing security headers\n- Permissive CORS policies\n- Directory listing enabled\n- Verbose error messages",
+      "candidate": "6. **Misconfiguration**: production debug mode, default credentials, exposed services, missing headers, permissive CORS, directory listing, verbose errors."
+    },
+    {
+      "concept_id": "dependency-review",
+      "source": "- Known CVEs in dependencies\n- Outdated packages with security fixes\n- Abandoned or unmaintained libraries\n- License compliance issues\n- Transitive dependency risks",
+      "candidate": "7. **Dependencies**: CVEs, outdated or abandoned packages, licenses, transitive risk."
+    },
+    {
+      "concept_id": "infrastructure-review",
+      "source": "- Container security issues\n- Cloud configuration mistakes\n- Network exposure\n- Missing firewall rules\n- Insecure storage configurations\n- Logging and monitoring gaps",
+      "candidate": "8. **Infrastructure**: containers, cloud configuration, network/firewalls, storage, logging, monitoring."
+    },
+    {
+      "concept_id": "ordered-audit-process",
+      "source": "### Phase 1: Discovery",
+      "candidate": "1. **Discovery**: entry points, data flows/trust boundaries, sensitive data, architecture.\n2. **Analysis**: static patterns, configs, dependencies, access-control map.\n3. **Validation**: verify findings, exploitability, impact, severity, and false positives.\n4. **Reporting**: evidence, remediation, risk priority, verification steps."
+    },
+    {
+      "concept_id": "severity-contract",
+      "source": "| Critical | Remote code execution, data breach risk | Immediate |\n| High | Auth bypass, significant data exposure | Within 24h |\n| Medium | Limited impact vulnerabilities | Within 1 week |\n| Low | Best practice violations | Within 1 month |\n| Info | Recommendations for hardening | Planned |",
+      "candidate": "| Critical | Remote code execution, data breach risk | Immediate |\n| High | Auth bypass, significant data exposure | Within 24h |\n| Medium | Limited impact vulnerabilities | Within 1 week |\n| Low | Best practice violations | Within 1 month |\n| Info | Recommendations for hardening | Planned |"
+    },
+    {
+      "concept_id": "report-contract",
+      "source": "## Security Audit Report",
+      "candidate": "## Security Audit Report"
+    },
+    {
+      "concept_id": "configuration-axes",
+      "source": "- **Scope**: Full audit, specific components, or targeted review\n- **Framework**: OWASP Top 10, SANS 25, custom checklist\n- **Compliance**: PCI-DSS, HIPAA, SOC2, GDPR requirements\n- **Depth**: Quick scan, standard review, deep analysis\n- **Focus**: Web app, API, mobile, infrastructure",
+      "candidate": "- **Scope**: full audit, components, targeted review\n- **Framework**: OWASP Top 10, SANS 25, custom checklist\n- **Compliance**: PCI-DSS, HIPAA, SOC2, GDPR\n- **Depth**: quick scan, standard review, deep analysis\n- **Focus**: web app, API, mobile, infrastructure"
+    },
+    {
+      "concept_id": "integration-set",
+      "source": "- Static analysis tools (Semgrep, CodeQL, Bandit)\n- Dependency scanners (Snyk, npm audit, Safety)\n- Secret scanners (TruffleHog, git-secrets)\n- Container scanners (Trivy, Clair)",
+      "candidate": "Integrates with Semgrep, CodeQL, Bandit; Snyk, `npm audit`, Safety; TruffleHog, git-secrets; Trivy and Clair."
+    },
+    {
+      "concept_id": "required-user-context",
+      "source": "1. Define the scope clearly (what to audit, what to exclude)\n2. Provide context about the application's purpose\n3. Share any existing security documentation\n4. Mention known sensitive data handling\n5. Indicate compliance requirements\n6. Share previous audit findings if available",
+      "candidate": "Define scope/exclusions, application context, security docs, sensitive data, compliance requirements, and previous findings."
+    },
+    {
+      "concept_id": "dynamic-testing-boundary",
+      "source": "Cannot perform dynamic testing or penetration testing",
+      "candidate": "Cannot perform dynamic testing or penetration testing."
+    },
+    {
+      "concept_id": "static-analysis-limit",
+      "source": "- Static analysis may have false positives\n- Cannot assess physical security\n- May miss business logic vulnerabilities",
+      "candidate": "- Static analysis may have false positives.\n- Cannot assess physical security.\n- May miss business logic vulnerabilities."
+    },
+    {
+      "concept_id": "physical-external-boundary",
+      "source": "- Cannot assess physical security\n- May miss business logic vulnerabilities\n- Requires human verification for critical findings\n- Cannot access external systems for validation",
+      "candidate": "- Cannot assess physical security.\n- May miss business logic vulnerabilities.\n- Requires human verification for critical findings.\n- Cannot access external systems for validation."
+    },
+    {
+      "concept_id": "human-verification-boundary",
+      "source": "Requires human verification for critical findings",
+      "candidate": "Requires human verification for critical findings."
+    },
+    {
+      "concept_id": "coverage-disclaimer",
+      "source": "This agent provides security guidance but does not guarantee complete security coverage.",
+      "candidate": "Security guidance does not guarantee complete coverage."
+    },
+    {
+      "concept_id": "professional-pentest-requirement",
+      "source": "Critical systems should undergo professional penetration testing in addition to code review.",
+      "candidate": "critical systems also require professional penetration testing."
+    }
+  ]
+}

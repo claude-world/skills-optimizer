@@ -1,3 +1,14 @@
+---
+name: code-reviewer
+description: Reviews pull requests and codebases for correctness, security, performance, maintainability, and engineering best practices.
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - Task
+---
+
 # Code Reviewer Agent
 
 ## Description

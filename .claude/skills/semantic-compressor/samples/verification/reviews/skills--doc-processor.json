@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "id": "skills/doc-processor",
+  "verdict": "PASS",
+  "original_sha256": "bafe5d03e738e78107b5925acbfb3d8c06b79e571c9b6620de65f07b716f27ce",
+  "candidate_sha256": "7b3f960dbc57fdb8afcda63d1b7fd981b18a3876ea4e7b13219da292201c200c",
+  "inventory_sha256": "e4fe105528751480b04b60cf719923133022ec97e33c63a813957b665fa5e501",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent read-only comparison found all 20 inventoried concepts preserved, including the full format and conversion matrices, collaboration and embedded-content features, the exact report-template structure, backup and password safeguards, limits, recovery order, and references, with no unsupported additions."
+  ],
+  "reviewer": "benchmark-test-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "supported-format-matrix",
+      "source": "Full read/write with formatting",
+      "candidate": "Full read/write with formatting"
+    },
+    {
+      "concept_id": "format-preservation",
+      "source": "maintaining proper formatting and structure",
+      "candidate": "preserving formatting and structure."
+    },
+    {
+      "concept_id": "creation-modes",
+      "source": "Start with an empty document and add content",
+      "candidate": "Create blank, template-based, or converted documents."
+    },
+    {
+      "concept_id": "editing-capabilities",
+      "source": "Apply fonts, styles, colors, and alignment",
+      "candidate": "Edit text; fonts/styles/colors/alignment; headings/lists/tables"
+    },
+    {
+      "concept_id": "collaboration-features",
+      "source": "Enable revision tracking for collaborative editing",
+      "candidate": "tracked changes; inline comments/annotations."
+    },
+    {
+      "concept_id": "embedded-content-support",
+      "source": "Image embedding support",
+      "candidate": "tables, images"
+    },
+    {
+      "concept_id": "analysis-capabilities",
+      "source": "Word count, page count, reading time estimates",
+      "candidate": "calculate word/page counts and reading-time estimates; search text/patterns."
+    },
+    {
+      "concept_id": "conversion-matrix",
+      "source": "Word to PDF",
+      "candidate": "Convert Word→PDF, PDF→Word with OCR when needed, Markdown→Word/PDF, or any supported format→plain text."
+    },
+    {
+      "concept_id": "ocr-fallback",
+      "source": "PDF to Word (with OCR if needed)",
+      "candidate": "PDF→Word with OCR when needed"
+    },
+    {
+      "concept_id": "report-template-contract",
+      "source": "This will create a new Word document with standard report formatting including title page, table of contents placeholder, and section headers.",
+      "candidate": "`/doc-processor create report` creates a Word document with standard report formatting: a title page, table of contents placeholder, and section headers."
+    },
+    {
+      "concept_id": "backup-before-edit",
+      "source": "Before making changes to important documents, create a backup",
+      "candidate": "Back up important documents before editing"
+    },
+    {
+      "concept_id": "track-collaborative-edits",
+      "source": "For collaborative work, enable track changes to maintain history",
+      "candidate": "use tracked changes for collaboration"
+    },
+    {
+      "concept_id": "post-conversion-check",
+      "source": "After conversion, verify that formatting was preserved correctly",
+      "candidate": "verify formatting after conversion"
+    },
+    {
+      "concept_id": "image-heavy-performance",
+      "source": "Large documents with many images may take longer to process",
+      "candidate": "expect image-heavy files to take longer"
+    },
+    {
+      "concept_id": "complex-pdf-limit",
+      "source": "Complex PDF layouts may not convert perfectly to editable formats",
+      "candidate": "Complex PDF layouts may convert imperfectly."
+    },
+    {
+      "concept_id": "advanced-word-limit",
+      "source": "Some advanced Word features (macros, embedded objects) may not be fully supported",
+      "candidate": "Advanced Word macros/embedded objects may be unsupported."
+    },
+    {
+      "concept_id": "large-file-limit",
+      "source": "Very large documents (>50MB) may experience slower processing times",
+      "candidate": "Files `>50MB` may be slower."
+    },
+    {
+      "concept_id": "password-required",
+      "source": "Encrypted or password-protected documents require the password to access",
+      "candidate": "Encrypted/password-protected files require the password."
+    },
+    {
+      "concept_id": "error-recovery-order",
+      "source": "For conversion errors, try a simpler target format first",
+      "candidate": "On error, verify the path exists, permissions allow access, the file is uncorrupted and supported, then retry conversion with a simpler target format."
+    },
+    {
+      "concept_id": "reference-links",
+      "source": "Template gallery: `templates.md`",
+      "candidate": "References: templates `templates.md`, formats `formats.md`, troubleshooting `troubleshooting.md`."
+    }
+  ]
+}

@@ -1,3 +1,15 @@
+---
+name: security-auditor
+description: Audits application code, dependencies, infrastructure, deployment practices, compliance, and vulnerability remediation.
+tools:
+  - Read
+  - Grep
+  - Glob
+  - Bash
+  - WebFetch
+  - WebSearch
+---
+
 # Security Auditor Agent
 
 ## Description

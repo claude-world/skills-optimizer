@@ -1,0 +1,153 @@
+{
+  "schema_version": 1,
+  "id": "skills/code-analyzer",
+  "verdict": "PASS",
+  "original_sha256": "fec9f883cdcf6ab3590ee70eb6147d76dbe8e250e71205b9bfca09bcb50bc327",
+  "candidate_sha256": "2ef3f072e8b145332fe49a4ac88f6494e2a6a3e056cd874de19ac2f45337f717",
+  "inventory_sha256": "82c9b8729be9eca421b949fcd2ccc171215e3ebecdf9ef424b7d4cc0c2bf602a",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent read-only comparison found all 27 inventoried concepts preserved across analysis scope, language-depth boundaries, commands and profiles, configuration thresholds, integrations, custom-rule behavior, performance limits, best-practice ordering, trends, and references, without unsupported capabilities."
+  ],
+  "reviewer": "benchmark-test-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "scope-and-techniques",
+      "source": "abstract syntax tree analysis",
+      "candidate": "pattern matching, AST, and data flow"
+    },
+    {
+      "concept_id": "language-depth-matrix",
+      "source": "varying levels of analysis depth",
+      "candidate": "All listed languages receive full syntax, security, and complexity analysis. Type analysis is full for TypeScript/Java/Go/Rust, uses TypeScript for JavaScript and type hints for Python, and is partial for C/C++/Ruby/PHP."
+    },
+    {
+      "concept_id": "syntax-style-analysis",
+      "source": "Indentation and formatting issues",
+      "candidate": "1. Syntax/style: indentation, formatting, naming, unused variables/imports, dead code, line length, missing documentation."
+    },
+    {
+      "concept_id": "bug-detection",
+      "source": "Null pointer dereferences",
+      "candidate": "2. Bugs: null dereferences, type mismatches, array bounds, unclosed files/connections, races, unreachable paths."
+    },
+    {
+      "concept_id": "security-analysis",
+      "source": "Identifies security vulnerabilities based on OWASP Top 10",
+      "candidate": "3. Security: SQL/command injection, XSS, weak passwords/sessions, hardcoded or logged secrets, XXE, missing authorization, debug/default-credential misconfiguration, vulnerable dependencies/CVEs."
+    },
+    {
+      "concept_id": "complexity-metrics",
+      "source": "Cyclomatic Complexity: Measures decision points in code",
+      "candidate": "4. Metrics: cyclomatic/cognitive/Halstead complexity, physical/logical LOC, inheritance depth."
+    },
+    {
+      "concept_id": "dependency-analysis",
+      "source": "Outdated packages",
+      "candidate": "5. Dependencies: outdated/vulnerable/unused packages, license compatibility, circular dependencies."
+    },
+    {
+      "concept_id": "profile-semantics",
+      "source": "Quick check - fast, essential issues only",
+      "candidate": "Profiles mean quick/essential, standard/balanced, strict/all-rules, and security-focused."
+    },
+    {
+      "concept_id": "output-contract",
+      "source": "The skill can generate reports in various formats",
+      "candidate": "Outputs are console (default), JSON, HTML, or GitHub-compatible SARIF."
+    },
+    {
+      "concept_id": "language-configuration",
+      "source": "Create a `.code-analyzer.yaml` file for custom settings",
+      "candidate": "`.code-analyzer.yaml` supports language enablement"
+    },
+    {
+      "concept_id": "security-configuration",
+      "source": "scan_dependencies: true",
+      "candidate": "`scan_dependencies`, `check_secrets`, `owasp_top_10`"
+    },
+    {
+      "concept_id": "complexity-thresholds",
+      "source": "max_cyclomatic: 10",
+      "candidate": "`max_cyclomatic: 10`, `max_cognitive: 15`, `max_line_length: 120`, `max_function_lines: 50`"
+    },
+    {
+      "concept_id": "severity-contract",
+      "source": "Critical issues that must be fixed",
+      "candidate": "Severity: Error (critical; fix before merge), Warning (review recommended), Info or Hint (optional)."
+    },
+    {
+      "concept_id": "console-sample-contract",
+      "source": "Summary: 2 errors, 2 warnings, 1 info",
+      "candidate": "totals are `2 errors, 2 warnings, 1 info`."
+    },
+    {
+      "concept_id": "git-hook-integration",
+      "source": "/code-analyzer analyze --staged --severity error",
+      "candidate": "/code-analyzer analyze --staged --severity error"
+    },
+    {
+      "concept_id": "github-sarif-flow",
+      "source": "github/codeql-action/upload-sarif@v2",
+      "candidate": "GitHub Actions: `actions/checkout@v3`, run SARIF with `--output results.sarif`, then `github/codeql-action/upload-sarif@v2` using `sarif_file: results.sarif`."
+    },
+    {
+      "concept_id": "ide-integrations",
+      "source": "Install the Code Analyzer extension",
+      "candidate": "IDEs: VS Code extension; IntelliJ external tool; Vim/Neovim with ALE or coc.nvim."
+    },
+    {
+      "concept_id": "custom-rule-api-key",
+      "source": "no-api-keys-in-code",
+      "candidate": "Preserve examples `api_key\\s*=\\s*[\"'][a-zA-Z0-9]+[\"']` → `\"Do not hardcode API keys\"`/error for Python+JavaScript"
+    },
+    {
+      "concept_id": "custom-rule-fetch-catch",
+      "source": "require-error-handling",
+      "candidate": "`fetch\\([^)]+\\)(?!\\s*\\.\\s*catch)` → `\"fetch() calls must have error handling\"`/warning for JavaScript+TypeScript."
+    },
+    {
+      "concept_id": "performance-optimizations",
+      "source": "Incremental analysis (only changed files)",
+      "candidate": "Incremental, parallel, cached, streaming analysis"
+    },
+    {
+      "concept_id": "performance-targets",
+      "source": "Small project (< 10K LOC): < 5 seconds",
+      "candidate": "`<10K LOC` in `<5 seconds`; `10K-100K` in `<30 seconds`; `>100K` in `<2 minutes`."
+    },
+    {
+      "concept_id": "binary-file-limit",
+      "source": "Binary files are not analyzed",
+      "candidate": "Binary files are not analyzed"
+    },
+    {
+      "concept_id": "generated-code-limit",
+      "source": "Generated code may produce false positives",
+      "candidate": "generated code can false-positive"
+    },
+    {
+      "concept_id": "language-framework-limits",
+      "source": "Some language features may not be fully supported",
+      "candidate": "language features/accuracy vary; custom frameworks may need rules."
+    },
+    {
+      "concept_id": "best-practice-order",
+      "source": "Start with Standard Profile",
+      "candidate": "Start standard, fix errors before warnings, integrate early, customize exceptions, and periodically run full analysis."
+    },
+    {
+      "concept_id": "historical-trends",
+      "source": "Historical trend analysis",
+      "candidate": "and trends."
+    },
+    {
+      "concept_id": "reference-links",
+      "source": "Rule reference: `rules/index.md`",
+      "candidate": "References: rules `rules/index.md`, security scanning `guides/security.md`, custom rules `guides/custom-rules.md`, CI/CD `guides/ci-cd.md`."
+    }
+  ]
+}

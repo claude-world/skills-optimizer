@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "id": "agents/code-reviewer",
+  "verdict": "PASS",
+  "original_sha256": "47cbdfbbae2272ad6cd49482e1abf0d2f1fcec5376d1bdf4e5d511f541982ac9",
+  "candidate_sha256": "6200202de5e461a970de39b7ef2ed1b924c50f3663ec297f89aaf94e8fb8283e",
+  "inventory_sha256": "5c66438171084edc0dcdd7501bb95c9433ce80d879497c452c2410444a21f424",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent line-by-line comparison found the activation scope, five review categories, ordered process, report shape, configuration, required context, and all limitations preserved without new capabilities."
+  ],
+  "reviewer": "core-usability-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "activation-scope",
+      "source": "Reviewing pull requests before they are merged into the main branch",
+      "candidate": "Review pull requests or existing codebases, explain review standards to new team members, identify technical debt, and enforce project style guides."
+    },
+    {
+      "concept_id": "review-granularity",
+      "source": "The agent takes a systematic approach to code review, examining code at multiple levels from individual lines to overall architecture. It provides constructive feedback that is actionable and educational, helping developers improve their skills over time.",
+      "candidate": "Examine individual lines and architecture; make feedback constructive, actionable, and educational."
+    },
+    {
+      "concept_id": "tool-roles",
+      "source": "- **Bash**: For running linters, test suites, and other analysis tools\n- **Task**: For delegating specialized analysis to other agents when needed",
+      "candidate": "- **Bash** runs linters, tests, and analysis tools. **Task** delegates specialized analysis when needed."
+    },
+    {
+      "concept_id": "correctness-checks",
+      "source": "- Off-by-one errors in loops and array indexing\n- Null pointer dereferences and undefined value access\n- Type mismatches and incorrect type conversions\n- Logic errors in conditional statements\n- Incorrect error handling and exception propagation\n- Resource management issues (memory leaks, unclosed resources)\n- Concurrency issues (race conditions, deadlocks)",
+      "candidate": "1. **Code Correctness**: off-by-one and indexing errors; null/undefined access; type mismatches/conversions; conditional logic; error/exception propagation; memory leaks or unclosed resources; races and deadlocks."
+    },
+    {
+      "concept_id": "security-checks",
+      "source": "- Input validation and sanitization\n- SQL injection vulnerabilities\n- Cross-site scripting (XSS) possibilities\n- Authentication and authorization issues\n- Sensitive data exposure\n- Insecure cryptographic practices\n- Dependency vulnerabilities",
+      "candidate": "2. **Security**: input validation/sanitization; SQL injection; XSS; authentication/authorization; sensitive-data exposure; insecure cryptography; dependency vulnerabilities."
+    },
+    {
+      "concept_id": "performance-checks",
+      "source": "- Algorithm complexity and efficiency\n- Database query optimization\n- Memory usage patterns\n- Network request efficiency\n- Caching opportunities\n- Lazy loading considerations\n- Resource pooling and connection management",
+      "candidate": "3. **Performance**: algorithm complexity; database queries; memory and network use; caching and lazy loading; resource pools/connections."
+    },
+    {
+      "concept_id": "maintainability-checks",
+      "source": "- Code readability and clarity\n- Function and class size\n- Code duplication\n- Naming conventions\n- Documentation quality\n- Test coverage\n- Modularity and separation of concerns",
+      "candidate": "4. **Maintainability**: readability; function/class size; duplication; naming; documentation; test coverage; modularity and separation of concerns."
+    },
+    {
+      "concept_id": "best-practice-checks",
+      "source": "- SOLID principles\n- DRY (Don't Repeat Yourself)\n- KISS (Keep It Simple, Stupid)\n- Proper error handling patterns\n- Logging and observability\n- Configuration management\n- Version control practices",
+      "candidate": "5. **Best Practices**: SOLID, DRY, KISS, error handling, logging/observability, configuration management, and version control."
+    },
+    {
+      "concept_id": "ordered-review-process",
+      "source": "1. **Context Gathering**: First, the agent reads the relevant files and understands the context of the changes being reviewed.",
+      "candidate": "1. Gather purpose, architecture, changed and related files.\n2. Perform static analysis for anti-patterns, vulnerabilities, and code smells.\n3. Trace logic, edge cases, and error conditions.\n4. Check project formatting, naming, documentation, standards, and style guides.\n5. Check associated tests adequately cover changed behavior.\n6. Produce a structured, actionable report."
+    },
+    {
+      "concept_id": "report-contract",
+      "source": "## Code Review Summary",
+      "candidate": "## Code Review Summary"
+    },
+    {
+      "concept_id": "configuration-axes",
+      "source": "- **Review Depth**: How deeply to analyze the code (quick, standard, thorough)\n- **Focus Areas**: Which categories to prioritize (security, performance, all)\n- **Severity Threshold**: Minimum severity level to report\n- **Style Guide**: Which coding standards to apply\n- **Language**: Programming language specific rules",
+      "candidate": "- **Review Depth**: quick, standard, thorough\n- **Focus Areas**: security, performance, all\n- **Severity Threshold**: minimum severity to report\n- **Style Guide**: coding standards to apply\n- **Language**: programming-language-specific rules"
+    },
+    {
+      "concept_id": "required-user-context",
+      "source": "1. Provide clear context about what you want reviewed\n2. Mention any specific areas of concern\n3. Indicate the project's coding standards if they differ from common practices\n4. Share information about the feature or bug being addressed\n5. Let the agent know if this is a draft or final review",
+      "candidate": "Provide clear review context, concerns, project-specific standards, feature/bug information, and whether the review is draft or final."
+    },
+    {
+      "concept_id": "runtime-boundary",
+      "source": "Cannot execute code to verify runtime behavior",
+      "candidate": "Cannot execute code to verify runtime behavior"
+    },
+    {
+      "concept_id": "analysis-limitations",
+      "source": "- May miss issues that require deep domain knowledge\n- Static analysis cannot catch all types of bugs",
+      "candidate": "May miss deep domain issues or produce false positives in complex codebases."
+    },
+    {
+      "concept_id": "human-review-boundary",
+      "source": "Does not replace human code review for critical systems",
+      "candidate": "Does not replace human review for critical systems."
+    }
+  ]
+}

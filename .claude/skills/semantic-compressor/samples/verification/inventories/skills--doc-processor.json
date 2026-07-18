@@ -1,0 +1,149 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "bafe5d03e738e78107b5925acbfb3d8c06b79e571c9b6620de65f07b716f27ce",
+  "literals": {
+    "triggers": [
+      "Word document",
+      "editing contracts",
+      "extracting information",
+      "professional document workflows"
+    ],
+    "commands": [
+      "/doc-processor create --type docx --template report",
+      "/doc-processor edit <file_path> --track-changes",
+      "/doc-processor extract <file_path> --format text",
+      "/doc-processor convert <input_file> --to pdf",
+      "/doc-processor create report",
+      "/doc-processor edit contract.docx --track-changes --comment \"Updated clause 3.2\"",
+      "/doc-processor extract invoice.pdf --format text --preserve-layout"
+    ],
+    "tools": [
+      "Microsoft Word",
+      "OCR"
+    ],
+    "formats": [
+      ".docx",
+      ".pdf",
+      ".txt",
+      ".rtf",
+      ".md",
+      "plain text",
+      "title page",
+      "table of contents placeholder",
+      "section headers"
+    ],
+    "paths": [
+      "<file_path>",
+      "<input_file>",
+      "contract.docx",
+      "invoice.pdf",
+      "templates.md",
+      "formats.md",
+      "troubleshooting.md"
+    ],
+    "numbers": [
+      "3.2",
+      ">50MB"
+    ],
+    "error_messages": [],
+    "security_rules": [
+      "require the password",
+      "password-protected",
+      "--track-changes",
+      ">50MB"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "supported-format-matrix",
+      "description": "Word and Markdown have full read/write support, PDF supports reading, extraction, and basic manipulation, plain text is full read/write, and Rich Text is basic read/write."
+    },
+    {
+      "id": "format-preservation",
+      "description": "Document operations preserve formatting and structural organization where the format supports it."
+    },
+    {
+      "id": "creation-modes",
+      "description": "Documents may be created blank, from predefined templates, or by conversion."
+    },
+    {
+      "id": "editing-capabilities",
+      "description": "Editing covers text, fonts, styles, colors, alignment, headings, lists, and tables."
+    },
+    {
+      "id": "collaboration-features",
+      "description": "Tracked changes, revision history, inline comments, and annotations remain supported."
+    },
+    {
+      "id": "embedded-content-support",
+      "description": "Document generation supports tables and embedded images."
+    },
+    {
+      "id": "analysis-capabilities",
+      "description": "Analysis extracts text and hierarchy, computes word and page counts and reading time, and searches text or patterns."
+    },
+    {
+      "id": "conversion-matrix",
+      "description": "Conversions cover Word to PDF, PDF to Word, Markdown to Word or PDF, and every supported format to plain text."
+    },
+    {
+      "id": "ocr-fallback",
+      "description": "PDF-to-Word conversion uses OCR when needed."
+    },
+    {
+      "id": "report-template-contract",
+      "description": "The report shortcut creates a Word document with a title page, table-of-contents placeholder, and section headers."
+    },
+    {
+      "id": "backup-before-edit",
+      "description": "Important documents are backed up before editing."
+    },
+    {
+      "id": "track-collaborative-edits",
+      "description": "Collaborative edits use tracked changes to retain history."
+    },
+    {
+      "id": "post-conversion-check",
+      "description": "Formatting is verified after conversion."
+    },
+    {
+      "id": "image-heavy-performance",
+      "description": "Documents containing many images may process more slowly."
+    },
+    {
+      "id": "complex-pdf-limit",
+      "description": "Complex PDF layouts may not convert perfectly to editable formats."
+    },
+    {
+      "id": "advanced-word-limit",
+      "description": "Macros and embedded objects may not be fully supported."
+    },
+    {
+      "id": "large-file-limit",
+      "description": "Documents above 50MB may process more slowly."
+    },
+    {
+      "id": "password-required",
+      "description": "Encrypted or password-protected documents cannot be accessed without the password."
+    },
+    {
+      "id": "error-recovery-order",
+      "description": "Recovery checks path existence, permissions, corruption or unsupported format, then retries conversion with a simpler target."
+    },
+    {
+      "id": "reference-links",
+      "description": "Template, format-support, and troubleshooting references retain their respective guide roles."
+    }
+  ]
+}

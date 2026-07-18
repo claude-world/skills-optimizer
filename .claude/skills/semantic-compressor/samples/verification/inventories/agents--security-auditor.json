@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "2fe854c0a102f164b4542d84ec88d1c0bc29bacab3a6a58803eba05670b860e0",
+  "literals": {
+    "triggers": [
+      "security",
+      "vulnerability",
+      "authentication",
+      "OWASP Top 10",
+      "PCI-DSS",
+      "HIPAA",
+      "SOC2"
+    ],
+    "commands": [
+      "Task(subagent_type=\"security-auditor\", prompt=\"Audit the authentication module for vulnerabilities...\")"
+    ],
+    "tools": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash",
+      "WebFetch",
+      "WebSearch",
+      "Semgrep",
+      "CodeQL",
+      "Bandit",
+      "Snyk",
+      "npm audit",
+      "Safety",
+      "TruffleHog",
+      "git-secrets",
+      "Trivy",
+      "Clair",
+      "bcrypt"
+    ],
+    "formats": [
+      "OWASP Top 10",
+      "SANS 25",
+      "PCI-DSS",
+      "HIPAA",
+      "SOC2",
+      "GDPR",
+      "```markdown",
+      "| Severity | Description | Response Time |",
+      "## Security Audit Report",
+      "### Executive Summary",
+      "### Critical Findings",
+      "### High Findings",
+      "### Medium Findings",
+      "### Recommendations",
+      "### Compliance Checklist",
+      "VULN-001"
+    ],
+    "paths": [
+      "src/api/users.py:45"
+    ],
+    "numbers": [
+      "Within 24h",
+      "Within 1 week",
+      "Within 1 month",
+      "9.8",
+      "SANS 25",
+      "VULN-001"
+    ],
+    "error_messages": [],
+    "security_rules": [
+      "parameterized",
+      "bcrypt",
+      "textContent",
+      "Cannot perform dynamic testing or penetration testing",
+      "Static analysis may have false positives",
+      "Cannot assess physical security",
+      "May miss business logic vulnerabilities",
+      "Requires human verification for critical findings",
+      "Cannot access external systems for validation",
+      "does not guarantee complete",
+      "professional penetration testing"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "activation-scope",
+      "description": "Perform pre-deployment, periodic, pull-request, architecture, dependency, incident/root-cause, remediation, and compliance reviews."
+    },
+    {
+      "id": "tool-roles",
+      "description": "Read/search/discover security evidence, run scanners/config checks, retrieve advisories, and research vulnerabilities and mitigations."
+    },
+    {
+      "id": "injection-review",
+      "description": "Cover SQL, command, NoSQL, and LDAP injection and require safe parameterization rather than untrusted concatenation."
+    },
+    {
+      "id": "authentication-authorization-review",
+      "description": "Cover credentials, brute-force controls, MFA, sessions, missing access checks, IDOR, privilege escalation, and function-level controls."
+    },
+    {
+      "id": "cryptography-review",
+      "description": "Flag deprecated algorithms, embedded keys, weak randomness/key lengths, missing encryption, and certificate-validation errors."
+    },
+    {
+      "id": "sensitive-data-review",
+      "description": "Check secrets and PII in logs/source/client/errors/URLs plus transport encryption and retention."
+    },
+    {
+      "id": "xss-review",
+      "description": "Cover reflected, stored, and DOM XSS, output encoding, and unsafe innerHTML; retain the textContent remediation."
+    },
+    {
+      "id": "misconfiguration-review",
+      "description": "Check production debug, default credentials, exposed services, headers, CORS, directory listing, and verbose errors."
+    },
+    {
+      "id": "dependency-review",
+      "description": "Check CVEs, outdated/abandoned packages, licenses, and transitive dependency risk."
+    },
+    {
+      "id": "infrastructure-review",
+      "description": "Check containers, cloud settings, network/firewalls, storage, logging, and monitoring."
+    },
+    {
+      "id": "ordered-audit-process",
+      "description": "Preserve discovery, analysis, validation, then reporting, including trust boundaries, exploitability/impact, false positives, evidence, and verification."
+    },
+    {
+      "id": "severity-contract",
+      "description": "Retain Critical/High/Medium/Low/Info meanings and Immediate/24h/one-week/one-month/Planned response targets."
+    },
+    {
+      "id": "report-contract",
+      "description": "Report executive risk, categorized findings, location, severity, CVSS, evidence/description, impact, remediation/code, verification, recommendations, and compliance status."
+    },
+    {
+      "id": "configuration-axes",
+      "description": "Support scope, framework, compliance, depth, and application-focus configuration."
+    },
+    {
+      "id": "integration-set",
+      "description": "Retain static-analysis, dependency, secret, and container scanner integrations."
+    },
+    {
+      "id": "required-user-context",
+      "description": "Require scope/exclusions, application purpose, security docs, sensitive-data handling, compliance needs, and prior findings."
+    },
+    {
+      "id": "dynamic-testing-boundary",
+      "description": "The agent cannot perform dynamic testing or penetration testing."
+    },
+    {
+      "id": "static-analysis-limit",
+      "description": "Static analysis can produce false positives and miss business-logic vulnerabilities."
+    },
+    {
+      "id": "physical-external-boundary",
+      "description": "The agent cannot assess physical security or access external systems for validation."
+    },
+    {
+      "id": "human-verification-boundary",
+      "description": "Qualified humans must verify findings, especially critical findings."
+    },
+    {
+      "id": "coverage-disclaimer",
+      "description": "Security guidance does not guarantee complete coverage."
+    },
+    {
+      "id": "professional-pentest-requirement",
+      "description": "Critical systems also require professional penetration testing."
+    }
+  ]
+}

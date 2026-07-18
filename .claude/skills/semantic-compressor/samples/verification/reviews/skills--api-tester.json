@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "skills/api-tester",
+  "verdict": "PASS",
+  "original_sha256": "1aa7cf4882ca655dc908a723e0c2b2c41816d7b8a372fdc883865a57138e8121",
+  "candidate_sha256": "5252f5b2739851ed04da8081d9ca41f639147374b30ec911c0c2f1421c88b93b",
+  "inventory_sha256": "7f223a206893d2398caa2db00443378b960adb6d57b38898c48e1902f1707cb0",
+  "missing_concepts": [],
+  "altered_meanings": [],
+  "unsupported_additions": [],
+  "evidence": [
+    "Independent read-only comparison found all 24 inventoried concepts preserved, including protocol and authentication boundaries, validation contracts, safety rules, numerical limits, error behavior, and reference paths, with no new capability claims."
+  ],
+  "reviewer": "benchmark-test-audit",
+  "reviewer_mode": "independent-read-only",
+  "concept_evidence": [
+    {
+      "concept_id": "rest-method-coverage",
+      "source": "GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS",
+      "candidate": "GET/POST/PUT/DELETE/PATCH/HEAD/OPTIONS"
+    },
+    {
+      "concept_id": "graphql-operation-boundary",
+      "source": "GraphQL subscriptions are not yet supported",
+      "candidate": "GraphQL subscriptions are unsupported"
+    },
+    {
+      "concept_id": "websocket-boundary",
+      "source": "WebSocket support is currently limited to basic connection testing",
+      "candidate": "WebSockets support basic connection testing only"
+    },
+    {
+      "concept_id": "grpc-beta",
+      "source": "Protocol buffer-based service testing (beta)",
+      "candidate": "gRPC/protocol buffers (beta)"
+    },
+    {
+      "concept_id": "authentication-matrix",
+      "source": "API Key, Bearer Token, OAuth2, Basic Auth",
+      "candidate": "API key (`X-API-Key`, header), bearer/JWT, OAuth 2.0 `client_credentials` or authorization-code flow, Basic username/password."
+    },
+    {
+      "concept_id": "body-and-schema-support",
+      "source": "Request body support (JSON, XML, form-data, raw)",
+      "candidate": "Bodies/formats: JSON, XML, form-data, raw; JSON Schema/custom response validators"
+    },
+    {
+      "concept_id": "environment-management",
+      "source": "Manage different environments for your API tests",
+      "candidate": "development/staging/production variables"
+    },
+    {
+      "concept_id": "collection-execution",
+      "source": "Organize related tests into collections",
+      "candidate": "reusable collections, chained requests, automated assertions"
+    },
+    {
+      "concept_id": "request-chaining",
+      "source": "Chain requests (use output from one as input to another)",
+      "candidate": "chained requests"
+    },
+    {
+      "concept_id": "load-and-doc-generation",
+      "source": "Generate API documentation from tests",
+      "candidate": "load/timing analysis, documentation generation"
+    },
+    {
+      "concept_id": "direct-request-examples",
+      "source": "GET https://api.example.com/users/123",
+      "candidate": "Direct request examples use `GET https://api.example.com/users/123` with `Accept: application/json`/`X-API-Key`, and JSON `POST https://api.example.com/users` with `Content-Type: application/json` plus name/email."
+    },
+    {
+      "concept_id": "response-validation-contract",
+      "source": "Validate API responses against expected schemas",
+      "candidate": "The canonical response schema requires status `200`, JSON content type, and an object body with required integer `id` and string `name` properties."
+    },
+    {
+      "concept_id": "assertion-contract",
+      "source": "The skill supports various assertion types for validating responses",
+      "candidate": "Assertions: `status == 200`, `body.name == \"John\"`, `headers.content-type contains \"json\"`, `time < 500` milliseconds, `body.items.length >= 10`"
+    },
+    {
+      "concept_id": "performance-output-contract",
+      "source": "Response Metrics:",
+      "candidate": "Timing output retains Total `245ms`, DNS `12ms`, TCP `23ms`, TLS `89ms`, TTFB `156ms`, download `34ms`, response size `1.2KB`."
+    },
+    {
+      "concept_id": "mock-server-contract",
+      "source": "Set up a mock server for testing client applications",
+      "candidate": "Mock server example listens on port `8080`; GET `/users` returns status `200` with ID `1`/name `Mock User`; POST returns `201`, `created: true`, and `{{random.uuid}}`."
+    },
+    {
+      "concept_id": "error-reporting",
+      "source": "Connection Errors",
+      "candidate": "Report connection, configurable-timeout, authentication, and SSL/TLS errors clearly."
+    },
+    {
+      "concept_id": "certificate-skip-boundary",
+      "source": "Options to skip certificate validation for testing",
+      "candidate": "Certificate validation may be skipped only for testing."
+    },
+    {
+      "concept_id": "secret-handling",
+      "source": "Never hardcode sensitive values like API keys",
+      "candidate": "Use environment variables; never hardcode API keys or other sensitive values."
+    },
+    {
+      "concept_id": "collection-versioning",
+      "source": "Keep test collections in version control",
+      "candidate": "Keep test collections in version control."
+    },
+    {
+      "concept_id": "edge-case-coverage",
+      "source": "Include tests for error conditions, not just happy paths",
+      "candidate": "Test failures and edge cases, not only happy paths."
+    },
+    {
+      "concept_id": "observable-test-quality",
+      "source": "Set reasonable time assertions to catch performance regressions",
+      "candidate": "Set reasonable response-time assertions to detect regressions."
+    },
+    {
+      "concept_id": "oauth-browser-limit",
+      "source": "OAuth 2.0 authorization code flow requires manual browser interaction",
+      "candidate": "OAuth 2.0 authorization code requires manual browser interaction"
+    },
+    {
+      "concept_id": "upload-limit",
+      "source": "File upload testing has a 10MB limit per file",
+      "candidate": "uploads are limited to `10MB` per file"
+    },
+    {
+      "concept_id": "reference-links",
+      "source": "Request examples: `examples/requests.md`",
+      "candidate": "References: request examples `examples/requests.md`, schema validation `guides/schema-validation.md`, CI/CD integration `guides/ci-integration.md`."
+    }
+  ]
+}

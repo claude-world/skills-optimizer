@@ -1,0 +1,172 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "6b13334e2c7191188571350032dd10e77da1d68df5017ad81141701174e5115e",
+  "literals": {
+    "triggers": [
+      "database design",
+      "query optimization",
+      "schema management",
+      "migrations",
+      "troubleshooting",
+      "backup and recovery",
+      "slow query"
+    ],
+    "commands": [
+      "Task(subagent_type=\"db-specialist\", prompt=\"Optimize the slow query in reports.sql...\")"
+    ],
+    "tools": [
+      "Read",
+      "Grep",
+      "Glob",
+      "Bash",
+      "Edit",
+      "Write",
+      "PostgreSQL",
+      "MySQL/MariaDB",
+      "SQLite",
+      "SQL Server",
+      "Oracle",
+      "MongoDB",
+      "Redis",
+      "Elasticsearch",
+      "Cassandra",
+      "DynamoDB"
+    ],
+    "formats": [
+      "SQL",
+      "NoSQL",
+      "JSONB",
+      "CTEs",
+      "GSI/LSI",
+      "```markdown",
+      "## Database Analysis Report",
+      "### Current State",
+      "### Identified Issues",
+      "### Recommendations",
+      "### Implementation Plan",
+      "### Verification"
+    ],
+    "paths": [
+      "reports.sql"
+    ],
+    "numbers": [
+      "VARCHAR(20)",
+      "DECIMAL(10,2)",
+      "LIMIT 10"
+    ],
+    "error_messages": [],
+    "security_rules": [
+      "least privilege",
+      "SSL/TLS",
+      "encryption at rest",
+      "SQL injection prevention",
+      "Cannot directly access production databases",
+      "non-production"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "activation-scope",
+      "description": "Handle schema design, query optimization, schema management, migrations, integrity, indexing, troubleshooting, backup/recovery, and access control."
+    },
+    {
+      "id": "tool-roles",
+      "description": "Read/search/discover database files, run database and analysis commands, edit schemas/queries, and write migrations/docs."
+    },
+    {
+      "id": "relational-support",
+      "description": "Support PostgreSQL advanced features, MySQL/MariaDB optimization/replication/partitioning, SQLite, SQL Server T-SQL, and Oracle PL/SQL."
+    },
+    {
+      "id": "nosql-support",
+      "description": "Support MongoDB modeling/aggregation/indexes, Redis structures/cache/pub-sub, Elasticsearch, Cassandra, and DynamoDB single-table GSI/LSI."
+    },
+    {
+      "id": "schema-design",
+      "description": "Cover entity relationships, normalization choices, data types, constraints, indexes, and partitioning."
+    },
+    {
+      "id": "schema-example",
+      "description": "Preserve replacing JSON stored as text with relational orders and order_items using the stated field sizes."
+    },
+    {
+      "id": "query-optimization",
+      "description": "Find missing indexes, rewrite/restructure queries, inspect plans, and consider caching."
+    },
+    {
+      "id": "query-example",
+      "description": "Preserve the APAC subquery-to-JOIN rewrite and indexes on customer region and order customer ID."
+    },
+    {
+      "id": "migration-management",
+      "description": "Create scripts, plan zero-downtime changes and data transformations, integrate version control, and plan rollback."
+    },
+    {
+      "id": "migration-example",
+      "description": "Preserve the Up/Down JSONB preferences migration and GIN index behavior."
+    },
+    {
+      "id": "performance-diagnostics",
+      "description": "Check slow queries, locks, connection pools, index bloat, and resource use."
+    },
+    {
+      "id": "diagnostic-example",
+      "description": "Use pg_stat_statements ordered by mean time with the stated limit and compare sequential and index scans."
+    },
+    {
+      "id": "backup-recovery",
+      "description": "Cover schedules, point-in-time recovery, replication, disaster recovery, and archival."
+    },
+    {
+      "id": "database-security",
+      "description": "Cover roles, least privilege, transport security, encryption at rest, audit logging, and SQL-injection prevention."
+    },
+    {
+      "id": "ordered-workflow",
+      "description": "Understand context, analyze current state, identify issues, propose solutions, explain trade-offs, then optionally implement."
+    },
+    {
+      "id": "implementation-boundary",
+      "description": "Create SQL, migrations, or configuration only when implementation is requested."
+    },
+    {
+      "id": "report-contract",
+      "description": "Report current state, issues and impact, recommendation with benefit/risk/effort, implementation plan, and verification methods."
+    },
+    {
+      "id": "configuration-axes",
+      "description": "Support database system, analysis depth, focus area, and output-detail configuration."
+    },
+    {
+      "id": "required-user-context",
+      "description": "Require schemas, queries, database/version, data volume/growth, metrics/errors, and downtime/compliance constraints."
+    },
+    {
+      "id": "production-access-boundary",
+      "description": "The agent cannot directly access production databases."
+    },
+    {
+      "id": "nonproduction-validation",
+      "description": "Recommendations must be tested outside production first."
+    },
+    {
+      "id": "profiling-context-limit",
+      "description": "Complex issues may need detailed profiling and optimization choices depend on context."
+    },
+    {
+      "id": "data-visibility-limit",
+      "description": "The agent cannot see actual data distributions."
+    }
+  ]
+}

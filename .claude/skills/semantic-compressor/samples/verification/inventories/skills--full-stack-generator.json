@@ -1,0 +1,463 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "40e3700f59e09bf3380a2c56bd1341cd326850b9299db633bf4ddeac6e2e5084",
+  "literals": {
+    "triggers": [
+      "full-stack",
+      "scaffold",
+      "generate app",
+      "create project",
+      "bootstrap",
+      "new app",
+      "starter",
+      "boilerplate",
+      "project generator",
+      "web app",
+      "application scaffold"
+    ],
+    "commands": [
+      "/full-stack-generator",
+      "/full-stack-generator init my-awesome-app",
+      "/full-stack-generator config",
+      "/full-stack-generator frontend react",
+      "/full-stack-generator frontend vue",
+      "/full-stack-generator frontend nextjs",
+      "/full-stack-generator frontend nuxt",
+      "/full-stack-generator frontend angular",
+      "/full-stack-generator frontend sveltekit",
+      "/full-stack-generator frontend add-component Button",
+      "/full-stack-generator frontend add-component UserProfile --with-tests",
+      "/full-stack-generator frontend add-component DataTable --with-stories",
+      "/full-stack-generator frontend add-page Dashboard",
+      "/full-stack-generator frontend add-page Settings --layout admin",
+      "/full-stack-generator backend express",
+      "/full-stack-generator backend fastify",
+      "/full-stack-generator backend nestjs",
+      "/full-stack-generator backend fastapi",
+      "/full-stack-generator backend django",
+      "/full-stack-generator backend gin",
+      "/full-stack-generator backend fiber",
+      "/full-stack-generator backend actix",
+      "/full-stack-generator backend add-module users",
+      "/full-stack-generator backend add-module products --with-crud",
+      "/full-stack-generator backend add-module orders --with-events",
+      "/full-stack-generator backend add-endpoint /api/users",
+      "/full-stack-generator backend add-endpoint /api/products --methods GET,POST,PUT,DELETE",
+      "/full-stack-generator database init",
+      "/full-stack-generator database add-model User",
+      "/full-stack-generator database add-model Product --fields \"name:string,price:decimal,stock:integer\"",
+      "/full-stack-generator database migrate",
+      "/full-stack-generator database migrate --seed",
+      "/full-stack-generator test setup",
+      "/full-stack-generator test add unit UserService",
+      "/full-stack-generator test add integration AuthController",
+      "/full-stack-generator test add e2e login-flow",
+      "/full-stack-generator devops docker",
+      "/full-stack-generator devops ci github",
+      "/full-stack-generator devops ci gitlab",
+      "/full-stack-generator devops ci jenkins",
+      "/full-stack-generator devops ci circleci",
+      "/full-stack-generator devops deploy aws",
+      "/full-stack-generator devops deploy gcp",
+      "/full-stack-generator devops deploy azure",
+      "/full-stack-generator devops deploy vercel",
+      "/full-stack-generator devops deploy railway",
+      "/full-stack-generator devops deploy fly",
+      "/full-stack-generator init my-saas-app \\",
+      "/full-stack-generator init my-shop \\",
+      "/full-stack-generator init my-blog \\",
+      "--typescript",
+      "--no-typescript",
+      "--styling",
+      "--state",
+      "--testing",
+      "--path",
+      "--with-tests",
+      "--with-stories",
+      "--layout",
+      "--protected",
+      "--with-api",
+      "--database",
+      "--orm",
+      "--auth",
+      "--docker",
+      "--with-crud",
+      "--with-events",
+      "--with-queue",
+      "--methods",
+      "--validation",
+      "--fields",
+      "--relations",
+      "--timestamps",
+      "--soft-delete",
+      "--seed",
+      "--fresh",
+      "--coverage",
+      "--watch",
+      "--frontend",
+      "--backend",
+      "--features",
+      "--frozen-lockfile",
+      "--from",
+      "--health-cmd",
+      "--health-interval",
+      "--health-timeout",
+      "--health-retries"
+    ],
+    "tools": [
+      "React",
+      "Vue",
+      "Next.js",
+      "Nuxt",
+      "Angular",
+      "SvelteKit",
+      "Express",
+      "Fastify",
+      "NestJS",
+      "FastAPI",
+      "Django",
+      "Gin",
+      "Fiber",
+      "Actix-web",
+      "postgresql",
+      "mysql",
+      "mongodb",
+      "Redis",
+      "Prisma",
+      "TypeORM",
+      "Mongoose",
+      "SQLAlchemy",
+      "GORM",
+      "Jest",
+      "Vitest",
+      "Playwright",
+      "Cypress",
+      "Docker",
+      "GitHub Actions",
+      "gitlab",
+      "jenkins",
+      "circleci",
+      "Terraform",
+      "Swagger",
+      "OpenAPI",
+      "bcrypt",
+      "pnpm",
+      "Node",
+      "Tailwind",
+      "Zustand",
+      "Pinia",
+      "NgRx",
+      "JWT",
+      "OAuth2",
+      "aws",
+      "gcp",
+      "azure",
+      "vercel",
+      "railway"
+    ],
+    "formats": [
+      "yaml",
+      "JSON",
+      "TypeScript",
+      "JavaScript",
+      "Python",
+      "Go",
+      "Rust",
+      ".md",
+      ".env",
+      "Dockerfile",
+      "docker-compose",
+      "OpenAPI",
+      "HTML",
+      "Prisma",
+      "Terraform",
+      "bash"
+    ],
+    "paths": [
+      ".fullstack.yaml",
+      "/api/users",
+      "/api/products",
+      "/api/v1",
+      "/docs",
+      "/auth/callback",
+      "logs/app.log",
+      "docker-compose.yml",
+      "docker-compose.prod.yml",
+      ".dockerignore",
+      ".env.example",
+      "README.md",
+      "CONTRIBUTING.md",
+      "postgresql://localhost:5432/myapp_dev",
+      "node_modules",
+      ".next",
+      "dist",
+      "https://nextjs.org/docs",
+      "https://docs.nestjs.com",
+      "https://www.prisma.io/docs",
+      "https://tailwindcss.com/docs"
+    ],
+    "numbers": [
+      "18.2",
+      "3.4",
+      "Next.js 14",
+      "14.1",
+      "3.9",
+      "17.1",
+      "2.0",
+      "4.18",
+      "4.25",
+      "NestJS 10.3",
+      "0.109",
+      "3.11",
+      "5.0",
+      "1.9",
+      "1.21",
+      "2.52",
+      "4.4",
+      "1.75",
+      "decimal(10,2)",
+      "15m",
+      "7d",
+      "5432",
+      "6379",
+      "3600",
+      "10MB",
+      "5%",
+      "500ms",
+      "coverage: 80",
+      "10",
+      "409",
+      "201",
+      "200",
+      "401",
+      "1000",
+      "20",
+      "8",
+      "10s",
+      "5s",
+      "3000",
+      "3.8",
+      "50",
+      "90",
+      "9",
+      "11",
+      "64"
+    ],
+    "error_messages": [
+      "Invalid credentials",
+      "Invalid refresh token"
+    ],
+    "security_rules": [
+      "Role.ADMIN",
+      "Invalid credentials",
+      "JWT_ACCESS_SECRET",
+      "JWT_REFRESH_SECRET",
+      "approval_required: true",
+      "auto_deploy: false",
+      "whitelist: true",
+      "csrf: true",
+      "helmet: true",
+      "--fresh",
+      "all tables",
+      "dev-secret-key",
+      "JWT_SECRET",
+      "--frozen-lockfile",
+      "--health-cmd",
+      "--health-interval",
+      "--health-timeout",
+      "--health-retries",
+      "needs: [lint, test]",
+      "needs: [build]",
+      "refs/heads/main"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "clean-architecture-principles",
+      "description": "Generation preserves separation of concerns, dependency inversion, single responsibility, open-closed, and interface-segregation principles."
+    },
+    {
+      "id": "interactive-wizard-flow",
+      "description": "The base command interactively selects project metadata, frontend, backend, database, authentication, features, and deployment."
+    },
+    {
+      "id": "init-default-stack",
+      "description": "Quick initialization defaults to Next.js with TypeScript, NestJS, PostgreSQL with Prisma, JWT, Jest, and Playwright."
+    },
+    {
+      "id": "frontend-stack-matrix",
+      "description": "React, Vue, Next.js, Nuxt, Angular, and SvelteKit retain their documented routing, state, styling, form, API, authentication, and test integrations."
+    },
+    {
+      "id": "backend-stack-matrix",
+      "description": "Express, Fastify, NestJS, FastAPI, Django, Gin, Fiber, and Actix retain their documented validation, authentication, ORM, database, cache, logging, documentation, and test integrations."
+    },
+    {
+      "id": "database-choice-boundary",
+      "description": "Supported database choices are exactly PostgreSQL, MySQL, and MongoDB, constrained by the selected backend framework."
+    },
+    {
+      "id": "frontend-option-semantics",
+      "description": "Frontend generation controls TypeScript, styling, state management, and test framework; TypeScript is enabled by default."
+    },
+    {
+      "id": "component-page-options",
+      "description": "Components can select paths, tests, and stories; pages can select layouts, protection, and matching API routes."
+    },
+    {
+      "id": "backend-option-semantics",
+      "description": "Backend generation controls database, ORM, authentication strategy, and Docker inclusion."
+    },
+    {
+      "id": "module-endpoint-options",
+      "description": "Modules can add CRUD, events, or queue workers; endpoints can select methods, authentication, and validation."
+    },
+    {
+      "id": "model-option-semantics",
+      "description": "Models can define fields, relations, timestamps, and soft deletion."
+    },
+    {
+      "id": "fresh-migration-destructive",
+      "description": "Fresh migration drops every table before rerunning migrations."
+    },
+    {
+      "id": "test-generation",
+      "description": "Testing supports setup plus unit, integration, and end-to-end additions with coverage and watch options."
+    },
+    {
+      "id": "devops-generation",
+      "description": "DevOps generation produces per-service Docker files, local and production Compose files, CI for four platforms, and deployment configuration for six targets."
+    },
+    {
+      "id": "project-configuration",
+      "description": "The configuration file retains project metadata, version, author, license, selected package managers, and stack versions."
+    },
+    {
+      "id": "frontend-configuration",
+      "description": "Frontend configuration retains UI, dark mode, persisted state, app routing, middleware, i18n locales, forms, API retry and cache, testing, and build controls."
+    },
+    {
+      "id": "backend-api-configuration",
+      "description": "Backend configuration retains clean modules, REST versioning and prefix, documentation path, transformed whitelisted validation, and local or OAuth providers."
+    },
+    {
+      "id": "backend-operational-configuration",
+      "description": "Database pooling, migrations, Redis cache, queues, rotating logs, CORS, rate limits, CSRF, and unit, integration, and end-to-end tests remain configured."
+    },
+    {
+      "id": "model-schema-contract",
+      "description": "User, refresh-token, post, product, order, order-item, and category models retain fields, relations, indexes, uniqueness, optionals, defaults, roles, order states, decimal precision, and refresh-token storage."
+    },
+    {
+      "id": "devops-promotion-gate",
+      "description": "Develop auto-deploys to staging, while main-to-production disables auto deployment and requires approval."
+    },
+    {
+      "id": "deployment-monitoring",
+      "description": "AWS deployment retains its region and frontend, backend, database, and cache service mapping plus error-rate and latency alerts."
+    },
+    {
+      "id": "environment-secret-boundary",
+      "description": "Development values are placeholders; staging and production database, Redis, and JWT secrets come from environment secret management."
+    },
+    {
+      "id": "phase-init",
+      "description": "Initialization creates the root workspace, Git state, package files, environment examples, and secret-management setup."
+    },
+    {
+      "id": "phase-frontend",
+      "description": "Frontend generation configures framework, TypeScript, UI, state, routing guards, API integration, and test examples."
+    },
+    {
+      "id": "phase-backend",
+      "description": "Backend generation configures framework, persistence, authentication, layered modules, validation, API documentation, and tests."
+    },
+    {
+      "id": "phase-integration",
+      "description": "Integration generates shared API types, validates contracts, connects URLs, proxy, and CORS, and wires refresh and protected routes."
+    },
+    {
+      "id": "phase-devops",
+      "description": "DevOps generation creates multi-stage containers, CI, optional Terraform, cloud resources, and monitoring."
+    },
+    {
+      "id": "phase-documentation",
+      "description": "Documentation generation creates README, contribution, API, authentication, error, deployment, architecture, style, PR, and testing guidance."
+    },
+    {
+      "id": "generated-tree-contract",
+      "description": "Frontend and backend trees separate application, components, hooks, stores, utilities, modules, common infrastructure, configuration, database code, and tests, joined by shared API types."
+    },
+    {
+      "id": "generated-format-contract",
+      "description": "Generated artifacts cover configuration, source languages, Prisma schemas and migrations, documentation, environment files, containers, OpenAPI and HTML docs, scripts, and optional Terraform."
+    },
+    {
+      "id": "request-security",
+      "description": "Generated APIs validate and whitelist requests and apply Helmet, CORS, CSP, CSRF, and rate limiting."
+    },
+    {
+      "id": "password-and-authorization",
+      "description": "New and updated passwords use bcrypt cost 10, password fields are excluded from responses, users update only themselves unless admin, and create or delete routes are admin guarded."
+    },
+    {
+      "id": "auth-error-status-contract",
+      "description": "Missing users and bad passwords share the same invalid-credentials response; duplicate registration, successful registration, login, and invalid credentials retain their respective HTTP statuses."
+    },
+    {
+      "id": "jwt-lifecycle",
+      "description": "Access and refresh tokens use separate secrets and TTLs; refresh tokens are stored with expiry, rotated on refresh, deleted on logout, and expiration seconds are converted to milliseconds."
+    },
+    {
+      "id": "invalid-refresh-rejection",
+      "description": "Missing or expired stored refresh tokens are rejected as unauthorized."
+    },
+    {
+      "id": "generated-quality-invariants",
+      "description": "API types, CORS, refresh handling, protected routes, validation, documentation, dependency injection, strict TypeScript, accessibility, i18n, and tests are generated behavior rather than advisory prose."
+    },
+    {
+      "id": "ci-runtime-contract",
+      "description": "Reference CI uses the documented Node, pnpm, PostgreSQL, and Redis versions, database ports, health timings, retries, coverage target, job dependencies, and production branch gate."
+    },
+    {
+      "id": "ui-example-constants",
+      "description": "The sample button and pagination retain their focus-ring, opacity, hover, height, page, and limit constants as examples rather than universal policy."
+    },
+    {
+      "id": "container-build-contract",
+      "description": "The container uses frozen dependency installation, dependency and builder copy stages, port exposure, and PostgreSQL health-check controls."
+    },
+    {
+      "id": "example-project-recipes",
+      "description": "SaaS, shop, and blog recipes retain their respective frontend, backend, database, authentication, and feature selections."
+    },
+    {
+      "id": "database-troubleshooting",
+      "description": "Database recovery checks service state and the connection string before pushing the schema."
+    },
+    {
+      "id": "jwt-troubleshooting",
+      "description": "Authentication recovery checks both JWT secrets and regenerates a 64-byte random secret."
+    },
+    {
+      "id": "build-troubleshooting-scope",
+      "description": "Build recovery removes only the listed local dependency and build caches, then reinstalls and rebuilds in the intended project."
+    },
+    {
+      "id": "reference-links",
+      "description": "Next.js, NestJS, Prisma, and Tailwind documentation retain their canonical URLs."
+    }
+  ]
+}

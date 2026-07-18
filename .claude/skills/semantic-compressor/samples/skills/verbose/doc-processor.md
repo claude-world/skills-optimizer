@@ -148,6 +148,6 @@ If you encounter errors while using this skill:
 
 ## See Also
 
-- [Template Gallery](templates.md) - Browse available document templates
-- [Format Guide](formats.md) - Detailed format support information
-- [Troubleshooting](troubleshooting.md) - Common issues and solutions
+- Template gallery: `templates.md` - Browse available document templates
+- Format guide: `formats.md` - Detailed format support information
+- Troubleshooting: `troubleshooting.md` - Common issues and solutions

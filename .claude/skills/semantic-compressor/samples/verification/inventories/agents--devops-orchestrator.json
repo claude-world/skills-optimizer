@@ -1,0 +1,470 @@
+{
+  "schema_version": 1,
+  "status": "complete",
+  "source_sha256": "ea4ea5519da4a9ad9e9a9e11e19f5d2e845069f0ff0158c52c8b7228dafefa9d",
+  "literals": {
+    "triggers": [
+      "AWS",
+      "GCP",
+      "Azure",
+      "Docker",
+      "Kubernetes",
+      "Terraform",
+      "Pulumi",
+      "CloudFormation",
+      "CI/CD",
+      "monitoring",
+      "cost optimization",
+      "disaster recovery",
+      "production"
+    ],
+    "commands": [
+      "Task(subagent_type=\"devops-orchestrator\", prompt=\"Set up a production-ready Kubernetes cluster on AWS with monitoring and CI/CD...\")",
+      "needs: [test, security-scan]",
+      "needs: build",
+      "--wait --timeout 5m",
+      "--wait --timeout 10m",
+      "fail_ci_if_error: true",
+      "exit-code: '1'",
+      "allow_failure: true",
+      "when: manual"
+    ],
+    "tools": [
+      "Read",
+      "Write",
+      "Edit",
+      "Grep",
+      "Glob",
+      "Bash",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "EC2",
+      "Lambda",
+      "ECS",
+      "EKS",
+      "Fargate",
+      "Elastic Beanstalk",
+      "Batch",
+      "Lightsail",
+      "S3",
+      "EBS",
+      "EFS",
+      "FSx",
+      "Glacier",
+      "Storage Gateway",
+      "RDS",
+      "Aurora",
+      "PostgreSQL",
+      "MySQL",
+      "SQL Server",
+      "Redis",
+      "Memcached",
+      "DynamoDB",
+      "ElastiCache",
+      "DocumentDB",
+      "Neptune",
+      "Timestream",
+      "QLDB",
+      "Keyspaces",
+      "VPC",
+      "Route 53",
+      "CloudFront",
+      "API Gateway",
+      "ELB/ALB/NLB",
+      "Direct Connect",
+      "Transit Gateway",
+      "PrivateLink",
+      "IAM",
+      "KMS",
+      "Secrets Manager",
+      "Certificate Manager",
+      "WAF",
+      "Shield",
+      "GuardDuty",
+      "Security Hub",
+      "Macie",
+      "Inspector",
+      "CodePipeline",
+      "CodeBuild",
+      "CodeDeploy",
+      "CodeCommit",
+      "CodeArtifact",
+      "CDK",
+      "Systems Manager",
+      "CloudWatch",
+      "X-Ray",
+      "CloudTrail",
+      "Config",
+      "Compute Engine",
+      "Cloud Functions",
+      "Cloud Run",
+      "GKE",
+      "App Engine",
+      "Anthos",
+      "Cloud Storage",
+      "Persistent Disk",
+      "Filestore",
+      "Archive Storage",
+      "Cloud SQL",
+      "Cloud Spanner",
+      "Firestore",
+      "Bigtable",
+      "Memorystore",
+      "Cloud DNS",
+      "Cloud Armor",
+      "Cloud NAT",
+      "Cloud Interconnect",
+      "Cloud IAM",
+      "Secret Manager",
+      "Security Command Center",
+      "Binary Authorization",
+      "Cloud Build",
+      "Cloud Deploy",
+      "Artifact Registry",
+      "Cloud Source Repositories",
+      "Deployment Manager",
+      "Cloud Monitoring",
+      "Error Reporting",
+      "Virtual Machines",
+      "Azure Functions",
+      "Container Instances",
+      "AKS",
+      "App Service",
+      "Files",
+      "Data Lake Storage",
+      "Azure SQL Database",
+      "Cosmos DB",
+      "Database for MySQL/PostgreSQL",
+      "Cache for Redis",
+      "Table Storage",
+      "Virtual Network",
+      "Load Balancer",
+      "Application Gateway",
+      "Front Door",
+      "ExpressRoute",
+      "VPN Gateway",
+      "Azure AD",
+      "Key Vault",
+      "Security Center",
+      "Sentinel",
+      "DDoS Protection",
+      "Firewall",
+      "Azure DevOps",
+      "GitHub Actions",
+      "Azure Pipelines",
+      "ARM Templates",
+      "Bicep",
+      "Azure Monitor",
+      "Application Insights",
+      "Log Analytics",
+      "Network Watcher",
+      "Docker Buildx",
+      "Docker Scout",
+      "Helm",
+      "Node",
+      "npm",
+      "HorizontalPodAutoscaler",
+      "RuntimeDefault",
+      "GitHub",
+      "GitLab",
+      "Bitbucket",
+      "Trivy",
+      "Snyk",
+      "Prometheus Operator",
+      "Cert-Manager",
+      "External Secrets Operator",
+      "Argo CD",
+      "Istio",
+      "Crossplane",
+      "GitLab CI",
+      "Grafana",
+      "Datadog"
+    ],
+    "formats": [
+      "Docker Compose",
+      "Infrastructure as Code",
+      "SAST",
+      "DAST",
+      "SCA",
+      "SLO/SLI",
+      "High/Medium/Low",
+      "```markdown",
+      "## Infrastructure Analysis Report",
+      "### Executive Summary",
+      "### Current State Assessment",
+      "### Recommendations",
+      "#### High Priority",
+      "#### Medium Priority",
+      "### Implementation Plan",
+      "#### Phase 1: Foundation (Week 1-2)",
+      "#### Phase 2: Core Infrastructure (Week 3-4)",
+      "### Risk Assessment",
+      "### Success Metrics"
+    ],
+    "paths": [
+      ".dockerignore",
+      "/health",
+      "10.0.0.0/16",
+      "production/database",
+      "ghcr.io",
+      "us-west-2"
+    ],
+    "numbers": [
+      "18-alpine",
+      "1001",
+      "3000",
+      "3.8",
+      "3000:3000",
+      "30s",
+      "10s",
+      "3",
+      "40s",
+      "0.5",
+      "512M",
+      "0.25",
+      "256M",
+      "15-alpine",
+      "7-alpine",
+      "5s",
+      "1000",
+      "v1.2.3",
+      "9090",
+      "500m",
+      "512Mi",
+      "250m",
+      "256Mi",
+      "30",
+      "10",
+      "5",
+      "100",
+      "1",
+      "70",
+      "80",
+      "300",
+      "60",
+      "4",
+      "15",
+      "2",
+      "5432",
+      "6379",
+      "53",
+      "1.0.0",
+      "1.2.3",
+      "12.1.0",
+      "17.3.0",
+      ">= 1.5.0",
+      "~> 5.0",
+      "~> 2.23",
+      "~> 2.11",
+      "10.0.0.0/16",
+      "19.0",
+      "1.28",
+      "33",
+      "0",
+      "6.0",
+      "15.4",
+      "20",
+      "7",
+      "Mon:00:00-Mon:03:00",
+      "03:00-06:00",
+      "0.52",
+      "7.0",
+      "m5.large",
+      "20-alpine",
+      "5m",
+      "10m",
+      "replicaCount=5",
+      "24",
+      "24-dind",
+      "30d",
+      "50GB",
+      "100Gi",
+      "4h",
+      "7249",
+      "6417",
+      "1860",
+      "27",
+      "200m",
+      "1h",
+      "Week 1-2",
+      "Week 3-4"
+    ],
+    "error_messages": [],
+    "security_rules": [
+      "non-root",
+      "NO_SCHEDULE",
+      "fail_ci_if_error: true",
+      "exit-code: '1'",
+      "CRITICAL,HIGH",
+      "allow_failure: true",
+      "when: manual",
+      "restricted",
+      "Cannot directly access cloud provider consoles",
+      "before implementation",
+      "external auditors",
+      "Cost estimates are approximate",
+      "Some cloud-specific features may have limited support"
+    ]
+  },
+  "category_attestations": {
+    "triggers": true,
+    "commands": true,
+    "tools": true,
+    "formats": true,
+    "paths": true,
+    "numbers": true,
+    "error_messages": true,
+    "security_rules": true
+  },
+  "concepts": [
+    {
+      "id": "activation-scope",
+      "description": "Support the full DevOps lifecycle across cloud infrastructure, containers, IaC, CI/CD, observability, security/compliance, cost, availability, and recovery."
+    },
+    {
+      "id": "tool-roles",
+      "description": "Read, create, edit, search, execute, research, and delegate infrastructure work using the declared tools."
+    },
+    {
+      "id": "aws-service-scope",
+      "description": "Retain the stated AWS compute, storage, database, networking, security, DevOps, and monitoring catalog without adding services."
+    },
+    {
+      "id": "gcp-service-scope",
+      "description": "Retain the stated GCP compute, storage, database, networking, security, DevOps, and monitoring catalog without adding services."
+    },
+    {
+      "id": "azure-service-scope",
+      "description": "Retain the stated Azure compute, storage, database, networking, security, DevOps, and monitoring catalog without adding services."
+    },
+    {
+      "id": "docker-image-controls",
+      "description": "Use multi-stage pinned images, non-root execution, dockerignore, caching, health checks, environment args, and image scanning."
+    },
+    {
+      "id": "compose-contract",
+      "description": "Preserve web-to-database/Redis dependencies, ports, environment variables, health timings/retries, resource limits/reservations, persistence, and bridge networking."
+    },
+    {
+      "id": "kubernetes-deployment-contract",
+      "description": "Preserve rollout, replica, user/group, image, scrape port, resources, probe timings, read-only ConfigMap, anti-affinity, topology spread, service, and TLS ingress settings."
+    },
+    {
+      "id": "autoscaling-network-contract",
+      "description": "Preserve HPA bounds/targets/behaviors, disruption budget, and network-policy database, Redis, and DNS access."
+    },
+    {
+      "id": "helm-operator-contract",
+      "description": "Preserve chart/app/dependency versions, security/autoscaling/secret behavior, and the named operator set."
+    },
+    {
+      "id": "terraform-foundation",
+      "description": "Preserve Terraform/provider versions, encrypted locked backend, region, environment validation, VPC CIDR/zones/subnets, flow logs, DNS, and NAT behavior."
+    },
+    {
+      "id": "eks-contract",
+      "description": "Preserve Kubernetes/module versions, public/private endpoints, add-ons, IAM roles, node-group bounds, update percentage, and spot taint."
+    },
+    {
+      "id": "rds-contract",
+      "description": "Preserve PostgreSQL/module versions, storage/port, production HA/protection, retention/windows, logs, and final-snapshot condition."
+    },
+    {
+      "id": "redis-contract",
+      "description": "Preserve ElastiCache module/engine versions, environment-dependent size/failover, encryption, eviction policy, and port."
+    },
+    {
+      "id": "iac-output-contract",
+      "description": "Output VPC, EKS, RDS, and Redis identifiers; preserve Pulumi VPC/subnet/EKS settings and CloudFormation support."
+    },
+    {
+      "id": "github-trigger-dependency",
+      "description": "Run GitHub Actions on the stated branches; test and security scan precede build, and build precedes each deploy."
+    },
+    {
+      "id": "github-test-security-build",
+      "description": "Preserve Node/cache/lint/coverage, Codecov failure, Snyk/Trivy thresholds, container build/cache/push, and blocking image scan."
+    },
+    {
+      "id": "github-deploy-contract",
+      "description": "Develop deploys staging then smoke-tests; main deploys production with distinct timeouts/replicas and Slack notification."
+    },
+    {
+      "id": "gitlab-manual-production",
+      "description": "Preserve test-security-build-deploy order, branch gates, allowed security failure, and the manual production gate."
+    },
+    {
+      "id": "prometheus-grafana-contract",
+      "description": "Preserve retention/storage, Alertmanager timing/routing, and Grafana dashboard IDs/revision."
+    },
+    {
+      "id": "datadog-contract",
+      "description": "Preserve logs, APM, process/network collection, compliance/runtime security, and agent resources."
+    },
+    {
+      "id": "external-secret-contract",
+      "description": "Read the production database username/password from AWS Secrets Manager on the stated refresh interval and own the target secret."
+    },
+    {
+      "id": "pod-security-contract",
+      "description": "Preserve restricted labels, non-root identity, RuntimeDefault seccomp, no privilege escalation, read-only filesystem, and dropped capabilities."
+    },
+    {
+      "id": "infrastructure-capability",
+      "description": "Provision segmented networks, compute, HA databases, load balancing/CDN, firewalls/WAF, and DNS."
+    },
+    {
+      "id": "container-capability",
+      "description": "Manage EKS/GKE/AKS, scaling, service mesh, ingress, storage, RBAC, and security."
+    },
+    {
+      "id": "delivery-capability",
+      "description": "Support source integrations, cached builds, testing/security scans, artifacts, and rolling/blue-green/canary delivery."
+    },
+    {
+      "id": "observability-capability",
+      "description": "Support metrics, logs, traces, dashboards, notifications, and SLO/SLI tracking."
+    },
+    {
+      "id": "security-capability",
+      "description": "Support IAM, secrets, network policy, vulnerability scans, compliance automation, and audit logs."
+    },
+    {
+      "id": "cost-capability",
+      "description": "Support right-sizing, reserved/spot planning, unused-resource detection, budgets, and allocation tags."
+    },
+    {
+      "id": "ordered-eight-stage-process",
+      "description": "Preserve assess, requirements, architecture, implementation plan, IaC implementation, validation, documentation, then monitoring/optimization."
+    },
+    {
+      "id": "report-contract",
+      "description": "Report executive summary, current state, prioritized recommendations with impact/effort/timeline, phased plan, risk matrix, and success metrics."
+    },
+    {
+      "id": "configuration-axes",
+      "description": "Support cloud provider, environment, compliance, cost-optimization level, and security-level configuration."
+    },
+    {
+      "id": "required-user-context",
+      "description": "Require security/compliance needs, infrastructure docs, budget, preferred tools, timeline/resources, and incident lessons."
+    },
+    {
+      "id": "console-access-boundary",
+      "description": "The agent cannot directly access cloud-provider consoles."
+    },
+    {
+      "id": "review-expertise-boundary",
+      "description": "Recommendations need review before implementation and complex migrations may require human expertise."
+    },
+    {
+      "id": "compliance-boundary",
+      "description": "Compliance verification may require external auditors."
+    },
+    {
+      "id": "estimate-support-limit",
+      "description": "Cost estimates are approximate and some cloud-specific features may have limited support."
+    }
+  ]
+}
