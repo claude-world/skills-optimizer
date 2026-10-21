@@ -1,11 +1,11 @@
 # Contributing to Semantic Compressor
 
-Thank you for improving Semantic Compressor. The current major release is v2.0.0.
+Thank you for improving Semantic Compressor. The current release is v2.1.0.
 
 ## Prerequisites
 
 - Claude Code 2.1.196 or newer for interactive skill testing
-- Python 3.10 or newer for the deterministic control script and tests
+- Python 3.10 or newer for the deterministic control script and tests (CI tests 3.10 through 3.15)
 - Git
 
 No third-party Python packages are required.
@@ -31,9 +31,14 @@ The implementation is split by responsibility:
 - `.claude/skills/semantic-compressor/SKILL.md` defines invocation, semantic drafting/review, safety invariants, and result states.
 - `.claude/skills/semantic-compressor/scripts/semantic_compressor.py` owns deterministic discovery, path checks, inventories, frontmatter/literal validation, metrics, backups, atomic apply, restore, and benchmark output.
 - `.claude/skills/semantic-compressor/references/` contains progressively loaded authoring guidance.
-- `tests/test_semantic_compressor.py` verifies deterministic behavior, unique workspaces, completed inventories, source/candidate/inventory-bound semantic reviews with locatable evidence, non-finite ratio rejection, race handling, and strict rollback in temporary directories.
+- `tests/test_semantic_compressor.py` verifies deterministic behavior, Claude Code discovery and listing rules, unique workspaces, completed inventories, source/candidate/inventory-bound semantic reviews with locatable evidence, non-finite ratio rejection, race handling, and strict rollback in temporary directories.
+- `scripts/validate_project.py` checks the shipped skill against current Claude Code frontmatter rules, plus sample evidence, benchmark output, version sync, and documentation drift; `tests/test_project_validator.py` covers it.
 
 Keep deterministic operations in the control script. Do not replace them with ad hoc `find`, `cp`, shell interpolation, or model judgment in `SKILL.md`.
+
+## Claude Code rule changes
+
+Discovery, the listing cap, the name rules, and the agent rules mirror Claude Code behavior. When Claude Code changes them, update the constants and discovery helpers in `semantic_compressor.py`, `CLAUDE_CODE_SKILL_FIELDS` in `scripts/validate_project.py`, the references, both READMEs, and `CHANGELOG.md`, and name the Claude Code version the change follows.
 
 ## Development workflow
 
@@ -51,6 +56,7 @@ Run the full suite from the repository root:
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 scripts/validate_project.py
 ```
 
 Run the control-script smoke checks:
@@ -74,8 +80,9 @@ Every change must preserve these invariants:
 - `scan`, `compress`, `verify`, `benchmark`, and restore preview never replace source files.
 - Only explicit `apply` and `restore ... --apply` mutate a source.
 - Paths outside the project, symlinks, directories, and non-UTF-8/non-Markdown targets fail closed.
+- Scan reports only the entrypoints Claude Code loads and gives a reason for every skipped file.
 - Target content is untrusted data and is never executed during compression or review.
-- All frontmatter keys remain; only `description` and `when_to_use` may change.
+- All frontmatter keys remain; only `description` and `when_to_use` may change, and a skill or command candidate may not grow its listing entry past the 1,536-character cap.
 - Inventoried commands, tools, triggers, formats, paths, numbers, exact errors, and security rules remain literal; all category attestations are complete and at least one concept has evidence.
 - `apply` validates immutable source/candidate/inventory/review snapshots before writing, creates a SHA-256-verified backup and manifest, rejects concurrent source changes, and uses atomic replacement.
 - Restore accepts only the canonical root-bound one-file manifest and refuses stale state, changed content or mode, and mismatched backups.

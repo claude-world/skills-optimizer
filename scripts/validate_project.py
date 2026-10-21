@@ -23,6 +23,46 @@ core = importlib.util.module_from_spec(SPEC)
 sys.modules[SPEC.name] = core
 SPEC.loader.exec_module(core)
 
+# Skill frontmatter fields documented for Claude Code 2.1.305
+# (https://code.claude.com/docs/en/skills#frontmatter-reference).
+CLAUDE_CODE_SKILL_FIELDS = {
+    "name",
+    "description",
+    "when_to_use",
+    "argument-hint",
+    "arguments",
+    "disable-model-invocation",
+    "user-invocable",
+    "allowed-tools",
+    "disallowed-tools",
+    "model",
+    "effort",
+    "context",
+    "agent",
+    "background",
+    "hooks",
+    "paths",
+    "shell",
+    "metadata",
+    "license",
+    "compatibility",
+}
+# Limits from the Agent Skills specification (https://agentskills.io/specification).
+SPEC_NAME_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
+SPEC_NAME_LIMIT = 64
+SPEC_DESCRIPTION_LIMIT = 1024
+# Claude Code reads these spellings as booleans since v2.1.218.
+BOOLEAN_VALUES = {
+    "true": True,
+    "yes": True,
+    "on": True,
+    "1": True,
+    "false": False,
+    "no": False,
+    "off": False,
+    "0": False,
+}
+
 
 class Validation:
     def __init__(self, *, verbose: bool = False) -> None:
@@ -63,31 +103,88 @@ def parse_frontmatter(path: Path, validation: Validation) -> dict[str, str]:
 
 def frontmatter_scalar(blocks: dict[str, str], key: str) -> str | None:
     block = blocks.get(key)
-    if block is None:
-        return None
-    first = block.splitlines()[0]
-    value = first.split(":", 1)[1].strip()
-    if value.startswith(('"', "'")) and value.endswith(value[0]):
-        value = value[1:-1]
-    return value
+    return None if block is None else core.scalar_text(block)
 
 
-def validate_formats(validation: Validation) -> None:
-    main = parse_frontmatter(SKILL_DIR / "SKILL.md", validation)
+def frontmatter_bool(blocks: dict[str, str], key: str) -> bool | None:
+    value = frontmatter_scalar(blocks, key)
+    return None if value is None else BOOLEAN_VALUES.get(value.strip().lower())
+
+
+def metadata_value(blocks: dict[str, str], key: str) -> str | None:
+    """Return one first-level string from the frontmatter ``metadata`` map."""
+    lines = blocks.get("metadata", "").splitlines()[1:]
+    indents = [len(line) - len(line.lstrip(" ")) for line in lines if line.strip()]
+    for line in lines:
+        match = re.fullmatch(r"( +)([A-Za-z0-9_.-]+):(.*)", line)
+        if match and len(match.group(1)) == min(indents) and match.group(2) == key:
+            return core.scalar_text(f"{key}:{match.group(3)}")
+    return None
+
+
+def validate_main_skill(validation: Validation) -> None:
+    """Check the shipped skill against current Claude Code and spec rules."""
+    skill_path = SKILL_DIR / "SKILL.md"
+    main = parse_frontmatter(skill_path, validation)
+    if not main:
+        return
+    name = frontmatter_scalar(main, "name")
+    validation.require(name == SKILL_DIR.name, "main skill name matches its directory")
     validation.require(
-        frontmatter_scalar(main, "name") == "semantic-compressor",
-        "main skill name matches its directory",
+        name is not None
+        and len(name) <= SPEC_NAME_LIMIT
+        and SPEC_NAME_RE.fullmatch(name) is not None,
+        "main skill name follows the Agent Skills naming rule",
     )
-    validation.require("description" in main, "main skill has a description")
+    unknown = sorted(set(main) - CLAUDE_CODE_SKILL_FIELDS)
     validation.require(
-        frontmatter_scalar(main, "disable-model-invocation") == "true",
+        not unknown,
+        "main skill uses only documented Claude Code frontmatter fields"
+        + (f" (unknown: {', '.join(unknown)})" if unknown else ""),
+    )
+    description = (frontmatter_scalar(main, "description") or "").strip()
+    validation.require(bool(description), "main skill has a description")
+    validation.require(
+        len(description) <= SPEC_DESCRIPTION_LIMIT,
+        f"main skill description fits the {SPEC_DESCRIPTION_LIMIT:,}-character spec limit",
+    )
+    validation.require(
+        "<" not in description and ">" not in description,
+        "main skill description has no angle brackets",
+    )
+    skill_text = core.read_text(skill_path)
+    validation.require(
+        core.utf16_length(core.listing_entry(skill_text))
+        <= core.SKILL_LISTING_CHARACTER_CAP,
+        f"main skill listing fits Claude Code's {core.SKILL_LISTING_CHARACTER_CAP:,}-character cap",
+    )
+    validation.require(
+        core.text_metrics(skill_text).lines < core.SKILL_LINE_LIMIT,
+        f"SKILL.md stays under {core.SKILL_LINE_LIMIT} lines",
+    )
+    validation.require(
+        frontmatter_bool(main, "disable-model-invocation") is True,
         "mutating skill disables model invocation",
     )
     validation.require(
-        frontmatter_scalar(main, "user-invocable") == "true",
+        frontmatter_bool(main, "user-invocable") is True,
         "main skill remains user invocable",
     )
     validation.require("argument-hint" in main, "main skill declares argument-hint")
+    validation.require(
+        metadata_value(main, "version") == core.COMPRESSOR_VERSION,
+        "SKILL.md metadata.version matches the control script version",
+    )
+    linked = set(markdown_links(skill_text))
+    for reference in sorted((SKILL_DIR / "references").glob("*.md")):
+        relative = reference.relative_to(SKILL_DIR).as_posix()
+        validation.require(
+            relative in linked, f"SKILL.md links {relative} directly"
+        )
+
+
+def validate_formats(validation: Validation) -> None:
+    validate_main_skill(validation)
 
     samples = SKILL_DIR / "samples"
     pairs = core.sample_pairs(samples)
@@ -116,6 +213,16 @@ def validate_formats(validation: Validation) -> None:
             validation.require(
                 "tools" in original_fields and "tools" in compressed_fields,
                 f"{pair['id']} has operational tools metadata",
+            )
+        else:
+            try:
+                entry = core.utf16_length(core.listing_entry(core.read_text(compressed)))
+            except core.CompressorError:
+                entry = None
+            validation.require(
+                entry is not None and entry <= core.SKILL_LISTING_CHARACTER_CAP,
+                f"{pair['id']} compressed listing fits Claude Code's "
+                f"{core.SKILL_LISTING_CHARACTER_CAP:,}-character cap",
             )
         expected_name = pair["id"].split("/", 1)[1]
         validation.require(
@@ -371,6 +478,7 @@ def validate_docs_and_assets(validation: Validation) -> None:
     ]
     for path in required:
         validation.require(path.is_file(), f"{path.relative_to(ROOT)} exists")
+    version = core.COMPRESSOR_VERSION
     for path in (ROOT / "README.md", ROOT / "README.zh-TW.md"):
         if not path.is_file():
             continue
@@ -382,6 +490,19 @@ def validate_docs_and_assets(validation: Validation) -> None:
             f"{path.name} documents manual-only invocation safety",
         )
         validation.require("restore" in text, f"{path.name} documents restoration")
+        validation.require(
+            f"`{version}`" in text, f"{path.name} names the current script version {version}"
+        )
+    changelog = ROOT / "CHANGELOG.md"
+    validation.require(
+        changelog.is_file() and f"## [{version}]" in changelog.read_text(encoding="utf-8"),
+        f"CHANGELOG.md has a {version} entry",
+    )
+    contributing = ROOT / "CONTRIBUTING.md"
+    validation.require(
+        contributing.is_file() and f"v{version}" in contributing.read_text(encoding="utf-8"),
+        f"CONTRIBUTING.md names the current release v{version}",
+    )
     validate_eval_suite(validation)
     validate_links(validation)
 

@@ -1,5 +1,5 @@
 {
-  "compressor_version": "2.0.0",
+  "compressor_version": "2.1.0",
   "measurement": {
     "note": "These are deterministic text metrics, not Claude tokenizer counts.",
     "ratio_gate": "whitespace-delimited words"

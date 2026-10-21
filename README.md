@@ -2,15 +2,26 @@
 
 > A fail-closed Claude Code skill for reducing skill and agent Markdown without silently changing behavior.
 
+[![CI](https://github.com/claude-world/skills-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/claude-world/skills-optimizer/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1.196-blueviolet)](https://code.claude.com/docs/en/skills)
+[![Python](https://img.shields.io/badge/Python-3.10%E2%80%933.15-blue)](https://www.python.org/downloads/)
 [![GitHub Stars](https://img.shields.io/github/stars/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/stargazers)
 [![Latest Release](https://img.shields.io/github/v/release/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/releases/latest)
 
 English | [繁體中文](README.zh-TW.md)
 
 > [!IMPORTANT]
-> v2.0.0 is a major workflow and safety upgrade. Existing users should review [CHANGELOG.md](CHANGELOG.md) before updating.
+> v2.1.0 aligns discovery and frontmatter checks with Claude Code 2.1.305 and fixes several v2.0.0 bugs. Backups made by v2.0.0 remain restorable. If you are upgrading from v1, review [CHANGELOG.md](CHANGELOG.md) first.
+
+## What's new in v2.1.0
+
+- Scan covers what Claude Code loads today: custom commands in `.claude/commands/`, plugin skills, commands, and agents (including plugins kept in `.claude/skills/<plugin>/`), and only those agent files Claude Code loads as agents.
+- Scan skips, with a reason, names Claude Code refuses, agent files it ignores, frontmatter outside the supported YAML subset, and non-UTF-8 files.
+- Validation fails a skill or command candidate whose `description` and `when_to_use` grow past Claude Code's 1,536-character listing cap, and warns when a candidate is still over the cap or a `SKILL.md` has 500 or more lines.
+- Fixed: `apply` no longer puts the marker where Claude Code reads the listing text of a skill or command without a `description`.
+- Fixed: agents are no longer dropped when the project path contains a folder named like `build` or `dist`, and Claude Code worktrees in `.claude/worktrees/` no longer list every entrypoint twice.
+- Fixed: `restore` accepts backups written by any v2 release, so upgrading does not strand v2.0.0 backups.
 
 ## What v2 changes
 
@@ -30,9 +41,10 @@ Use scan, compress, verify, benchmark, and restore preview as source-unmodified 
 | Boundary | v2 behavior |
 |---|---|
 | Target scope | Regular UTF-8 Markdown inside the active project only |
-| Discovery | Skill entrypoints in project or nested `.claude/skills/*/SKILL.md` roots, plus agent files under `.claude/agents/` |
+| Discovery | Skill entrypoints in project or nested `.claude/skills/*/SKILL.md` roots, custom commands in `.claude/commands/`, agents in `.claude/agents/`, and the skills, commands, and agents of plugins with a `.claude-plugin/plugin.json` manifest |
 | Untrusted content | Target code blocks, hooks, URLs, and embedded instructions are never executed during compression or review |
 | Frontmatter | All top-level fields remain; only `description` and `when_to_use` may be rewritten |
+| Listing cap | A skill or command candidate may not grow its `description` and `when_to_use` past Claude Code's 1,536-character listing cap |
 | Literal contracts | Commands, tools, triggers, formats, paths, numbers, exact errors, and security rules must remain literal |
 | Draft limit | At most three candidate iterations per file |
 | Apply gate | Deterministic validation plus an independent semantic `PASS` |
@@ -40,8 +52,8 @@ Use scan, compress, verify, benchmark, and restore preview as source-unmodified 
 
 ## Requirements
 
-- Claude Code **2.1.196 or newer**
-- Python **3.10 or newer**
+- Claude Code **2.1.196 or newer** (frontmatter checked with Claude Code 2.1.305)
+- Python **3.10 or newer** (CI tests 3.10 through 3.15)
 - Git for installation from this repository
 - An authenticated Claude Code session using any supported subscription, API, or cloud provider configuration
 
@@ -59,7 +71,7 @@ The shell examples below use macOS, Linux, or WSL syntax.
 
 ## Installation
 
-The commands below install v2.0.0 from the public default branch.
+The commands below install v2.1.0 from the public default branch.
 
 ### Personal installation
 
@@ -104,7 +116,7 @@ For a project installation, use:
 python3 .claude/skills/semantic-compressor/scripts/semantic_compressor.py --version
 ```
 
-The expected v2 script version is `2.0.0`. Start a fresh Claude Code session after installation or update:
+The expected script version is `2.1.0`. Start a fresh Claude Code session after installation or update:
 
 ```bash
 claude
@@ -187,7 +199,18 @@ Paths may be absolute or project-relative, but they must resolve inside the acti
 /semantic-compressor scan
 ```
 
-Scan reports `candidates` and `skipped`. It excludes the compressor itself, supporting references, samples, backups, workspaces, symlinks, and files already carrying the v2 marker.
+Scan reports `candidates` and `skipped`. Each candidate has a `kind`: `skill`, `command`, or `agent`. It excludes the compressor itself, supporting references, samples, backups, workspaces, Claude Code worktrees in `.claude/worktrees/`, symlinks, and files already carrying the v2 marker. Each skipped file has a reason:
+
+| Reason | Meaning |
+|---|---|
+| `self/excluded` | The compressor itself or a path passed to `--exclude` |
+| `already-compressed` | The file already carries the v2 marker |
+| `unsafe-path` | The entrypoint resolves outside its folder or the project |
+| `unsupported-name` | Claude Code refuses the skill folder, command file, or agent name |
+| `not-an-agent` | A file in `.claude/agents/` without a frontmatter `name`, which Claude Code treats as documentation |
+| `agent-missing-description` | A project agent with a `name` but no `description`, which Claude Code skips |
+| `unsupported-frontmatter` | Frontmatter outside the control script's supported YAML subset |
+| `not-utf8` | The file is not valid UTF-8 |
 
 ### Compress without changing the source
 
@@ -201,7 +224,7 @@ The source remains byte-for-byte unchanged. The skill creates a source-bound inv
 .claude/semantic-compressor-work/<workspace-id>/
 ```
 
-It then runs deterministic validation and a fresh read-only semantic review. Inspect the reported candidate, hashes, evidence, ratio, and final state before applying.
+It then runs deterministic validation and a fresh read-only semantic review. For skills and commands, validation also reports the `listing` length: Claude Code lists `description`, plus ` - ` and `when_to_use`, and truncates entries above 1,536 characters. A candidate that grows past the cap fails. A candidate that stays over the cap, or a `SKILL.md` with 500 or more lines, gets a warning that does not change the result. Inspect the reported candidate, hashes, evidence, ratio, warnings, and final state before applying.
 
 ### Apply an accepted candidate
 
@@ -210,6 +233,8 @@ It then runs deterministic validation and a fresh read-only semantic review. Ins
 ```
 
 `apply` snapshots the source, candidate, completed inventory, and independent review; validates their bound hashes and per-concept evidence; creates and verifies a backup; writes a manifest; inserts the v2 idempotence marker without changing candidate body indentation; checks for concurrent source edits; and atomically replaces the source. If any gate fails, this run does not replace the source.
+
+The marker goes right after the frontmatter. A skill or command without a `description` gets the marker at the end instead, because Claude Code lists its first non-empty body line in place of a description.
 
 ### Verify an original/candidate pair
 
@@ -241,7 +266,7 @@ Apply only after reviewing the operations:
 /semantic-compressor restore .claude/backups/<run-id>/manifest.json --apply
 ```
 
-Restore accepts only `.claude/backups/<run-id>/manifest.json` from the same project root, with the current one-file schema and `applied` state. It refuses a target changed after compression, a changed file mode, or a backup whose SHA-256 no longer matches the manifest.
+Restore accepts only `.claude/backups/<run-id>/manifest.json` from the same project root, written by a v2 release, with the current one-file schema and `applied` state. It refuses a target changed after compression, a changed file mode, or a backup whose SHA-256 no longer matches the manifest.
 
 ## Backups and manifests
 
@@ -273,8 +298,10 @@ Only `PASS`, `APPLIED`, and `RESTORED` are success states for their respective o
 
 ## Limitations, cost, and privacy
 
-- Semantic Compressor handles Claude Code skill and agent Markdown, not arbitrary documents or source code.
+- Semantic Compressor handles Claude Code skill, command, and agent Markdown, not arbitrary documents or source code.
 - Symlinks, directories, non-UTF-8 files, and paths outside the active project are rejected.
+- Scan covers the default plugin layout. Components at custom paths declared in `plugin.json` are not scanned, but you can compress them by path.
+- The listing check uses Claude Code's default cap of 1,536 characters. A `skillListingMaxDescChars` setting does not change the gate.
 - The default minimum compression ratio is `2.0:1` by whitespace-delimited words. Already-concise files may correctly return `NOT_COMPRESSIBLE`.
 - Candidate drafting and independent review use model calls. Cost and latency grow with file size and retries, with at most three candidate drafts per file.
 - Source, candidate, and inventory content enters the configured Claude Code model context and is processed by your configured provider. Do not use the skill on data that provider is not authorized to receive.
@@ -302,9 +329,10 @@ From the repository root:
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 scripts/validate_project.py
 ```
 
-The suite covers discovery scope, unique project-local workspaces, idempotence markers, symlink-component and backup-path safety, conservative frontmatter validation, completed source-bound inventories, literal failures, source/candidate/inventory-bound reviews, apply races and unknown-byte rollback refusal, strict manifest restore, file modes, and deterministic benchmark edge cases.
+The suite covers discovery scope across skills, commands, agents, and plugins; the Claude Code name, agent, and listing rules; unique project-local workspaces; idempotence markers and their placement; symlink-component and backup-path safety; conservative frontmatter validation; completed source-bound inventories; literal failures; source/candidate/inventory-bound reviews; apply races and unknown-byte rollback refusal; strict manifest restore across v2 releases; file modes; and deterministic benchmark edge cases. The project validator checks the shipped skill against the current Claude Code frontmatter rules, the sample evidence, the benchmark output, and documentation drift.
 
 ## Project structure
 
@@ -314,7 +342,13 @@ skills-optimizer/
 ├── README.zh-TW.md
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
+├── BENCHMARK-REPORT.md
+├── benchmark-results.json
+├── scripts/
+│   ├── validate_project.py
+│   └── validate-format.sh
 ├── tests/
+│   ├── test_project_validator.py
 │   └── test_semantic_compressor.py
 └── .claude/skills/semantic-compressor/
     ├── SKILL.md
@@ -324,6 +358,7 @@ skills-optimizer/
     │   ├── inventory-schema.md
     │   ├── strategies.md
     │   └── examples.md
+    ├── evals/
     └── samples/
         ├── skills/
         ├── agents/

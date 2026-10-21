@@ -2,15 +2,26 @@
 
 > 一個採失敗即停止設計的 Claude Code skill，用來縮減 skill 與 agent Markdown，同時避免悄悄改變行為。
 
+[![CI](https://github.com/claude-world/skills-optimizer/actions/workflows/ci.yml/badge.svg)](https://github.com/claude-world/skills-optimizer/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Claude Code](https://img.shields.io/badge/Claude%20Code-%E2%89%A52.1.196-blueviolet)](https://code.claude.com/docs/en/skills)
+[![Python](https://img.shields.io/badge/Python-3.10%E2%80%933.15-blue)](https://www.python.org/downloads/)
 [![GitHub Stars](https://img.shields.io/github/stars/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/stargazers)
 [![Latest Release](https://img.shields.io/github/v/release/claude-world/skills-optimizer)](https://github.com/claude-world/skills-optimizer/releases/latest)
 
 [English](README.md) | 繁體中文
 
 > [!IMPORTANT]
-> v2.0.0 是一次 major workflow 與安全性升級。既有使用者更新前應先閱讀 [CHANGELOG.md](CHANGELOG.md)。
+> v2.1.0 讓 discovery 與 frontmatter 檢查對齊 Claude Code 2.1.305，並修正多個 v2.0.0 的錯誤。v2.0.0 建立的備份仍可還原。若從 v1 升級，請先閱讀 [CHANGELOG.md](CHANGELOG.md)。
+
+## v2.1.0 新功能
+
+- Scan 涵蓋 Claude Code 目前會載入的位置：`.claude/commands/` 中的自訂 command、plugin 的 skill、command 與 agent（包含放在 `.claude/skills/<plugin>/` 的 plugin），且只納入 Claude Code 會載入為 agent 的檔案。
+- Scan 會略過並附上原因：Claude Code 拒絕的名稱、它不會載入的 agent 檔案、超出支援 YAML 子集的 frontmatter，以及非 UTF-8 檔案。
+- 當 skill 或 command 候選檔的 `description` 與 `when_to_use` 長度增加並超過 Claude Code 1,536 字元的 listing 上限時，驗證會失敗；候選檔仍超過上限，或 `SKILL.md` 達 500 行以上時則會發出警告。
+- 修正：對沒有 `description` 的 skill 或 command，`apply` 不再把 marker 放在 Claude Code 讀取 listing 文字的位置。
+- 修正：專案路徑包含 `build` 或 `dist` 等名稱的資料夾時，agent 不再被遺漏；`.claude/worktrees/` 中的 Claude Code worktree 也不再讓每個 entrypoint 重複列出。
+- 修正：`restore` 接受任何 v2 版本寫入的備份，升級後 v2.0.0 的備份仍可使用。
 
 ## v2 的改變
 
@@ -30,9 +41,10 @@ Scan、compress、verify、benchmark 與 restore 預覽都是來源不變的 dry
 | 邊界 | v2 行為 |
 |---|---|
 | 目標範圍 | 僅限目前專案內的 regular UTF-8 Markdown 檔案 |
-| 探索範圍 | 專案或巢狀 `.claude/skills/*/SKILL.md` root 的 skill entrypoint，以及 `.claude/agents/` 下的 agent 檔案 |
+| 探索範圍 | 專案或巢狀 `.claude/skills/*/SKILL.md` root 的 skill entrypoint、`.claude/commands/` 的自訂 command、`.claude/agents/` 的 agent，以及具有 `.claude-plugin/plugin.json` manifest 的 plugin 中的 skill、command 與 agent |
 | 不可信內容 | 壓縮或審查時絕不執行目標內的 code block、hook、URL 或嵌入指令 |
 | Frontmatter | 保留所有頂層欄位；只有 `description` 與 `when_to_use` 可改寫 |
+| Listing 上限 | Skill 或 command 候選檔的 `description` 與 `when_to_use` 不得增長到超過 Claude Code 1,536 字元的 listing 上限 |
 | 字面契約 | command、tool、trigger、format、path、number、精確錯誤訊息與安全規則必須原樣保留 |
 | 草稿上限 | 每個檔案最多三次候選版本 |
 | Apply gate | deterministic 驗證加上獨立語義 `PASS` |
@@ -40,8 +52,8 @@ Scan、compress、verify、benchmark 與 restore 預覽都是來源不變的 dry
 
 ## 系統需求
 
-- Claude Code **2.1.196 或更新版本**
-- Python **3.10 或更新版本**
+- Claude Code **2.1.196 或更新版本**（frontmatter 已用 Claude Code 2.1.305 檢查）
+- Python **3.10 或更新版本**（CI 測試 3.10 至 3.15）
 - 從此 repository 安裝時需要 Git
 - 已登入的 Claude Code session，可使用任何支援的訂閱、API 或雲端 provider 設定
 
@@ -59,7 +71,7 @@ python3 --version
 
 ## 安裝
 
-以下指令會從 public default branch 安裝 v2.0.0。
+以下指令會從 public default branch 安裝 v2.1.0。
 
 ### 個人安裝
 
@@ -104,7 +116,7 @@ python3 ~/.claude/skills/semantic-compressor/scripts/semantic_compressor.py --ve
 python3 .claude/skills/semantic-compressor/scripts/semantic_compressor.py --version
 ```
 
-v2 腳本預期版本為 `2.0.0`。安裝或更新後，啟動新的 Claude Code session：
+腳本預期版本為 `2.1.0`。安裝或更新後，啟動新的 Claude Code session：
 
 ```bash
 claude
@@ -187,7 +199,18 @@ Path 可以是絕對路徑或專案相對路徑，但解析後必須位於目前
 /semantic-compressor scan
 ```
 
-Scan 會回報 `candidates` 與 `skipped`。它會排除 compressor 自身、supporting reference、sample、backup、workspace、symlink，以及已有 v2 marker 的檔案。
+Scan 會回報 `candidates` 與 `skipped`。每個 candidate 都有 `kind`：`skill`、`command` 或 `agent`。它會排除 compressor 自身、supporting reference、sample、backup、workspace、`.claude/worktrees/` 中的 Claude Code worktree、symlink，以及已有 v2 marker 的檔案。每個被略過的檔案都附有原因：
+
+| 原因 | 意義 |
+|---|---|
+| `self/excluded` | Compressor 自身，或傳給 `--exclude` 的路徑 |
+| `already-compressed` | 檔案已帶有 v2 marker |
+| `unsafe-path` | Entrypoint 解析後位於其資料夾或專案之外 |
+| `unsupported-name` | Claude Code 拒絕該 skill 資料夾、command 檔案或 agent 名稱 |
+| `not-an-agent` | `.claude/agents/` 中沒有 frontmatter `name` 的檔案，Claude Code 會視為文件 |
+| `agent-missing-description` | 有 `name` 但沒有 `description` 的專案 agent，Claude Code 會略過 |
+| `unsupported-frontmatter` | Frontmatter 超出控制腳本支援的 YAML 子集 |
+| `not-utf8` | 檔案不是有效的 UTF-8 |
 
 ### 壓縮但不修改來源
 
@@ -201,7 +224,7 @@ Scan 會回報 `candidates` 與 `skipped`。它會排除 compressor 自身、sup
 .claude/semantic-compressor-work/<workspace-id>/
 ```
 
-接著執行 deterministic 驗證與全新的唯讀語義審查。Apply 前請檢查回報的 candidate、hash、證據、比例與最終狀態。
+接著執行 deterministic 驗證與全新的唯讀語義審查。對 skill 與 command，驗證也會回報 `listing` 長度：Claude Code 會列出 `description`，加上 ` - ` 與 `when_to_use`，超過 1,536 字元的部分會被截斷。增長到超過上限的 candidate 會失敗；仍超過上限的 candidate，或達 500 行以上的 `SKILL.md`，會收到不改變結果的警告。Apply 前請檢查回報的 candidate、hash、證據、比例、警告與最終狀態。
 
 ### 套用已接受的候選檔
 
@@ -210,6 +233,8 @@ Scan 會回報 `candidates` 與 `skipped`。它會排除 compressor 自身、sup
 ```
 
 `apply` 會 snapshot source、candidate、已完成的 inventory 與獨立 review；驗證其綁定 hash 與逐 concept 證據；建立並驗證 backup；寫入 manifest；在不改變 candidate body 縮排的前提下插入 v2 idempotence marker；檢查 concurrent source edit；最後 atomic replace。任何 gate 失敗時，本次執行都不會取代來源。
+
+Marker 會放在 frontmatter 之後。沒有 `description` 的 skill 或 command 則會把 marker 放在檔案結尾，因為 Claude Code 會以 body 第一個非空白行取代 description 列出。
 
 ### 驗證 original/candidate 配對
 
@@ -241,7 +266,7 @@ Benchmark 會相對於已安裝 skill 定位 sample，而不是使用目前專�
 /semantic-compressor restore .claude/backups/<run-id>/manifest.json --apply
 ```
 
-Restore 只接受同一 project root 下的 `.claude/backups/<run-id>/manifest.json`，且必須符合目前的單檔 schema 與 `applied` 狀態。壓縮後已修改的 target、已改變的 file mode，或 SHA-256 不再符合 manifest 的 backup 都會被拒絕。
+Restore 只接受同一 project root 下、由 v2 版本寫入的 `.claude/backups/<run-id>/manifest.json`，且必須符合目前的單檔 schema 與 `applied` 狀態。壓縮後已修改的 target、已改變的 file mode，或 SHA-256 不再符合 manifest 的 backup 都會被拒絕。
 
 ## 備份與 manifest
 
@@ -273,8 +298,10 @@ Manifest 會記錄來源路徑、備份路徑、file mode、project root、compr
 
 ## 限制、成本與隱私
 
-- Semantic Compressor 處理 Claude Code skill 與 agent Markdown，不適用任意文件或 source code。
+- Semantic Compressor 處理 Claude Code skill、command 與 agent Markdown，不適用任意文件或 source code。
 - Symlink、directory、非 UTF-8 檔案，以及專案外路徑都會被拒絕。
+- Scan 涵蓋預設的 plugin 結構。`plugin.json` 宣告的自訂路徑中的元件不會被掃描，但可以指定路徑壓縮。
+- Listing 檢查使用 Claude Code 預設的 1,536 字元上限。`skillListingMaxDescChars` 設定不會改變此 gate。
 - 預設最低壓縮比例是以空白分隔 word 計算的 `2.0:1`。已經精簡的檔案可能正確回傳 `NOT_COMPRESSIBLE`。
 - Candidate 草擬與獨立審查會使用模型呼叫。成本與延遲會隨檔案大小與重試增加，每檔最多三次 candidate 草稿。
 - Source、candidate 與 inventory 內容會進入已設定的 Claude Code 模型 context，並由你所設定的 provider 處理。不要用於 provider 未獲授權接收的資料。
@@ -302,9 +329,10 @@ python3 .claude/skills/semantic-compressor/scripts/semantic_compressor.py benchm
 
 ```bash
 python3 -m unittest discover -s tests -v
+python3 scripts/validate_project.py
 ```
 
-測試涵蓋 discovery scope、唯一且位於專案內的 workspace、idempotence marker、symlink component 與 backup path safety、保守的 frontmatter validation、已完成且綁定 source 的 inventory、literal failure、綁定 source/candidate/inventory 的 review、apply race 與 unknown-byte rollback refusal、strict manifest restore、file mode，以及 deterministic benchmark edge case。
+測試涵蓋 skill、command、agent 與 plugin 的 discovery scope；Claude Code 的名稱、agent 與 listing 規則；唯一且位於專案內的 workspace；idempotence marker 及其位置；symlink component 與 backup path safety；保守的 frontmatter validation；已完成且綁定 source 的 inventory；literal failure；綁定 source/candidate/inventory 的 review；apply race 與 unknown-byte rollback refusal；跨 v2 版本的 strict manifest restore；file mode；以及 deterministic benchmark edge case。專案驗證器會依目前的 Claude Code frontmatter 規則檢查出貨的 skill，並檢查 sample 證據、benchmark 輸出與文件落差。
 
 ## 專案結構
 
@@ -314,7 +342,13 @@ skills-optimizer/
 ├── README.zh-TW.md
 ├── CONTRIBUTING.md
 ├── CHANGELOG.md
+├── BENCHMARK-REPORT.md
+├── benchmark-results.json
+├── scripts/
+│   ├── validate_project.py
+│   └── validate-format.sh
 ├── tests/
+│   ├── test_project_validator.py
 │   └── test_semantic_compressor.py
 └── .claude/skills/semantic-compressor/
     ├── SKILL.md
@@ -324,6 +358,7 @@ skills-optimizer/
     │   ├── inventory-schema.md
     │   ├── strategies.md
     │   └── examples.md
+    ├── evals/
     └── samples/
         ├── skills/
         ├── agents/

@@ -709,6 +709,330 @@ class CompressorTestCase(unittest.TestCase):
         )
         self.assertIn("N/A", markdown)
 
+    def test_discovery_covers_commands_and_plugin_layouts(self) -> None:
+        skill = "---\nname: {0}\ndescription: Does {0}.\n---\nBody\n"
+        write(
+            self.root / ".claude/commands/deploy.md",
+            "---\ndescription: Deploy.\n---\nDeploy now.\n",
+        )
+        write(self.root / ".claude/commands/frontend/component.md", "Build it.\n")
+        plugin = self.root / "plugins/demo"
+        write(plugin / ".claude-plugin/plugin.json", '{"name": "demo"}\n')
+        write(plugin / "SKILL.md", skill.format("demo"))
+        write(plugin / "skills/review/SKILL.md", skill.format("review"))
+        write(plugin / "skills/review/reference.md", "Reference\n")
+        write(plugin / "commands/ship.md", "Ship it.\n")
+        # Claude Code loads a plugin agent without a name under its filename.
+        write(plugin / "agents/helper.md", "Help with plugin tasks.\n")
+        local = self.root / ".claude/skills/local-plugin"
+        write(local / ".claude-plugin/plugin.json", '{"skills": ["./"]}\n')
+        write(local / "SKILL.md", skill.format("local-plugin"))
+        write(local / "skills/example/SKILL.md", skill.format("example"))
+        write(
+            local / "agents/example.md",
+            "---\nname: example\ndescription: Example agent.\n---\nBody\n",
+        )
+        # Without a plugin manifest, a skills folder is not a Claude Code root.
+        write(self.root / "docs/skills/fake/SKILL.md", skill.format("fake"))
+
+        result = compressor.discover_candidates(
+            self.root, exclude=[], include_compressed=False
+        )
+
+        self.assertEqual(
+            result["candidates"],
+            [
+                {"path": ".claude/commands/deploy.md", "kind": "command"},
+                {"path": ".claude/commands/frontend/component.md", "kind": "command"},
+                {"path": ".claude/skills/local-plugin/SKILL.md", "kind": "skill"},
+                {"path": ".claude/skills/local-plugin/agents/example.md", "kind": "agent"},
+                {
+                    "path": ".claude/skills/local-plugin/skills/example/SKILL.md",
+                    "kind": "skill",
+                },
+                {"path": "plugins/demo/SKILL.md", "kind": "skill"},
+                {"path": "plugins/demo/agents/helper.md", "kind": "agent"},
+                {"path": "plugins/demo/commands/ship.md", "kind": "command"},
+                {"path": "plugins/demo/skills/review/SKILL.md", "kind": "skill"},
+            ],
+        )
+        self.assertEqual(result["skipped"], [])
+
+    def test_discovery_skips_files_claude_code_does_not_load(self) -> None:
+        agents = self.root / ".claude/agents"
+        write(agents / "README.md", "# Agents\n\nNotes kept beside the agents.\n")
+        write(agents / "untitled.md", "---\ndescription: No name.\n---\nBody\n")
+        write(agents / "scoped.md", "---\nname: team:reviewer\ndescription: Reviews.\n---\n")
+        write(agents / "dashed.md", "---\nname: -reviewer\ndescription: Reviews.\n---\n")
+        write(agents / "silent.md", "---\nname: silent\n---\nBody\n")
+        write(agents / "broken.md", "---\nname: broken\ndescription: [unterminated\n---\n")
+        write(agents / "review/good.md", "---\nname: good\ndescription: Reviews.\n---\n")
+        skill = "---\nname: demo\ndescription: Demo.\n---\nBody\n"
+        write(self.root / ".claude/skills/zero\u200bwidth/SKILL.md", skill)
+        write(self.root / ".claude/skills/\U0001f469\u200d\U0001f4bb-helper/SKILL.md", skill)
+        write(self.root / ".claude/commands/a<b.md", "Command\n")
+        latin1 = self.root / ".claude/skills/latin1/SKILL.md"
+        latin1.parent.mkdir(parents=True)
+        latin1.write_bytes(b"---\nname: caf\xe9\n---\n")
+        plugin = self.root / "tools"
+        write(plugin / ".claude-plugin/plugin.json", "{}\n")
+        # Plugin skill folders still load; Claude Code hyphenates refused characters.
+        write(plugin / "skills/zero\u200bwidth/SKILL.md", skill)
+
+        result = compressor.discover_candidates(
+            self.root, exclude=[], include_compressed=False
+        )
+
+        self.assertEqual(
+            result["candidates"],
+            [
+                {"path": ".claude/agents/review/good.md", "kind": "agent"},
+                {
+                    "path": ".claude/skills/\U0001f469\u200d\U0001f4bb-helper/SKILL.md",
+                    "kind": "skill",
+                },
+                {"path": "tools/skills/zero\u200bwidth/SKILL.md", "kind": "skill"},
+            ],
+        )
+        self.assertEqual(
+            {item["path"]: item["reason"] for item in result["skipped"]},
+            {
+                ".claude/agents/README.md": "not-an-agent",
+                ".claude/agents/broken.md": "unsupported-frontmatter",
+                ".claude/agents/dashed.md": "unsupported-name",
+                ".claude/agents/scoped.md": "unsupported-name",
+                ".claude/agents/silent.md": "agent-missing-description",
+                ".claude/agents/untitled.md": "not-an-agent",
+                ".claude/commands/a<b.md": "unsupported-name",
+                ".claude/skills/latin1/SKILL.md": "not-utf8",
+                ".claude/skills/zero\u200bwidth/SKILL.md": "unsupported-name",
+            },
+        )
+
+    def test_discovery_keeps_agents_when_the_project_path_has_an_ignored_name(
+        self,
+    ) -> None:
+        project = self.root / "build/app"
+        agent = "---\nname: {0}\ndescription: Reviews code.\n---\nBody\n"
+        write(project / ".claude/agents/reviewer.md", agent.format("reviewer"))
+        write(project / ".claude/agents/node_modules/vendored.md", agent.format("vendored"))
+
+        result = compressor.discover_candidates(
+            project, exclude=[], include_compressed=False
+        )
+
+        self.assertEqual(
+            result["candidates"], [{"path": ".claude/agents/reviewer.md", "kind": "agent"}]
+        )
+
+    def test_discovery_does_not_list_claude_code_worktrees_again(self) -> None:
+        skill = "---\nname: demo\ndescription: Demo.\n---\nBody\n"
+        write(self.root / ".claude/skills/demo/SKILL.md", skill)
+        write(self.root / ".claude/worktrees/feature/.claude/skills/demo/SKILL.md", skill)
+        write(self.root / "apps/web/.claude/skills/web/SKILL.md", skill)
+
+        result = compressor.discover_candidates(
+            self.root, exclude=[], include_compressed=False
+        )
+
+        self.assertEqual(
+            [item["path"] for item in result["candidates"]],
+            [".claude/skills/demo/SKILL.md", "apps/web/.claude/skills/web/SKILL.md"],
+        )
+
+    def test_listing_entry_follows_claude_code_rules(self) -> None:
+        text = (
+            "---\nname: demo\ndescription: |\n  Review <PRs>\n  and diffs.\n"
+            "when_to_use: >-\n  Use for PR review.\n---\nBody\n"
+        )
+        self.assertEqual(
+            compressor.listing_entry(text),
+            "Review &lt;PRs&gt; and diffs. - Use for PR review.",
+        )
+        quoted = (
+            "---\nname: demo\ndescription: 'It''s quoted' # note\n"
+            'when_to_use: "Use \\"now\\""\n---\nBody\n'
+        )
+        self.assertEqual(compressor.listing_entry(quoted), 'It\'s quoted - Use "now"')
+        heading = "---\nname: demo\n---\n\n## Deploy the service\n\nDetails.\n"
+        self.assertEqual(compressor.listing_entry(heading), "Deploy the service")
+        self.assertEqual(compressor.listing_entry("x" * 120 + "\n"), "x" * 97 + "...")
+        self.assertEqual(compressor.utf16_length("\U0001f600"), 2)
+
+    def test_description_may_continue_on_indented_lines(self) -> None:
+        quoted = (
+            '---\nname: demo\ndescription:\n  "Solve problems with\n'
+            '  adversarial verification."\n---\nBody\n'
+        )
+        plain = (
+            "---\nname: demo\ndescription:\n  Solve problems with\n"
+            "  adversarial verification.\n---\nBody\n"
+        )
+        self.assertEqual(compressor.validate_frontmatter(quoted, plain), [])
+        self.assertEqual(
+            compressor.listing_entry(quoted), "Solve problems with adversarial verification."
+        )
+        for nested in ("  key: value\n", "  - item\n"):
+            frontmatter, _body = compressor.split_frontmatter(
+                f"---\nname: demo\ndescription:\n{nested}---\nBody\n"
+            )
+            self.assertIn(
+                "frontmatter field description must be a scalar or block scalar",
+                compressor.frontmatter_syntax_errors(frontmatter or ""),
+            )
+
+    def test_listing_cap_fails_growth_and_warns_when_still_over(self) -> None:
+        body = "Run /demo safely. " + "Filler words keep this body verbose. " * 60 + "\n"
+
+        def skill(description: str, text: str, when_to_use: str = "") -> str:
+            extra = f"when_to_use: {when_to_use}\n" if when_to_use else ""
+            return f"---\nname: demo\ndescription: {description}\n{extra}---\n{text}"
+
+        original = write(self.root / ".claude/skills/demo/SKILL.md", skill("D" * 1400, body))
+        inventory = write(self.root / "work/inventory.json", json.dumps(inventory_for(original)))
+        grown = write(
+            self.root / "work/grown.md", skill("D" * 1000, "Run /demo safely.\n", "W" * 600)
+        )
+        result = compressor.validate_candidate(
+            original, grown, inventory, min_word_ratio=1.1
+        )
+        self.assertEqual(result["status"], "FAIL")
+        self.assertEqual(result["kind"], "skill")
+        self.assertEqual(
+            result["listing"],
+            {"cap": 1536, "original_characters": 1400, "candidate_characters": 1603},
+        )
+        self.assertTrue(
+            any("1,536-character skill listing cap" in error for error in result["errors"])
+        )
+
+        long_original = write(
+            self.root / ".claude/skills/long/SKILL.md", skill("L" * 2000, body)
+        )
+        long_inventory = write(
+            self.root / "work/long-inventory.json",
+            json.dumps(inventory_for(long_original)),
+        )
+        shorter = write(self.root / "work/shorter.md", skill("L" * 1700, "Run /demo safely.\n"))
+        result = compressor.validate_candidate(
+            long_original, shorter, long_inventory, min_word_ratio=1.1
+        )
+        self.assertEqual(result["status"], "PASS", result["errors"])
+        self.assertEqual(len(result["warnings"]), 1)
+        self.assertIn("listing cap (original: 2,000)", result["warnings"][0])
+
+        agent = write(self.root / ".claude/agents/helper.md", skill("Helps.", body))
+        agent_inventory = write(
+            self.root / "work/agent-inventory.json", json.dumps(inventory_for(agent))
+        )
+        agent_candidate = write(
+            self.root / "work/agent.md", skill("H" * 1600, "Run /demo safely.\n")
+        )
+        result = compressor.validate_candidate(
+            agent, agent_candidate, agent_inventory, min_word_ratio=1.1, kind="agent"
+        )
+        self.assertEqual(result["status"], "PASS", result["errors"])
+        self.assertIsNone(result["listing"])
+
+        tall = write(self.root / ".claude/skills/tall/SKILL.md", skill("Tall.", "word word\n" * 1200))
+        tall_inventory = write(
+            self.root / "work/tall-inventory.json", json.dumps(inventory_for(tall))
+        )
+        tall_candidate = write(self.root / "work/tall.md", skill("Tall.", "word\n" * 600))
+        result = compressor.validate_candidate(
+            tall, tall_candidate, tall_inventory, min_word_ratio=1.1
+        )
+        self.assertEqual(result["status"], "PASS", result["errors"])
+        self.assertTrue(any("under 500 lines" in warning for warning in result["warnings"]))
+
+    def test_apply_keeps_the_listed_body_line_when_there_is_no_description(
+        self,
+    ) -> None:
+        original_text = (
+            "---\nname: demo\n---\n# Deploy the demo service\n\n"
+            "Run /demo deploy and keep ERR_DEMO. Extra filler words make it verbose.\n"
+        )
+        original = write(self.root / ".claude/skills/demo/SKILL.md", original_text)
+        candidate = write(
+            self.root / "work/candidate.md",
+            "---\nname: demo\n---\n# Deploy the demo service\n\n"
+            "Run /demo deploy; keep ERR_DEMO.\n",
+        )
+        inventory = write(
+            self.root / "work/inventory.json",
+            json.dumps(
+                inventory_for(
+                    original,
+                    literals={"commands": ["/demo deploy"], "error_messages": ["ERR_DEMO"]},
+                )
+            ),
+        )
+        review = write(
+            self.root / "work/review.json",
+            json.dumps(review_for(original, candidate, inventory)),
+        )
+
+        applied = compressor.apply_candidate(
+            self.root,
+            original,
+            candidate,
+            inventory,
+            review,
+            min_word_ratio=1.1,
+            run_id="no-description",
+        )
+
+        applied_text = original.read_text(encoding="utf-8")
+        self.assertTrue(applied_text.startswith(candidate.read_text(encoding="utf-8")))
+        self.assertTrue(applied_text.splitlines()[-1].startswith(compressor.MARKER))
+        self.assertEqual(compressor.listing_entry(applied_text), "Deploy the demo service")
+        restored = compressor.restore_backup(
+            self.root, self.root / applied["manifest"], apply=True
+        )
+        self.assertEqual(restored["status"], "RESTORED")
+        self.assertEqual(original.read_text(encoding="utf-8"), original_text)
+
+    def test_restore_accepts_manifests_from_the_same_major_release(self) -> None:
+        original, candidate, inventory, review = self.make_apply_fixture(name="compat")
+        applied = compressor.apply_candidate(
+            self.root,
+            original,
+            candidate,
+            inventory,
+            review,
+            min_word_ratio=1.1,
+            run_id="compat",
+        )
+        manifest = self.root / applied["manifest"]
+        payload = json.loads(manifest.read_text(encoding="utf-8"))
+        for version in ("1.0.1", "3.0.0", "2.0", 2):
+            payload["compressor_version"] = version
+            manifest.write_text(json.dumps(payload), encoding="utf-8")
+            with self.assertRaisesRegex(compressor.CompressorError, "compressor version"):
+                compressor.restore_backup(self.root, manifest, apply=False)
+        # A backup made by v2.0.0 stays restorable after upgrading.
+        payload["compressor_version"] = "2.0.0"
+        manifest.write_text(json.dumps(payload), encoding="utf-8")
+        restored = compressor.restore_backup(self.root, manifest, apply=True)
+        self.assertEqual(restored["status"], "RESTORED")
+
+    def test_entrypoint_kind_follows_claude_code_layouts(self) -> None:
+        cases = {
+            ".claude/skills/demo/SKILL.md": "skill",
+            "plugins/demo/skills/review/SKILL.md": "skill",
+            ".claude/commands/frontend/component.md": "command",
+            ".claude/agents/commands/helper.md": "agent",
+            "services/agents/.claude/commands/deploy.md": "command",
+            "plugins/demo/agents/helper.md": "agent",
+            ".claude/skills/demo/reference.md": None,
+            "docs/guide.md": None,
+        }
+        for relative, expected in cases.items():
+            with self.subTest(relative=relative):
+                self.assertEqual(
+                    compressor.entrypoint_kind(self.root / relative, self.root), expected
+                )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -19,6 +19,7 @@ The control script permits rewriting only `description` and `when_to_use`. Keep 
 For descriptions:
 
 - Put the main capability first.
+- Keep the listing entry (`description`, plus ` - ` and `when_to_use`) within 1,536 characters. Claude Code truncates longer entries, and the gate fails a candidate that grows past the cap.
 - State when to use the skill with concrete user intents.
 - Preserve exact activation phrases recorded under `literals.triggers`.
 - Remove promotional adjectives and duplicated feature prose.
@@ -70,16 +71,16 @@ Retain:
 - retry, stop, failure, and rollback behavior;
 - references and the conditions for loading them.
 
-Descriptions are activation metadata, not a marketing summary. A concise description that drops a near-match trigger can make the skill effectively unusable even if the body is perfect.
+Descriptions are activation metadata, not a marketing summary. A concise description that drops a near-match trigger can make the skill effectively unusable even if the body is perfect. Without a description, Claude Code lists the first non-empty body line instead, so treat that line as the description.
 
 ## Agent-specific guidance
 
-Real Claude Code agents require valid YAML frontmatter. Preserve the full operational contract before shortening the body:
+Claude Code loads a project agent only when its frontmatter parses and has a `name` and a `description`. Preserve the full operational contract before shortening the body:
 
 - `name` and `description`;
-- tool and disallowed-tool lists;
-- model, effort, permission mode, and turn limits;
-- hooks, MCP servers, skills, memory, isolation, and background behavior;
+- `tools` and `disallowedTools`;
+- `model`, `effort`, `permissionMode`, `maxTurns`, and `autoCompactWindow`;
+- `hooks`, `mcpServers`, `skills`, `memory`, `isolation`, `background`, `omitClaudeMd`, `initialPrompt`, `color`, and `experimental`;
 - all unknown or future frontmatter keys.
 
 In the body, keep role boundaries, process, expected evidence, output format, escalation conditions, and limitations. Do not replace an existing tool with a newer or “better” one.

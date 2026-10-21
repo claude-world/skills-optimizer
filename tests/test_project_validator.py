@@ -190,6 +190,57 @@ class ProjectValidatorTestCase(unittest.TestCase):
         ]
         self.assertEqual(len(fixture_errors), 2)
 
+    def check_main_skill(
+        self, frontmatter: str, body: str, references: tuple[str, ...]
+    ) -> list[str]:
+        write(self.skill_dir / "SKILL.md", f"---\n{frontmatter}---\n{body}")
+        for reference in references:
+            write(self.skill_dir / reference, "Reference\n")
+        result = validator.Validation()
+        with mock.patch.object(validator, "ROOT", self.root), mock.patch.object(
+            validator, "SKILL_DIR", self.skill_dir
+        ):
+            validator.validate_main_skill(result)
+        return result.errors
+
+    def test_main_skill_follows_current_frontmatter_rules(self) -> None:
+        version = validator.core.COMPRESSOR_VERSION
+        valid = (
+            "name: semantic-compressor\n"
+            "description: Compress skills safely.\n"
+            'argument-hint: "[scan]"\n'
+            "disable-model-invocation: yes\n"
+            "user-invocable: true\n"
+            f'metadata:\n  version: "{version}"\n'
+        )
+        errors = self.check_main_skill(
+            valid, "See [the guide](references/guide.md).\n", ("references/guide.md",)
+        )
+        self.assertEqual(errors, [])
+
+        stale = (
+            "name: Semantic_Compressor\n"
+            "description: Compress <skills>.\n"
+            "disable-model-invocation: true\n"
+            "user-invocable: true\n"
+            "version: 2.0.0\n"
+        )
+        errors = self.check_main_skill(
+            stale, "Body\n" * 500, ("references/guide.md", "references/orphan.md")
+        )
+        for message in (
+            "main skill name matches its directory",
+            "main skill name follows the Agent Skills naming rule",
+            "main skill uses only documented Claude Code frontmatter fields (unknown: version)",
+            "main skill description has no angle brackets",
+            "SKILL.md stays under 500 lines",
+            "main skill declares argument-hint",
+            "SKILL.md metadata.version matches the control script version",
+            "SKILL.md links references/guide.md directly",
+            "SKILL.md links references/orphan.md directly",
+        ):
+            self.assertIn(message, errors)
+
 
 if __name__ == "__main__":
     unittest.main()
