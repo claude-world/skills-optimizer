@@ -3,8 +3,9 @@
 
 The language model still writes and semantically reviews candidates.  This
 module owns the parts that should not depend on model judgment: discovery,
-path validation, metadata preservation, literal checks, metrics, backups,
-atomic replacement, rollback, and reproducible sample reports.
+path validation, metadata preservation, Claude Code listing limits, literal
+checks, metrics, backups, atomic replacement, rollback, and reproducible
+sample reports.
 """
 
 from __future__ import annotations
@@ -18,6 +19,7 @@ import re
 import stat
 import sys
 import tempfile
+import unicodedata
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
@@ -25,7 +27,9 @@ from typing import Any, Sequence
 
 
 SCHEMA_VERSION = 1
-COMPRESSOR_VERSION = "2.0.0"
+COMPRESSOR_VERSION = "2.1.0"
+# Rollback manifests keep one schema across a major release line.
+RESTORABLE_VERSION_RE = re.compile(re.escape(COMPRESSOR_VERSION.split(".")[0]) + r"\.\d+\.\d+")
 MARKER = "<!-- semantic-compressor: v2"
 MARKER_RE = re.compile(
     r"^<!-- semantic-compressor: v2; source-sha256=([0-9a-f]{64}); "
@@ -57,6 +61,18 @@ INVENTORY_CATEGORIES = (
     "security_rules",
 )
 MUTABLE_FRONTMATTER_KEYS = {"description", "when_to_use"}
+# Claude Code lists a skill or command as its description plus " - " and
+# when_to_use, truncating entries longer than this (skillListingMaxDescChars).
+SKILL_LISTING_CHARACTER_CAP = 1536
+LISTED_KINDS = {"skill", "command"}
+# Claude Code recommends keeping SKILL.md under this many lines.
+SKILL_LINE_LIMIT = 500
+# Claude Code skips project agent files whose name is longer than this.
+AGENT_NAME_LIMIT = 256
+COMPONENT_DIRECTORY_NAMES = {"skills", "commands", "agents"}
+# Claude Code keeps its git worktrees, full copies of the project, here.
+CLAUDE_WORKTREES_DIRECTORY = "worktrees"
+PLUGIN_MANIFEST = Path(".claude-plugin") / "plugin.json"
 HASH_RE = re.compile(r"[0-9a-f]{64}")
 RUN_ID_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,127}")
 FRONTMATTER_KEY_RE = re.compile(r"^([A-Za-z][A-Za-z0-9_-]*):(?:\s?(.*))?$")
@@ -300,6 +316,30 @@ def flow_syntax_error(value: str) -> str | None:
     return None
 
 
+def continues_as_scalar(lines: Sequence[str], index: int) -> bool:
+    """Return whether an empty key value continues as an indented scalar.
+
+    Quoted scalars and plain scalars without ": " may start on the next line;
+    a nested mapping, list, or other YAML node may not.
+    """
+    for line in lines[index:]:
+        stripped = line.strip()
+        if not stripped:
+            continue
+        if line == line.lstrip(" "):
+            return False
+        if stripped[0] in "\"'":
+            return True
+        return (
+            ": " not in stripped
+            and not stripped.endswith(":")
+            and not stripped.startswith("- ")
+            and stripped != "-"
+            and stripped[0] not in "[{?&*!|>#%@`"
+        )
+    return False
+
+
 def frontmatter_syntax_errors(frontmatter: str) -> list[str]:
     """Validate a conservative, dependency-free YAML frontmatter subset.
 
@@ -343,7 +383,7 @@ def frontmatter_syntax_errors(frontmatter: str) -> list[str]:
             value = (match.group(2) or "").strip()
             active_is_block = bool(re.fullmatch(r"[|>][+-]?[1-9]?", value))
             if active_key in MUTABLE_FRONTMATTER_KEYS:
-                if not value:
+                if not value and not continues_as_scalar(lines, number):
                     errors.append(
                         f"frontmatter field {active_key} must be a scalar or block scalar"
                     )
@@ -428,6 +468,176 @@ def validate_frontmatter(original_text: str, candidate_text: str) -> list[str]:
         ):
             errors.append(f"frontmatter field changed: {key}")
     return errors
+
+
+def frontmatter_fields(text: str) -> tuple[dict[str, str] | None, str]:
+    """Return top-level frontmatter blocks (None without frontmatter) and the body.
+
+    Raises CompressorError when the frontmatter is outside the supported subset.
+    """
+    frontmatter, body = split_frontmatter(text)
+    if frontmatter is None:
+        return None, body
+    errors = frontmatter_syntax_errors(frontmatter)
+    if errors:
+        raise CompressorError("; ".join(errors))
+    return frontmatter_blocks(frontmatter), body
+
+
+DOUBLE_QUOTED_ESCAPES = {"n": "\n", "t": "\t", "r": "\r", "0": "\0"}
+
+
+def fold_lines(lines: Sequence[str]) -> str:
+    """Join scalar lines the way YAML folds them: blank lines become newlines."""
+    text = ""
+    newlines = 0
+    for line in lines:
+        if not line:
+            newlines += 1
+            continue
+        if text:
+            text += "\n" * newlines if newlines else " "
+        text += line
+        newlines = 0
+    return text
+
+
+def unquote_scalar(text: str) -> str:
+    quote, inner = text[0], text[1:]
+    characters: list[str] = []
+    index = 0
+    while index < len(inner):
+        character = inner[index]
+        if quote == "'" and character == "'":
+            if inner[index + 1 : index + 2] != "'":
+                break
+            index += 1
+        elif quote == '"' and character == "\\" and index + 1 < len(inner):
+            index += 1
+            character = DOUBLE_QUOTED_ESCAPES.get(inner[index], inner[index])
+        elif quote == '"' and character == '"':
+            break
+        characters.append(character)
+        index += 1
+    return "".join(characters)
+
+
+def scalar_text(block: str) -> str:
+    """Return the value of one top-level frontmatter block as text.
+
+    This covers the plain, quoted, and block scalars of the supported YAML
+    subset closely enough for name checks and listing lengths. It is not a
+    general YAML parser.
+    """
+    first, *rest = block.splitlines()
+    value = first.split(":", 1)[1].strip()
+    header = re.fullmatch(r"([|>])(?:([+-]?)[1-9]?|[1-9]([+-]))", value)
+    if header:
+        content: list[str] = []
+        for line in rest:
+            if line.strip() and not line.startswith(" "):
+                break
+            content.append(line)
+        indent = min(
+            (len(line) - len(line.lstrip(" ")) for line in content if line.strip()),
+            default=0,
+        )
+        lines = [line[indent:] if line.strip() else "" for line in content]
+        trailing = 0
+        while lines and not lines[-1]:
+            lines.pop()
+            trailing += 1
+        text = "\n".join(lines) if header.group(1) == "|" else fold_lines(lines)
+        chomping = header.group(2) or header.group(3) or ""
+        if lines and chomping == "+":
+            return text + "\n" * (trailing + 1)
+        return text + ("\n" if lines and not chomping else "")
+    lines = [value]
+    for line in rest:
+        if line.strip().startswith("#"):
+            break
+        lines.append(line.strip())
+    text = fold_lines(lines)
+    if text[:1] in ("'", '"'):
+        return unquote_scalar(text)
+    return re.split(r"[ \t]#", text, maxsplit=1)[0].rstrip()
+
+
+def listing_sanitize(value: str) -> str:
+    """Collapse each run of hidden characters to one space and escape angle
+    brackets, as Claude Code does before it measures a listing entry."""
+    characters: list[str] = []
+    hidden_run = False
+    for character in value:
+        if unicodedata.category(character)[0] == "C" or character in "\u2028\u2029":
+            if not hidden_run:
+                characters.append(" ")
+            hidden_run = True
+            continue
+        hidden_run = False
+        characters.append(character)
+    return "".join(characters).replace("<", "&lt;").replace(">", "&gt;")
+
+
+def utf16_length(value: str) -> int:
+    """Measure text in UTF-16 code units, the unit of Claude Code's caps."""
+    return len(value.encode("utf-16-le")) // 2
+
+
+def fallback_description(body: str) -> str:
+    """Return the first non-empty body line, as Claude Code uses it when a
+    skill or command has no description."""
+    for line in body.split("\n"):
+        stripped = line.strip()
+        if stripped:
+            heading = re.fullmatch(r"#+\s+(\S.*)", stripped)
+            text = heading.group(1) if heading else stripped
+            return text[:97] + "..." if len(text) > 100 else text
+    return ""
+
+
+def listed_description(blocks: dict[str, str] | None) -> str:
+    if not blocks or "description" not in blocks:
+        return ""
+    return scalar_text(blocks["description"]).strip()
+
+
+def listing_entry(text: str) -> str:
+    """Return the text Claude Code lists for a skill or command.
+
+    The entry is the description, plus " - " and ``when_to_use`` when that is
+    set. Without a description, Claude Code uses the first non-empty body line.
+    """
+    blocks, body = frontmatter_fields(text)
+    entry = listing_sanitize(listed_description(blocks) or fallback_description(body))
+    if blocks and "when_to_use" in blocks:
+        when_to_use = listing_sanitize(scalar_text(blocks["when_to_use"]))
+        if when_to_use:
+            entry = f"{entry} - {when_to_use}"
+    return entry
+
+
+def has_listed_description(text: str) -> bool:
+    try:
+        blocks, _body = frontmatter_fields(text)
+    except CompressorError:
+        return False
+    return bool(listed_description(blocks))
+
+
+def entrypoint_kind(path: Path, root: Path) -> str | None:
+    """Classify a project file by the Claude Code layout it lives in."""
+    if path.name == "SKILL.md":
+        return "skill"
+    folders = path.relative_to(root).parts[:-1]
+    if ".claude" in folders:
+        folders = folders[len(folders) - folders[::-1].index(".claude") :]
+    for part in folders:
+        if part == "commands":
+            return "command"
+        if part == "agents":
+            return "agent"
+    return None
 
 
 def load_json(path: Path) -> Any:
@@ -637,8 +847,12 @@ def validate_candidate_texts(
     original_path: Path,
     candidate_path: Path,
     min_word_ratio: float,
+    kind: str | None = None,
 ) -> dict[str, Any]:
     errors: list[str] = []
+    warnings: list[str] = []
+    if kind is None and original_path.name == "SKILL.md":
+        kind = "skill"
     valid_minimum = (
         isinstance(min_word_ratio, (int, float))
         and not isinstance(min_word_ratio, bool)
@@ -674,10 +888,43 @@ def validate_candidate_texts(
         errors.append(
             f"word compression ratio {rendered} is below minimum {min_word_ratio:.3f}"
         )
+
+    listing = None
+    if kind in LISTED_KINDS:
+        try:
+            original_entry = utf16_length(listing_entry(original_text))
+            candidate_entry = utf16_length(listing_entry(candidate_text))
+        except CompressorError:
+            pass  # Malformed frontmatter is already reported above.
+        else:
+            listing = {
+                "cap": SKILL_LISTING_CHARACTER_CAP,
+                "original_characters": original_entry,
+                "candidate_characters": candidate_entry,
+            }
+            if candidate_entry > SKILL_LISTING_CHARACTER_CAP:
+                message = (
+                    f"candidate description and when_to_use list as {candidate_entry:,} "
+                    f"characters, above Claude Code's {SKILL_LISTING_CHARACTER_CAP:,}-character "
+                    f"{kind} listing cap (original: {original_entry:,})"
+                )
+                # Growing past the cap hides activation text the original showed.
+                if candidate_entry > original_entry:
+                    errors.append(message)
+                else:
+                    warnings.append(message)
+    if kind == "skill" and metrics["candidate"]["lines"] >= SKILL_LINE_LIMIT:
+        warnings.append(
+            f"candidate SKILL.md has {metrics['candidate']['lines']:,} lines; Claude Code "
+            f"recommends keeping SKILL.md under {SKILL_LINE_LIMIT} lines"
+        )
     return {
         "schema_version": SCHEMA_VERSION,
         "status": "PASS" if not errors else "FAIL",
         "errors": errors,
+        "warnings": warnings,
+        "kind": kind,
+        "listing": listing,
         "metrics": metrics,
         "source_sha256": sha256_bytes(original_text.encode("utf-8")),
         "candidate_sha256": sha256_bytes(candidate_text.encode("utf-8")),
@@ -690,6 +937,7 @@ def validate_candidate(
     inventory_path: Path,
     *,
     min_word_ratio: float,
+    kind: str | None = None,
 ) -> dict[str, Any]:
     return validate_candidate_texts(
         read_text(original_path),
@@ -698,6 +946,7 @@ def validate_candidate(
         original_path=original_path,
         candidate_path=candidate_path,
         min_word_ratio=min_word_ratio,
+        kind=kind,
     )
 
 
@@ -705,6 +954,137 @@ def should_prune(path: Path, root: Path) -> bool:
     if path == root:
         return False
     return path.name in IGNORED_DIRECTORY_NAMES
+
+
+def refused_name(name: str) -> bool:
+    """Return whether Claude Code refuses a skill folder or command file name.
+
+    This is the documented part of Claude Code's rule: control, zero-width,
+    direction-changing, private-use, and unassigned characters, any blank other
+    than one plain space between words, and "<" or ">". The joiners that emoji
+    and some scripts need are allowed.
+    """
+    if "<" in name or ">" in name or name != name.strip(" ") or "  " in name:
+        return True
+    for character in name:
+        if character in "\u200c\u200d" or "\U000e0020" <= character <= "\U000e007f":
+            continue
+        category = unicodedata.category(character)
+        if category[0] == "C" or (category[0] == "Z" and character != " "):
+            return True
+    return False
+
+
+def command_name_refused(entrypoint: Path, commands_dir: Path) -> bool:
+    folders = entrypoint.relative_to(commands_dir).parts[:-1]
+    return any(refused_name(part) for part in (*folders, entrypoint.stem))
+
+
+def is_real_directory(path: Path) -> bool:
+    return path.is_dir() and not path.is_symlink()
+
+
+def is_regular_file(path: Path) -> bool:
+    return path.is_file() and not path.is_symlink()
+
+
+def is_plugin_root(directory: Path) -> bool:
+    return is_real_directory(directory / PLUGIN_MANIFEST.parent) and is_regular_file(
+        directory / PLUGIN_MANIFEST
+    )
+
+
+def markdown_files(directory: Path) -> list[Path]:
+    """Return regular Markdown files below a directory without following links."""
+    found: list[Path] = []
+    for current, dirnames, filenames in os.walk(directory, followlinks=False):
+        current_path = Path(current)
+        dirnames[:] = sorted(
+            name
+            for name in dirnames
+            if name not in IGNORED_DIRECTORY_NAMES
+            and not (current_path / name).is_symlink()
+        )
+        found.extend(
+            current_path / name
+            for name in sorted(filenames)
+            if name.endswith(".md") and is_regular_file(current_path / name)
+        )
+    return found
+
+
+# Each discovered entry is (entrypoint, kind, container, refused name, project agent).
+DiscoveredEntry = tuple[Path, str, Path, bool, bool]
+
+
+def component_entries(base: Path, *, project: bool) -> list[DiscoveredEntry]:
+    """Return command and agent files below a .claude or plugin directory."""
+    entries: list[DiscoveredEntry] = []
+    for name, kind in (("commands", "command"), ("agents", "agent")):
+        directory = base / name
+        if not is_real_directory(directory):
+            continue
+        for entrypoint in markdown_files(directory):
+            refused = kind == "command" and command_name_refused(entrypoint, directory)
+            entries.append(
+                (entrypoint, kind, directory, refused, project and kind == "agent")
+            )
+    return entries
+
+
+def plugin_entries(plugin_root: Path) -> list[DiscoveredEntry]:
+    """Return the entrypoints of a plugin's default component layout."""
+    entries: list[DiscoveredEntry] = []
+    root_skill = plugin_root / "SKILL.md"
+    if is_regular_file(root_skill):
+        entries.append((root_skill, "skill", plugin_root, False, False))
+    skills_dir = plugin_root / "skills"
+    if is_real_directory(skills_dir):
+        for skill_dir in sorted(skills_dir.iterdir(), key=lambda item: item.name):
+            entrypoint = skill_dir / "SKILL.md"
+            # Claude Code still loads a plugin skill whose folder name it refuses.
+            if is_real_directory(skill_dir) and is_regular_file(entrypoint):
+                entries.append((entrypoint, "skill", skill_dir, False, False))
+    return entries + component_entries(plugin_root, project=False)
+
+
+def claude_directory_entries(claude_dir: Path) -> list[DiscoveredEntry]:
+    """Return the entrypoints of a project .claude directory."""
+    entries: list[DiscoveredEntry] = []
+    skills_dir = claude_dir / "skills"
+    if is_real_directory(skills_dir):
+        for skill_dir in sorted(skills_dir.iterdir(), key=lambda item: item.name):
+            if not is_real_directory(skill_dir):
+                continue
+            if is_plugin_root(skill_dir):
+                # Claude Code loads plugins kept in a skills directory.
+                entries.extend(plugin_entries(skill_dir))
+                continue
+            entrypoint = skill_dir / "SKILL.md"
+            if is_regular_file(entrypoint):
+                entries.append(
+                    (entrypoint, "skill", skill_dir, refused_name(skill_dir.name), False)
+                )
+    return entries + component_entries(claude_dir, project=True)
+
+
+def entrypoint_problem(text: str, *, project_agent: bool) -> str | None:
+    """Return why a discovered file is not a compression candidate, if it is not."""
+    try:
+        blocks, _body = frontmatter_fields(text)
+    except CompressorError:
+        return "unsupported-frontmatter"
+    if not project_agent:
+        return None
+    # Claude Code skips these files in a project agents directory.
+    name = scalar_text(blocks["name"]).strip() if blocks and "name" in blocks else ""
+    if not name:
+        return "not-an-agent"
+    if name.startswith("-") or ":" in name or len(name) > AGENT_NAME_LIMIT:
+        return "unsupported-name"
+    if not listed_description(blocks):
+        return "agent-missing-description"
+    return None
 
 
 def discover_candidates(
@@ -722,71 +1102,49 @@ def discover_candidates(
             if not should_prune(current_path / name, root)
             and not (current_path / name).is_symlink()
         )
-        if current_path.name != ".claude":
+        pruned = set(COMPONENT_DIRECTORY_NAMES)
+        if current_path.name == ".claude":
+            entries = claude_directory_entries(current_path)
+            pruned.add(CLAUDE_WORKTREES_DIRECTORY)
+        elif is_plugin_root(current_path):
+            entries = plugin_entries(current_path)
+        else:
             continue
+        # Do not descend into component directories after processing them, or
+        # into worktrees, which would list every entrypoint again.
+        dirnames[:] = [name for name in dirnames if name not in pruned]
 
-        skills_dir = current_path / "skills"
-        if skills_dir.is_dir() and not skills_dir.is_symlink():
-            for skill_dir in sorted(skills_dir.iterdir(), key=lambda item: item.name):
-                entrypoint = skill_dir / "SKILL.md"
-                if (
-                    not skill_dir.is_dir()
-                    or skill_dir.is_symlink()
-                    or not entrypoint.is_file()
-                    or entrypoint.is_symlink()
-                ):
-                    continue
-                resolved = entrypoint.resolve()
-                if not is_within(resolved, skill_dir.resolve()) or not is_within(
-                    resolved, root
-                ):
-                    skipped.append(
-                        {
-                            "path": lexical_absolute(entrypoint).relative_to(root).as_posix(),
-                            "reason": "unsafe-path",
-                        }
-                    )
-                    continue
-                if any(is_within(resolved, item) for item in excluded):
-                    skipped.append(
-                        {"path": relative_posix(resolved, root), "reason": "self/excluded"}
-                    )
-                    continue
-                text = read_text(resolved)
-                if not include_compressed and MARKER_RE.search(text):
-                    skipped.append(
-                        {"path": relative_posix(resolved, root), "reason": "already-compressed"}
-                    )
-                    continue
-                candidates.append(
-                    {"path": relative_posix(resolved, root), "kind": "skill"}
+        for entrypoint, kind, container, name_refused, project_agent in entries:
+            resolved = entrypoint.resolve()
+            if not is_within(resolved, container.resolve()) or not is_within(
+                resolved, root
+            ):
+                skipped.append(
+                    {
+                        "path": lexical_absolute(entrypoint).relative_to(root).as_posix(),
+                        "reason": "unsafe-path",
+                    }
                 )
-
-        agents_dir = current_path / "agents"
-        if agents_dir.is_dir() and not agents_dir.is_symlink():
-            for entrypoint in sorted(agents_dir.rglob("*.md")):
-                if not entrypoint.is_file() or entrypoint.is_symlink():
-                    continue
-                resolved = entrypoint.resolve()
-                if any(part in IGNORED_DIRECTORY_NAMES for part in resolved.parts):
-                    continue
-                if any(is_within(resolved, item) for item in excluded):
-                    skipped.append(
-                        {"path": relative_posix(resolved, root), "reason": "self/excluded"}
-                    )
-                    continue
-                text = read_text(resolved)
-                if not include_compressed and MARKER_RE.search(text):
-                    skipped.append(
-                        {"path": relative_posix(resolved, root), "reason": "already-compressed"}
-                    )
-                    continue
-                candidates.append(
-                    {"path": relative_posix(resolved, root), "kind": "agent"}
-                )
-
-        # Do not descend inside a .claude directory after processing its known roots.
-        dirnames[:] = [name for name in dirnames if name not in {"skills", "agents"}]
+                continue
+            path = relative_posix(resolved, root)
+            if any(is_within(resolved, item) for item in excluded):
+                reason = "self/excluded"
+            elif name_refused:
+                reason = "unsupported-name"
+            else:
+                try:
+                    text = read_text(resolved)
+                except CompressorError:
+                    reason = "not-utf8"
+                else:
+                    if not include_compressed and MARKER_RE.search(text):
+                        reason = "already-compressed"
+                    else:
+                        reason = entrypoint_problem(text, project_agent=project_agent)
+            if reason:
+                skipped.append({"path": path, "reason": reason})
+            else:
+                candidates.append({"path": path, "kind": kind})
 
     candidates.sort(key=lambda item: (item["path"], item["kind"]))
     skipped.sort(key=lambda item: (item["path"], item["reason"]))
@@ -798,7 +1156,10 @@ def discover_candidates(
     }
 
 
-def insert_marker(candidate_text: str, marker: str) -> str:
+def insert_marker(candidate_text: str, marker: str, *, at_end: bool = False) -> str:
+    if at_end:
+        separator = "" if candidate_text.endswith(("\n", "\r")) else "\n"
+        return f"{candidate_text}{separator}{marker}\n"
     lines = candidate_text.splitlines(keepends=True)
     if not lines or lines[0].strip() != "---":
         return f"{marker}\n{candidate_text}"
@@ -882,6 +1243,7 @@ def apply_candidate(
     candidate_text = decode_utf8(candidate_bytes, candidate_path)
     inventory_value = load_json_bytes(inventory_bytes, inventory_path)
     semantic_review = load_json_bytes(semantic_review_bytes, semantic_review_path)
+    kind = entrypoint_kind(original_path, root)
 
     validation = validate_candidate_texts(
         original_text,
@@ -890,6 +1252,7 @@ def apply_candidate(
         original_path=original_path,
         candidate_path=candidate_path,
         min_word_ratio=min_word_ratio,
+        kind=kind,
     )
     if validation["status"] != "PASS":
         raise CompressorError(
@@ -936,11 +1299,18 @@ def apply_candidate(
         f"<!-- semantic-compressor: v2; source-sha256={sha256_bytes(original_bytes)}; "
         f"compressed-at={compressed_at}; run-id={run} -->"
     )
-    final_text = insert_marker(candidate_text, marker)
+    # Without a description, Claude Code lists the first non-empty body line,
+    # so the marker goes last instead of becoming that line.
+    listed = kind in LISTED_KINDS
+    final_text = insert_marker(
+        candidate_text, marker, at_end=listed and not has_listed_description(candidate_text)
+    )
     final_bytes = final_text.encode("utf-8")
     final_errors = validate_frontmatter(original_text, final_text)
     if isinstance(inventory_value, dict):
         final_errors.extend(validate_inventory(inventory_value, original_text, final_text))
+    if listed and listing_entry(final_text) != listing_entry(candidate_text):
+        final_errors.append("the marker would change the text Claude Code lists for this file")
     marker_matches = list(MARKER_RE.finditer(final_text))
     if len(marker_matches) != 1 or marker_matches[0].group(1) != sha256_bytes(original_bytes):
         final_errors.append("final output does not contain exactly one source-bound marker")
@@ -1065,8 +1435,11 @@ def restore_backup(root: Path, manifest_path: Path, *, apply: bool) -> dict[str,
         raise CompressorError("backup manifest has an invalid run id")
     if manifest_value.get("schema_version") != SCHEMA_VERSION:
         raise CompressorError("unsupported backup manifest schema")
-    if manifest_value.get("compressor_version") != COMPRESSOR_VERSION:
-        raise CompressorError("backup manifest compressor version does not match")
+    manifest_version = manifest_value.get("compressor_version")
+    if not isinstance(manifest_version, str) or not RESTORABLE_VERSION_RE.fullmatch(
+        manifest_version
+    ):
+        raise CompressorError("backup manifest compressor version is not supported")
     if manifest_value.get("run_id") != run:
         raise CompressorError("backup manifest run id does not match its directory")
     if manifest_value.get("root") != str(root):
@@ -1435,7 +1808,11 @@ def command_validate(args: argparse.Namespace) -> int:
         args.inventory, root, markdown_only=False
     )
     result = validate_candidate(
-        original, candidate, inventory, min_word_ratio=args.min_word_ratio
+        original,
+        candidate,
+        inventory,
+        min_word_ratio=args.min_word_ratio,
+        kind=entrypoint_kind(original, root),
     )
     print_json(result)
     return 0 if result["status"] == "PASS" else 1

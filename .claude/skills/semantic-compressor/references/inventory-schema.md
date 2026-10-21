@@ -74,8 +74,9 @@ Do not duplicate frontmatter fields in the literal inventory solely to make the 
 
 - frontmatter presence does not change;
 - no top-level key is added or removed;
-- `name`, tool/permission fields, hooks, model, context, arguments, version, and unknown fields remain value-equivalent;
-- only `description` and `when_to_use` may be rewritten.
+- every other field remains value-equivalent, including `name`, `allowed-tools`, `disallowed-tools`, `hooks`, `model`, `effort`, `context`, `agent`, `paths`, `arguments`, `metadata`, and unknown fields;
+- only `description` and `when_to_use` may be rewritten;
+- for skills and commands, the listing entry (`description`, plus ` - ` and `when_to_use`) does not grow past Claude Code's 1,536-character cap.
 
 Still include trigger phrases from `description` or `when_to_use` under `literals.triggers` when exact wording affects activation.
 

@@ -1,10 +1,11 @@
 ---
 name: semantic-compressor
-description: Safely reduce Claude Code skill and agent Markdown while preserving behavior, frontmatter, commands, tools, triggers, security rules, errors, paths, and numerical constraints. Use only when the user explicitly invokes /semantic-compressor to scan, draft, verify, apply, benchmark, or restore a compression run.
+description: Safely reduce Claude Code skill, command, and agent Markdown while preserving behavior, frontmatter, commands, tools, triggers, security rules, errors, paths, and numerical constraints. Use only when the user explicitly invokes /semantic-compressor to scan, draft, verify, apply, benchmark, or restore a compression run.
 argument-hint: "[scan|compress|apply|verify|benchmark|restore] [path ...]"
 disable-model-invocation: true
 user-invocable: true
-version: 2.0.0
+metadata:
+  version: "2.1.0"
 ---
 
 # Semantic Compressor
@@ -32,7 +33,7 @@ Interpret the arguments exactly once before taking action:
 | `restore <manifest>` | Verify a rollback and show exact operations | No |
 | `restore <manifest> --apply` | Restore only if current and backup hashes match the manifest | Yes |
 
-If arguments are missing, ambiguous, or name an unsupported mode, print this table and stop without writing files. A leading-dash path must follow `--`, for example `compress -- ./-review.md`.
+With no arguments, run `scan`. If the arguments are ambiguous, omit a path the chosen mode needs, or name an unsupported mode, print this table and stop without writing files. A leading-dash path must follow `--`, for example `compress -- ./-review.md`.
 
 ## Safety invariants
 
@@ -68,12 +69,14 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/semantic_compressor.py" discover \
   --exclude "${CLAUDE_SKILL_DIR}"
 ```
 
-The discovery contract intentionally selects only:
+The discovery contract intentionally selects only the entrypoints Claude Code loads:
 
 - `.claude/skills/*/SKILL.md` entrypoints, including nested project `.claude` roots;
-- `.claude/agents/**/*.md` definitions.
+- `.claude/commands/**/*.md` custom commands, which Claude Code treats as skills;
+- `.claude/agents/**/*.md` definitions;
+- plugin entrypoints below a `.claude-plugin/plugin.json` root, including plugins kept in `.claude/skills/<plugin>/`: the root `SKILL.md`, `skills/*/SKILL.md`, `commands/**/*.md`, and `agents/**/*.md`.
 
-It excludes this compressor, references, samples, backups, workspaces, generated candidates, symlinks, and files already carrying the v2 marker. Report `candidates` and `skipped`; do not compress during scan.
+It excludes this compressor, references, samples, backups, workspaces, Claude Code worktrees in `.claude/worktrees/`, generated candidates, symlinks, and files already carrying the v2 marker. It also reports a skip reason for files Claude Code would not load or the control script cannot validate: `unsupported-name`, `not-an-agent`, `agent-missing-description`, `unsupported-frontmatter`, or `not-utf8`. Report `candidates` and `skipped`; do not compress during scan.
 
 ## Compress or apply workflow
 
@@ -118,6 +121,8 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/semantic_compressor.py" validate \
 ```
 
 The published ratio is based on whitespace-delimited words because it is dependency-free and reproducible. Lines, characters, and bytes are supporting metrics, not substitutes. Do not label any estimate as Claude tokens.
+
+For skills and commands, the result also reports `listing`. Claude Code lists `description`, plus ` - ` and `when_to_use` when set, and truncates that entry above 1,536 characters. A candidate whose entry grows past the cap fails, because it would hide activation text the source showed. A candidate that is still over the cap but shorter than the source gets a warning. A `SKILL.md` candidate with 500 or more lines also gets a warning, because Claude Code recommends keeping `SKILL.md` under 500 lines. Warnings do not change the result state; use any remaining drafts to address them.
 
 If the gate fails:
 
@@ -171,7 +176,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/semantic_compressor.py" apply \
   "<workspace>/candidate.md"
 ```
 
-`apply` re-runs deterministic validation, creates a unique hash-verified backup and manifest, inserts the idempotence marker after frontmatter, and uses atomic replacement. Report the exact backup and manifest paths.
+`apply` re-runs deterministic validation, creates a unique hash-verified backup and manifest, inserts the idempotence marker, and uses atomic replacement. The marker goes after the frontmatter, or at the end of a skill or command without a `description`, where Claude Code lists the first non-empty body line instead. Report the exact backup and manifest paths.
 
 ## Verify workflow
 
@@ -199,7 +204,7 @@ python3 "${CLAUDE_SKILL_DIR}/scripts/semantic_compressor.py" restore \
   "<manifest-relative-path>"
 ```
 
-For explicit `--apply`, rerun with that flag. Restoration is refused unless the manifest is at its canonical root-bound path, has the current one-file schema and `applied` state, and matches the target, backup, mode, and hashes. A changed compressed file or backup is never overwritten.
+For explicit `--apply`, rerun with that flag. Restoration is refused unless the manifest is at its canonical root-bound path, was written by a v2 release, has the current one-file schema and `applied` state, and matches the target, backup, mode, and hashes. A changed compressed file or backup is never overwritten.
 
 ## Result states
 
